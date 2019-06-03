@@ -1,0 +1,21 @@
+service:
+  name: kremen-api
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  transport:
+    handler: transport.handler
+    events:
+      - http:
+          method: get
+          path: transport/routes
+      - http:
+          method: get
+          path: transport/busses/all
