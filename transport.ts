@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { withCity } from 'lib/transport';
-import { Log, okResp, serverErrResp } from 'utils';
+import { Log, okResp, serverErrResp, notFoundResp } from 'utils';
 const log = Log('TransportHandler');
 
 const kremenCityId = 10;
@@ -10,7 +10,9 @@ const allRouteIds = [
   172, 182, 167, 178, 180, 169, 174, 193, 
 ];
 
+
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
+  log.trace('incoming event=', event);
   try {
     const { path } = event;
     if (path === '/transport/routes') {
@@ -19,7 +21,9 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
     if (path === '/transport/buses/all') {
       return handleAllBuses();
     }
+    return notFoundResp(`API ${path} not found`);
   } catch(err) {
+    log.err(err);
     return serverErrResp(err.message);
   }
 }
@@ -27,6 +31,7 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
 const handleAllBuses = async () => {
   log.start('handleAllBusses');
   const data = await withCity(kremenCityId).getBusesAtRoutes(allRouteIds);
+  log.trace('all buses data=', data);
   log.end('handleAllBusses');
   return okResp(data);
 }
@@ -34,6 +39,7 @@ const handleAllBuses = async () => {
 const handleRoutes = async () => {
     log.start('handleRoutes');
     const data = await withCity(kremenCityId).getRoutes();
+    log.trace('routes data=', data);
     log.end('handleRoutes');
     return okResp(data);
 }

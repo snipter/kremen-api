@@ -11,7 +11,7 @@ export const serverErrResp = (data: string) => ({
   }),
 });
 
-export const notFoundRest = (data?: string) => ({
+export const notFoundResp = (data?: string) => ({
   statusCode: 404,
   body: JSON.stringify({
     status: 'error',
