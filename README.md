@@ -6,5 +6,7 @@ Set of different APIs based on Kremenchuk's open data.
 
 ```
 sls invoke local -f transport --stage dev --data '{ "path": "/transport/routes"}'
-sls invoke local -f transport --stage dev --data '{ "path": "/transport/buses/all"}'
+sls invoke local -f transport --stage dev --data '{ "path": "/transport/buses"}'
+
+sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas"}'
 ```

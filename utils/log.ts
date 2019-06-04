@@ -81,13 +81,13 @@ export const Log = (m: string) => {
     case LogLevel.Debug:
       return console.log(`${prefix}:`, dataStr);
     case LogLevel.Info:
-      return console.info(`${prefix}:`, dataStr);
+      return console.log(`${prefix}:`, dataStr);
     case LogLevel.Warn:
       return console.warn(`${prefix}:`, dataStr);
     case LogLevel.Error:
       return console.error(`${prefix}:`, dataStr);
     case LogLevel.Trace:
-      return console.trace(`${prefix}:`, dataStr);
+      return console.log(`${prefix}:`, dataStr);
     default:
       return console.trace(`${prefix}: `, dataStr);
     }

@@ -3,7 +3,7 @@ import { ICinema, ICinemaMovie, ICinemaSession, IContact } from './types';
 import iconv from 'iconv-lite';
 import { isBuffer, last } from 'lodash';
 import { asyncReq, Log } from 'utils';
-const SCHEDULE_URL = 'http://galaktika-kino.com.ua/main/price.php';
+const galaxyPricesUrl = 'http://galaktika-kino.com.ua/main/price.php';
 const log = Log('cinemas.adapters.galaxy');
 
 interface IGalaxySession {
@@ -44,9 +44,9 @@ interface IParsedPeriod {
 
 export const getCinema = async (): Promise<ICinema> => {
   const title = 'Галактика';
-  const website = "http://galaktika-kino.com.ua/";
+  const website = 'http://galaktika-kino.com.ua/';
   const contacts: IContact[] = [
-    { mobile: "+38 (067) 534-4-534" },
+    { mobile: '+38 (067) 534-4-534' },
   ];
   const schedule = await getSchedule();
   const movies = scheduleToMovies(schedule);
@@ -81,7 +81,7 @@ const scheduleToMovies = (schedule: IGalaxyPeriod[]): ICinemaMovie[] => {
 // Schedule
 
 const getSchedule = async (): Promise<IGalaxyPeriod[]> => {
-  const html = await getHtml(SCHEDULE_URL);
+  const html = await getHtml(galaxyPricesUrl);
   const $ = cheerio.load(html, { decodeEntities: false });
   const content = $('#opis');
   // Periods
