@@ -18,4 +18,16 @@ functions:
           path: transport/routes
       - http:
           method: get
-          path: transport/buses/all
+          path: transport/buses
+      - http:
+          method: get
+          path: transport/buses/short
+      - http:
+          method: get
+          path: transport/stations
+      - http:
+          method: get
+          path: transport/routes/{id}/buses
+      - http:
+          method: get
+          path: transport/routes/{id}/stations
