@@ -1,7 +1,7 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
 import { withCity } from 'lib/transport';
 import { Log, okResp, serverErrResp, notFoundResp, paramReqResp } from 'utils';
-const log = Log('TransportHandler');
+const log = Log('transport.handler');
 
 const transportCityId = 10;
 const allRouteIds = [
@@ -51,7 +51,7 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
       log.end('/transport/stations');
       return okResp(data);
     }
-    return notFoundResp(`API ${resource} not found`);
+    return notFoundResp(`${resource} not found`);
   } catch(err) {
     log.err(err);
     return serverErrResp(err.message);

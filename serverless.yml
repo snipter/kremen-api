@@ -11,7 +11,7 @@ provider:
 
 functions:
   transport:
-    handler: transport.handler
+    handler: handleTransport.handler
     events:
       - http:
           method: get
@@ -31,3 +31,9 @@ functions:
       - http:
           method: get
           path: transport/routes/{id}/stations
+  cinemas:
+    handler: handleCinemas.handler
+    events:
+      - http:
+          method: get
+          path: cinemas

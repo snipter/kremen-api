@@ -81,15 +81,15 @@ export const Log = (m: string) => {
     case LogLevel.Debug:
       return console.log(`${prefix}:`, dataStr);
     case LogLevel.Info:
-      return console.log(`${prefix}:`, dataStr);
+      return console.info(`${prefix}:`, dataStr);
     case LogLevel.Warn:
-      return console.log(`${prefix}:`, dataStr);
+      return console.warn(`${prefix}:`, dataStr);
     case LogLevel.Error:
-      return console.log(`${prefix}:`, dataStr);
+      return console.error(`${prefix}:`, dataStr);
     case LogLevel.Trace:
-      return console.log(`${prefix}:`, dataStr);
+      return console.trace(`${prefix}:`, dataStr);
     default:
-      return console.log(`${prefix}: `, dataStr);
+      return console.trace(`${prefix}: `, dataStr);
     }
   };
   // tslint:enable:no-console

@@ -1,7 +1,7 @@
 import { asyncReq, Log } from 'utils';
 import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusShort, ITransportRoute, ITransportStationRaw, ITransportStation } from './types';
 import { ILatLng } from 'core';
-const log = Log('TransportApi');
+const log = Log('transport.api');
 
 const apiRoot = 'http://infobus.kz';
 /*
