@@ -16,27 +16,35 @@ functions:
       - http:
           method: get
           path: transport/routes
+          cors: true
       - http:
           method: get
           path: transport/buses
+          cors: true
       - http:
           method: get
           path: transport/find
+          cors: true
       - http:
           method: get
           path: transport/buses/short
+          cors: true
       - http:
           method: get
           path: transport/stations
+          cors: true
       - http:
           method: get
           path: transport/routes/{id}/buses
+          cors: true
       - http:
           method: get
           path: transport/routes/{id}/stations
+          cors: true
   cinemas:
     handler: handleCinemas.handler
     events:
       - http:
           method: get
           path: cinemas
+          cors: true
