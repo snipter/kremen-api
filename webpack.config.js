@@ -13,7 +13,7 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     alias: {
-      lib: path.resolve(__dirname, 'lib/'),
+      services: path.resolve(__dirname, 'services/'),
       utils: path.resolve(__dirname, 'utils/'),
       core: path.resolve(__dirname, 'core/'),
     },

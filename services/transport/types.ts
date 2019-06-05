@@ -30,7 +30,7 @@ export interface ITransportBusRaw {
 
 export interface ITransportBus {
   tid: string;
-  rid: number
+  rid: number;
   direction: number;
   invalidAdapted: boolean;
   lat: number;

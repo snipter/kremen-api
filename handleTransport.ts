@@ -1,8 +1,13 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { withCity } from 'lib/transport';
-import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp } from 'utils';
-import { ILatLng } from 'core';
+import { withCity } from 'services/transport';
+import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec } from 'utils';
+import { ILatLng, IQueryStringParams } from 'core';
+import { cacheWithRootKey } from 'core/cache';
 const log = Log('transport.handler');
+// Cache
+const { env: { NODE_ENV } } = process;
+const cacheRootKey = `kremen:transport:${NODE_ENV}`;
+const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
 const transportCityId = 10;
 const allRouteIds = [
@@ -22,64 +27,108 @@ const strToLatLng = (val: string): ILatLng | undefined => {
   return { lat, lng };
 }
 
+const isCacheEnabled = (qs: IQueryStringParams | null): boolean => {
+  if (!qs) { return true; }
+  if (qs.cache === undefined) { return true; }
+  return (qs.cache === 'false') || (qs.cache === '0') ? false : true;
+}
+
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
   log.trace('event=', event);
+  const { resource, pathParameters, queryStringParameters: qs } = event;
+  const cache = isCacheEnabled(qs);
+  log.debug('cache=', cache);
   try {
-    const { resource, pathParameters, queryStringParameters } = event;
     if (resource === '/transport/routes') {
-      log.start('/transport/routes');
-      const data = await withCity(transportCityId).getRoutes();
-      log.end('/transport/routes');
-      return okResp(data);
+      return handleRoutes(cache);
     }
     if (resource === '/transport/find') {
-      if (!queryStringParameters) { return paramMissedResp('from'); }
-      const { from: fromStr, to: toStr } = queryStringParameters;
-      if (!fromStr) { return paramMissedResp('from'); }
-      const from = strToLatLng(fromStr);
-      if (!from) { return paramWrongFormatResp('from'); }
-      if (!toStr) { return paramMissedResp('to'); }
-      const to = strToLatLng(toStr);
-      if (!to) { return paramWrongFormatResp('to'); }
-      log.start('/transport/find');
-      const data = await withCity(transportCityId).findRoute(from, to);
-      log.end('/transport/find');
-      return okResp(data);
+      return handleFind(qs);
     }
     if (resource === '/transport/routes/{id}/buses') {
-      if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
-      const id = parseInt(pathParameters.id, 10);
-      if (isNaN(id)) { return paramMissedResp('id'); }
-      const data = await withCity(transportCityId).getBusesAtRoute(id);
-      return okResp(data);
+      return handleRoutesBuses(pathParameters);
     }
     if (resource === '/transport/routes/{id}/stations') {
-      if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
-      const id = parseInt(pathParameters.id, 10);
-      if (isNaN(id)) { return paramMissedResp('id'); }
-      return okResp(await withCity(transportCityId).getRouteStations(id));
+      return handleRoutesStations(pathParameters);
     }
     if (resource === '/transport/buses') {
-      log.start('/transport/buses');
-      const data = await withCity(transportCityId).getBusesAtRoutes(allRouteIds);
-      log.end('/transport/buses');
-      return okResp(data);
+      return handleBuses();
     }
     if (resource === '/transport/buses/short') {
-      log.start('/transport/buses/short');
-      const data = await withCity(transportCityId).getBusesShortInfo(allRouteIds);
-      log.end('/transport/buses/short');
-      return okResp(data);
+      return handleBusesShort();
     }
     if (resource === '/transport/stations') {
-      log.start('/transport/stations');
-      const data = await withCity(transportCityId).getRoutesStations(allRouteIds);
-      log.end('/transport/stations');
-      return okResp(data);
+      return handleStations(cache);
     }
     return notFoundResp(`${resource} not found`);
   } catch(err) {
     log.err(err);
     return serverErrResp(err.message);
   }
+}
+
+const handleRoutes = async (cache: boolean) => {
+  const cacheKey = 'routes';
+  const cacheData = cache ? await getCache(cacheKey) : undefined;
+  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData); }
+  log.start('transport/routes');
+  const data = await withCity(transportCityId).getRoutes();
+  log.end('transport/routes');
+  await setCache(cacheKey, data, daySec);
+  return okResp(data);
+}
+
+const handleFind = async (qs: IQueryStringParams | null) => {
+  if (!qs) { return paramMissedResp('from'); }
+  const { from: fromStr, to: toStr } = qs;
+  if (!fromStr) { return paramMissedResp('from'); }
+  const from = strToLatLng(fromStr);
+  if (!from) { return paramWrongFormatResp('from'); }
+  if (!toStr) { return paramMissedResp('to'); }
+  const to = strToLatLng(toStr);
+  if (!to) { return paramWrongFormatResp('to'); }
+  log.start('transport/find');
+  const data = await withCity(transportCityId).findRoute(from, to);
+  log.end('transport/find');
+  return okResp(data);
+}
+
+const handleRoutesBuses = async (pathParameters: IQueryStringParams) => {
+  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParameters.id, 10);
+  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  const data = await withCity(transportCityId).getBusesAtRoute(id);
+  return okResp(data);
+}
+
+const handleRoutesStations = async (pathParameters: IQueryStringParams) => {
+  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParameters.id, 10);
+  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  return okResp(await withCity(transportCityId).getRouteStations(id));
+}
+
+const handleBuses = async () => {
+  log.start('transport/buses');
+  const data = await withCity(transportCityId).getBusesAtRoutes(allRouteIds);
+  log.end('transport/buses');
+  return okResp(data);
+}
+
+const handleBusesShort = async () => {
+  log.start('transport/buses/short');
+  const data = await withCity(transportCityId).getBusesShortInfo(allRouteIds);
+  log.end('transport/buses/short');
+  return okResp(data);
+}
+
+const handleStations = async (cache: boolean) => {
+  const cacheKey = 'stations';
+  const cacheData = cache ? await getCache(cacheKey) : undefined;
+  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData); }
+  log.start('transport/stations');
+  const data = await withCity(transportCityId).getRoutesStations(allRouteIds);
+  log.end('transport/stations');
+  await setCache(cacheKey, data, daySec);
+  return okResp(data);
 }

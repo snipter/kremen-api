@@ -1,5 +1,5 @@
 import { APIGatewayProxyHandler } from 'aws-lambda';
-import { getCinemas } from 'lib/cinemas';
+import { getCinemas } from 'services/cinemas';
 import { Log, okResp, serverErrResp, notFoundResp } from 'utils';
 const log = Log('cinemas.handler');
 
