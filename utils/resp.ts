@@ -13,7 +13,12 @@ export const notFoundResp = (data?: string) => ({
   body: JSON.stringify({error: data || ''}),
 });
 
-export const paramReqResp = (paramName: string) => ({
+export const paramMissedResp = (paramName: string) => ({
   statusCode: 422,
   body: JSON.stringify({error: `"${paramName}" param missed`}),
+});
+
+export const paramWrongFormatResp = (paramName: string) => ({
+  statusCode: 422,
+  body: JSON.stringify({error: `Wrong "${paramName}" format`}),
 });

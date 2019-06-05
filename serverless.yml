@@ -21,6 +21,9 @@ functions:
           path: transport/buses
       - http:
           method: get
+          path: transport/find
+      - http:
+          method: get
           path: transport/buses/short
       - http:
           method: get

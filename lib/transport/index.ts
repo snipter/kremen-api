@@ -91,9 +91,9 @@ export const withCity = (cityId: number) => {
     return arr.map((stations, index) => ({ rid: routeIds[index], stations}));
   };
   
-  const findRoute = async (source: ILatLng, target: ILatLng) => {
+  const findRoute = async (from: ILatLng, to: ILatLng) => {
     const qs = {
-      sourceLat: source.lat, sourceLng: source.lng, targetLat: target.lat, targetLng: target.lng,
+      sourceLat: from.lat, sourceLng: from.lng, targetLat: to.lat, targetLng: to.lng,
     }
     return apiReq({path: `/cities/${cityId}/pathsbwpoints`, qs})
   }
