@@ -112,16 +112,16 @@ export const withCity = (cityId: number) => {
 
   const getBusesAtRoutes = async (routeIds: number[]) => {
     const arr = await Promise.all(routeIds.map((id) => getBusesAtRoute(id)));
-    return arr.map((buses, index) => ({ rid: routeIds[index], buses}));
+    const buses: ITransportBus[] = [];
+    arr.forEach((routeBuses) => buses.push(...routeBuses));
+    return buses;
   }
 
   const getBusesShortInfo = async (routeIds: number[]): Promise<ITransportBusesUpdate> => {
-    const arr = await getBusesAtRoutes(routeIds);
+    const buses = await getBusesAtRoutes(routeIds);
     let res: ITransportBusesUpdate = {};
-    arr.forEach(({ buses }) => {
-      buses.forEach((item) => {
-        res = {...res, ...busToShortInfo(item)}
-      })
+    buses.forEach((bus) => {
+      res = {...res, ...busToShortInfo(bus)}
     });
     return res;
   }
