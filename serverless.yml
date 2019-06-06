@@ -33,7 +33,7 @@ functions:
           cors: true
       - http:
           method: get
-          path: transport/buses/short
+          path: transport/buses/update
           cors: true
       - http:
           method: get

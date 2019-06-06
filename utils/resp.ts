@@ -3,9 +3,12 @@ const corsHeaders = {
   'Access-Control-Allow-Credentials': true,
 };
 
-export const okResp = <T = any>(data: T) => ({
+export const okResp = <T = any>(data: T, cache?: boolean) => ({
   statusCode: 200,
-  headers: {...corsHeaders},
+  headers: {
+    ...corsHeaders,
+    'X-Api-Cache': cache ? 'true' : undefined,
+  },
   body: JSON.stringify(data),
 });
 

@@ -54,8 +54,8 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
     if (resource === '/transport/buses') {
       return handleBuses();
     }
-    if (resource === '/transport/buses/short') {
-      return handleBusesShort();
+    if (resource === '/transport/buses/update') {
+      return handleBusesUpdate();
     }
     if (resource === '/transport/stations') {
       return handleStations(cache);
@@ -70,9 +70,16 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
 const handleRoutes = async (cache: boolean) => {
   const cacheKey = 'routes';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
-  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData); }
+  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
   log.start('transport/routes');
-  const data = await withCity(transportCityId).getRoutes();
+  const [routes, stations] = await Promise.all([
+    withCity(transportCityId).getRoutes(),
+    withCity(transportCityId).getRoutesStations(allRouteIds),
+  ]);
+  const data = routes.map((route) => {
+    const stationsData = stations.find(({ rid }) => rid === route.rid);
+    return stationsData ? {...route, stations: stationsData.stations} : route;
+  });
   log.end('transport/routes');
   await setCache(cacheKey, data, daySec);
   return okResp(data);
@@ -115,7 +122,7 @@ const handleBuses = async () => {
   return okResp(data);
 }
 
-const handleBusesShort = async () => {
+const handleBusesUpdate = async () => {
   log.start('transport/buses/short');
   const data = await withCity(transportCityId).getBusesShortInfo(allRouteIds);
   log.end('transport/buses/short');
@@ -125,7 +132,7 @@ const handleBusesShort = async () => {
 const handleStations = async (cache: boolean) => {
   const cacheKey = 'stations';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
-  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData); }
+  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
   log.start('transport/stations');
   const data = await withCity(transportCityId).getRoutesStations(allRouteIds);
   log.end('transport/stations');

@@ -7,14 +7,6 @@ export interface ITransportRouteRaw {
   routeNumber: string;  
 }
 
-export interface ITransportRoute {
-  rid: number;
-  location: string;
-  active: number;
-  name: string;
-  number: string;  
-}
-
 export interface ITransportBusRaw {
   busreportRouteId: number
   cityId: number;
@@ -26,22 +18,6 @@ export interface ITransportBusRaw {
   name: string;
   offline: boolean;
   speed: number;
-}
-
-export interface ITransportBus {
-  tid: string;
-  rid: number;
-  direction: number;
-  invalidAdapted: boolean;
-  lat: number;
-  lng: number;
-  name: string;
-  offline: boolean;
-  speed: number;
-}
-
-export interface ITransportBusShort {
-  [id: string]: number[];
 }
 
 export interface ITransportStationRaw {
@@ -62,4 +38,29 @@ export interface ITransportStation {
   name: string;
   sequenceNumber: number;
   directionForward: boolean;
+}
+
+export interface ITransportRoute {
+  rid: number;
+  location: string;
+  active: number;
+  name: string;
+  number: string;  
+  stations: ITransportStation[];
+}
+
+export interface ITransportBus {
+  tid: string;
+  rid: number;
+  direction: number;
+  invalidAdapted: boolean;
+  lat: number;
+  lng: number;
+  name: string;
+  offline: boolean;
+  speed: number;
+}
+
+export interface ITransportBusesUpdate {
+  [id: string]: number[];
 }

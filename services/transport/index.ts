@@ -1,5 +1,5 @@
 import { asyncReq, Log } from 'utils';
-import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusShort, ITransportRoute, ITransportStationRaw, ITransportStation } from './types';
+import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation } from './types';
 import { ILatLng } from 'core';
 const log = Log('transport.api');
 
@@ -37,7 +37,9 @@ const apiReq = async <T=any>({ path, qs }: IAPIReqParams): Promise<T> => {
 
 const modRawRoute = (input: ITransportRouteRaw): ITransportRoute => {
   const { busreportRouteId, location, bussesOnRoute, routeName, routeNumber } = input;
-  return { rid: busreportRouteId, location, active: bussesOnRoute, name: routeName, number: routeNumber };
+  return {
+    rid: busreportRouteId, location, active: bussesOnRoute, name: routeName, number: routeNumber, stations: [],
+  };
 }
 
 const modRawBusInfo = (input: ITransportBusRaw): ITransportBus => {
@@ -50,7 +52,7 @@ const modRawStationInfo = (input: ITransportStationRaw): ITransportStation => {
   return { sid: id, rid: routeId, lat, lng: lon, ...data };
 }
 
-const busToShortInfo = (input: ITransportBus): ITransportBusShort => {
+const busToShortInfo = (input: ITransportBus): ITransportBusesUpdate => {
   const { tid, lat, lng, direction, speed } = input;
   return { [tid]: [lat, lng, direction, speed] };
 }
@@ -113,9 +115,9 @@ export const withCity = (cityId: number) => {
     return arr.map((buses, index) => ({ rid: routeIds[index], buses}));
   }
 
-  const getBusesShortInfo = async (routeIds: number[]): Promise<ITransportBusShort> => {
+  const getBusesShortInfo = async (routeIds: number[]): Promise<ITransportBusesUpdate> => {
     const arr = await getBusesAtRoutes(routeIds);
-    let res: ITransportBusShort = {};
+    let res: ITransportBusesUpdate = {};
     arr.forEach(({ buses }) => {
       buses.forEach((item) => {
         res = {...res, ...busToShortInfo(item)}
