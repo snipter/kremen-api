@@ -1,6 +1,8 @@
 import { asyncReq, Log } from 'utils';
-import { flatten } from 'lodash';
-import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction } from './types';
+import { flatten, compact } from 'lodash';
+import {
+  ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction,
+} from './types';
 import { ILatLng } from 'core';
 const log = Log('transport.api');
 
@@ -38,10 +40,23 @@ const apiReq = async <T=any>({ path, qs }: IAPIReqParams): Promise<T> => {
 
 const modRawRoute = (input: ITransportRouteRaw): ITransportRoute => {
   const { busreportRouteId, location, bussesOnRoute, routeName, routeNumber } = input;
+  const path = parsePathLatLng(location);
   return {
-    rid: busreportRouteId, location, active: bussesOnRoute, name: routeName, number: routeNumber, stations: [],
+    rid: busreportRouteId, path, active: bussesOnRoute, name: routeName, number: routeNumber, stations: [],
   };
 }
+
+const parsePathLatLng = (val: string): number[][] => {
+  if (!val) { return []; }
+  const pairs = val.split(', ');
+  if (!pairs.length) { return []; }
+  return compact(pairs.map((pairStr) => {
+    const locParts = pairStr.split(' ');
+    if (locParts.length !== 2) { return undefined; }
+    const [lngStr, latStr] = locParts;
+    return [parseFloat(latStr), parseFloat(lngStr)];
+  }));
+};
 
 const modRawBusInfo = (input: ITransportBusRaw): ITransportBus => {
   const { busreportRouteId, cityId, imei, lon, lat, ...data } = input;

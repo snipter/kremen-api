@@ -56,7 +56,7 @@ export interface ITransportStation {
 
 export interface ITransportRoute {
   rid: number;
-  location: string;
+  path: number[][];
   active: number;
   name: string;
   number: string;  
