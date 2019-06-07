@@ -1,4 +1,14 @@
+import { compact } from 'lodash';
 import { IStrParams } from 'core';
+
+// Parsers
+
+export const parseIdsStr = (val: string): number[] => (
+  compact(val.split(',').map((item) => {
+    const val = parseInt(item, 10);
+    return isNaN(val) ? undefined : val;
+  }))
+);
 
 // Cache
 

@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { withCity, strToLatLng } from 'services/transport';
-import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec, isCacheEnabled } from 'utils';
+import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec, isCacheEnabled, parseIdsStr } from 'utils';
 import { IStrParams } from 'core';
 import { cacheWithRootKey } from 'core/cache';
 const log = Log('transport.handler');
@@ -25,34 +25,45 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
   return res;
 }
 
+interface IHandlerOpts {
+  pathParams: IStrParams;
+  queryParams: IStrParams;
+  cache: boolean;
+}
+
 const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  const { resource, pathParameters, queryStringParameters: qs } = event;
-  const cache = isCacheEnabled(qs);
+  const { resource, pathParameters: pathParams, queryStringParameters: queryParams } = event;
+  const cache = isCacheEnabled(queryParams);
   log.debug('cache=', cache);
+  const opts: IHandlerOpts = {
+    pathParams: pathParams ? pathParams : {},
+    queryParams: queryParams ? queryParams: {},
+    cache
+  };
   try {
     if (resource === '/transport/routes') {
-      return handleRoutes(cache);
+      return handleRoutes(opts);
     }
     if (resource === '/transport/find') {
-      return handleFind(qs);
+      return handleFind(opts);
     }
     if (resource === '/transport/buses') {
-      return handleBuses();
+      return handleBuses(opts);
     }
     if (resource === '/transport/buses/update') {
-      return handleBusesUpdate();
+      return handleBusesUpdate(opts);
     }
     if (resource === '/transport/stations') {
-      return handleStations(cache);
+      return handleStations(opts);
     }
     if (resource === '/transport/stations/{id}/prediction') {
-      return handleStationPrediction(pathParameters);
+      return handleStationPrediction(opts);
     }
     if (resource === '/transport/routes/{id}/buses') {
-      return handleRoutesBuses(pathParameters);
+      return handleRoutesBuses(opts);
     }
     if (resource === '/transport/routes/{id}/stations') {
-      return handleRoutesStations(pathParameters);
+      return handleRoutesStations(opts);
     }
     return notFoundResp(`${resource} not found`);
   } catch(err) {
@@ -61,7 +72,7 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
   }
 }
 
-const handleRoutes = async (cache: boolean) => {
+const handleRoutes = async ({ cache }: IHandlerOpts) => {
   const cacheKey = 'routes';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
   if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
@@ -77,9 +88,9 @@ const handleRoutes = async (cache: boolean) => {
   return okResp(data);
 }
 
-const handleFind = async (qs: IStrParams | null) => {
-  if (!qs) { return paramMissedResp('from'); }
-  const { from: fromStr, to: toStr } = qs;
+const handleFind = async ({ queryParams }: IHandlerOpts) => {
+  if (!queryParams) { return paramMissedResp('from'); }
+  const { from: fromStr, to: toStr } = queryParams;
   if (!fromStr) { return paramMissedResp('from'); }
   const from = strToLatLng(fromStr);
   if (!from) { return paramWrongFormatResp('from'); }
@@ -90,43 +101,46 @@ const handleFind = async (qs: IStrParams | null) => {
   return okResp(data);
 }
 
-const handleRoutesBuses = async (pathParameters: IStrParams) => {
-  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
-  const id = parseInt(pathParameters.id, 10);
+const handleRoutesBuses = async ({ pathParams }: IHandlerOpts) => {
+  if (!pathParams.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParams.id, 10);
   if (isNaN(id)) { return paramWrongFormatResp('id'); }
   const data = await api.getRouteBuses(id);
   return okResp(data);
 }
 
-const handleRoutesStations = async (pathParameters: IStrParams) => {
-  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
-  const id = parseInt(pathParameters.id, 10);
+const handleRoutesStations = async ({ pathParams }: IHandlerOpts) => {
+  if (!pathParams.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParams.id, 10);
   if (isNaN(id)) { return paramWrongFormatResp('id'); }
   return okResp(await api.getRouteStations(id));
 }
 
-const handleBuses = async () => {
-  const data = await api.getRoutesBuses(defRouteIds);
+const handleBuses = async ({ queryParams }: IHandlerOpts) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+  const data = await api.getRoutesBuses(rids);
   return okResp(data);
 }
 
-const handleBusesUpdate = async () => {
-  const data = await api.getRoutesBusesUpdate(defRouteIds);
+const handleBusesUpdate = async ({ queryParams }: IHandlerOpts) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+  const data = await api.getRoutesBusesUpdate(rids);
   return okResp(data);
 }
 
-const handleStations = async (cache: boolean) => {
-  const cacheKey = 'stations';
+const handleStations = async ({ cache, queryParams }: IHandlerOpts) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+  const cacheKey = `stations:${JSON.stringify(rids)}`;
   const cacheData = cache ? await getCache(cacheKey) : undefined;
   if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
-  const data = await api.getRoutesStations(defRouteIds);
+  const data = await api.getRoutesStations(rids);
   await setCache(cacheKey, data, daySec);
   return okResp(data);
 }
 
-const handleStationPrediction = async (pathParameters: IStrParams) => {
-  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
-  const id = parseInt(pathParameters.id, 10);
+const handleStationPrediction = async ({ pathParams }: IHandlerOpts) => {
+  if (!pathParams.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParams.id, 10);
   if (isNaN(id)) { return paramWrongFormatResp('id'); }
   return okResp(await api.getStationPrediction(id));
 }
