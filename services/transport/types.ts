@@ -30,6 +30,20 @@ export interface ITransportStationRaw {
   directionForward: boolean;
 }
 
+export interface ITransportPredictionRaw {
+  routeId: number;
+  stationId: number;
+  busIMEI: string;
+  reverse: boolean;
+  distance: number;
+  prediction: number;
+  generatedTime: number;
+  messageTime: number;
+  avgSpeed: number;
+  speed: number;
+  mainPrediction: boolean;
+}
+
 export interface ITransportStation {
   sid: number;
   rid: number;
@@ -63,4 +77,18 @@ export interface ITransportBus {
 
 export interface ITransportBusesUpdate {
   [id: string]: number[];
+}
+
+export interface ITransportPrediction {
+  rid: number;
+  sid: number;
+  tid: string;
+  reverse: boolean;
+  distance: number;
+  prediction: number;
+  generatedTime: number;
+  messageTime: number;
+  avgSpeed: number;
+  speed: number;
+  mainPrediction: boolean;
 }

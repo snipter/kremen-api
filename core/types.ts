@@ -5,6 +5,6 @@ export interface ILatLng {
   lng: number;
 }
 
-export interface IQueryStringParams {
+export interface IStrParams {
   [name: string]: string;
 }

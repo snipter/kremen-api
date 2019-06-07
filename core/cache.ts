@@ -49,7 +49,9 @@ export const cacheWithRootKey = (rootKey: string) => {
   const getCache = async <T = any>(key: string) => (
     new Promise<T | null>((resolve, reject) => {
       log.debug('getting cache with key=', fkey(key));
+      log.start(`get ${fkey(key)}`);
       client.get(fkey(key), (err, rawData) => {
+        log.end(`get ${fkey(key)}`);
         if (err) { return reject(err); }
         if (!rawData) { return resolve(null); }
         try {

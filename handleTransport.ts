@@ -1,7 +1,7 @@
-import { APIGatewayProxyHandler } from 'aws-lambda';
-import { withCity } from 'services/transport';
-import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec } from 'utils';
-import { ILatLng, IQueryStringParams } from 'core';
+import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+import { withCity, strToLatLng } from 'services/transport';
+import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec, isCacheEnabled } from 'utils';
+import { IStrParams } from 'core';
 import { cacheWithRootKey } from 'core/cache';
 const log = Log('transport.handler');
 // Cache
@@ -9,32 +9,23 @@ const { env: { NODE_ENV } } = process;
 const cacheRootKey = `kremen:transport:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
-const transportCityId = 10;
-const allRouteIds = [
+const cityId = 10;
+const api = withCity(cityId);
+const defRouteIds = [
   192, 190, 189, 187, 188, 191, 179, 166, 170,
   171, 184, 186, 173, 185, 181, 183, 168, 175,
   172, 182, 167, 178, 180, 169, 174, 193, 
 ];
 
-const strToLatLng = (val: string): ILatLng | undefined => {
-  if (!val) { return undefined; }
-  const parts = val.split(',');
-  if (parts.length !== 2) return undefined;
-  const lat = parseFloat(parts[0]);
-  if (isNaN(lat)) { return undefined; }
-  const lng = parseFloat(parts[1]);
-  if (isNaN(lng)) { return undefined; }
-  return { lat, lng };
-}
-
-const isCacheEnabled = (qs: IQueryStringParams | null): boolean => {
-  if (!qs) { return true; }
-  if (qs.cache === undefined) { return true; }
-  return (qs.cache === 'false') || (qs.cache === '0') ? false : true;
-}
-
 export const handler: APIGatewayProxyHandler = async (event, _context) => {
   log.trace('event=', event);
+  log.start(`resource ${event.resource}`);
+  const res = await processEvent(event);
+  log.end(`resource ${event.resource}`);
+  return res;
+}
+
+const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const { resource, pathParameters, queryStringParameters: qs } = event;
   const cache = isCacheEnabled(qs);
   log.debug('cache=', cache);
@@ -45,12 +36,6 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
     if (resource === '/transport/find') {
       return handleFind(qs);
     }
-    if (resource === '/transport/routes/{id}/buses') {
-      return handleRoutesBuses(pathParameters);
-    }
-    if (resource === '/transport/routes/{id}/stations') {
-      return handleRoutesStations(pathParameters);
-    }
     if (resource === '/transport/buses') {
       return handleBuses();
     }
@@ -59,6 +44,15 @@ export const handler: APIGatewayProxyHandler = async (event, _context) => {
     }
     if (resource === '/transport/stations') {
       return handleStations(cache);
+    }
+    if (resource === '/transport/stations/{id}/prediction') {
+      return handleStationPrediction(pathParameters);
+    }
+    if (resource === '/transport/routes/{id}/buses') {
+      return handleRoutesBuses(pathParameters);
+    }
+    if (resource === '/transport/routes/{id}/stations') {
+      return handleRoutesStations(pathParameters);
     }
     return notFoundResp(`${resource} not found`);
   } catch(err) {
@@ -71,21 +65,19 @@ const handleRoutes = async (cache: boolean) => {
   const cacheKey = 'routes';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
   if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
-  log.start('transport/routes');
   const [routes, stations] = await Promise.all([
-    withCity(transportCityId).getRoutes(),
-    withCity(transportCityId).getRoutesStations(allRouteIds),
+    api.getRoutes(),
+    api.getRoutesStations(defRouteIds),
   ]);
   const data = routes.map((route) => {
-    const stationsData = stations.find(({ rid }) => rid === route.rid);
-    return stationsData ? {...route, stations: stationsData.stations} : route;
+    const routeStations = stations.filter(({ rid }) => rid === route.rid);
+    return {...route, stations: routeStations};
   });
-  log.end('transport/routes');
   await setCache(cacheKey, data, daySec);
   return okResp(data);
 }
 
-const handleFind = async (qs: IQueryStringParams | null) => {
+const handleFind = async (qs: IStrParams | null) => {
   if (!qs) { return paramMissedResp('from'); }
   const { from: fromStr, to: toStr } = qs;
   if (!fromStr) { return paramMissedResp('from'); }
@@ -94,38 +86,32 @@ const handleFind = async (qs: IQueryStringParams | null) => {
   if (!toStr) { return paramMissedResp('to'); }
   const to = strToLatLng(toStr);
   if (!to) { return paramWrongFormatResp('to'); }
-  log.start('transport/find');
-  const data = await withCity(transportCityId).findRoute(from, to);
-  log.end('transport/find');
+  const data = await api.findRoute(from, to);
   return okResp(data);
 }
 
-const handleRoutesBuses = async (pathParameters: IQueryStringParams) => {
+const handleRoutesBuses = async (pathParameters: IStrParams) => {
   if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
   const id = parseInt(pathParameters.id, 10);
   if (isNaN(id)) { return paramWrongFormatResp('id'); }
-  const data = await withCity(transportCityId).getBusesAtRoute(id);
+  const data = await api.getRouteBuses(id);
   return okResp(data);
 }
 
-const handleRoutesStations = async (pathParameters: IQueryStringParams) => {
+const handleRoutesStations = async (pathParameters: IStrParams) => {
   if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
   const id = parseInt(pathParameters.id, 10);
   if (isNaN(id)) { return paramWrongFormatResp('id'); }
-  return okResp(await withCity(transportCityId).getRouteStations(id));
+  return okResp(await api.getRouteStations(id));
 }
 
 const handleBuses = async () => {
-  log.start('transport/buses');
-  const data = await withCity(transportCityId).getBusesAtRoutes(allRouteIds);
-  log.end('transport/buses');
+  const data = await api.getRoutesBuses(defRouteIds);
   return okResp(data);
 }
 
 const handleBusesUpdate = async () => {
-  log.start('transport/buses/short');
-  const data = await withCity(transportCityId).getBusesShortInfo(allRouteIds);
-  log.end('transport/buses/short');
+  const data = await api.getRoutesBusesUpdate(defRouteIds);
   return okResp(data);
 }
 
@@ -133,9 +119,14 @@ const handleStations = async (cache: boolean) => {
   const cacheKey = 'stations';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
   if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
-  log.start('transport/stations');
-  const data = await withCity(transportCityId).getRoutesStations(allRouteIds);
-  log.end('transport/stations');
+  const data = await api.getRoutesStations(defRouteIds);
   await setCache(cacheKey, data, daySec);
   return okResp(data);
+}
+
+const handleStationPrediction = async (pathParameters: IStrParams) => {
+  if (!pathParameters || !pathParameters.id) { return paramMissedResp('id'); }
+  const id = parseInt(pathParameters.id, 10);
+  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  return okResp(await api.getStationPrediction(id));
 }

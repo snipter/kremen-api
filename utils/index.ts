@@ -1,4 +1,4 @@
 export * from './log';
 export * from './req';
-export * from './resp';
+export * from './lambda';
 export * from './date';

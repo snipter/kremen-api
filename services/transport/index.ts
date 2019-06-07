@@ -1,5 +1,6 @@
 import { asyncReq, Log } from 'utils';
-import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation } from './types';
+import { flatten } from 'lodash';
+import { ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction } from './types';
 import { ILatLng } from 'core';
 const log = Log('transport.api');
 
@@ -52,6 +53,11 @@ const modRawStationInfo = (input: ITransportStationRaw): ITransportStation => {
   return { sid: id, rid: routeId, lat, lng: lon, ...data };
 }
 
+const modRawStationPrediction = (input: ITransportPredictionRaw): ITransportPrediction => {
+  const { routeId: rid, stationId: sid, busIMEI: tid, ...data} = input;
+  return {rid, sid, tid, ...data };
+}
+
 const busToShortInfo = (input: ITransportBus): ITransportBusesUpdate => {
   const { tid, lat, lng, direction, speed } = input;
   return { [tid]: [lat, lng, direction, speed] };
@@ -84,21 +90,26 @@ export const withCity = (cityId: number) => {
     apiReq({path: `/cities/${cityId}/routeamount`})
   );
   
-  const getRouteStations = async (routeId: number): Promise<ITransportStation[]> => (
-    (await apiReq<ITransportStationRaw[]>({path: `/cities/${cityId}/routes/${routeId}/stations`})).map(modRawStationInfo)
-  );
-
-  const getRoutesStations = async (routeIds: number[]) => {
-    const arr = await Promise.all(routeIds.map(getRouteStations));
-    return arr.map((stations, index) => ({ rid: routeIds[index], stations}));
-  };
-  
   const findRoute = async (from: ILatLng, to: ILatLng) => {
     const qs = {
       sourceLat: from.lat, sourceLng: from.lng, targetLat: to.lat, targetLng: to.lng,
     }
     return apiReq({path: `/cities/${cityId}/pathsbwpoints`, qs})
   }
+
+  // Stations
+
+  const getRouteStations = async (rid: number): Promise<ITransportStation[]> => (
+    (await apiReq<ITransportStationRaw[]>({path: `/cities/${cityId}/routes/${rid}/stations`})).map(modRawStationInfo)
+  );
+
+  const getRoutesStations = async (rids: number[]): Promise<ITransportStation[]> => (
+    flatten(await Promise.all(rids.map(getRouteStations)))
+  );
+
+  const getStationPrediction = async (sid: number) => (
+    (await apiReq<ITransportPredictionRaw[]>({path: `/cities/${cityId}/stations/${sid}/prediction`})).map(modRawStationPrediction)
+  );
   
   // Busses
   
@@ -106,19 +117,19 @@ export const withCity = (cityId: number) => {
     apiReq({path: `/cities/${cityId}/busamount`})
   );
   
-  const getBusesAtRoute = async (routeId: number) => (
-    (await apiReq<ITransportBusRaw[]>({path: `/cities/${cityId}/routes/${routeId}/busses`})).map(modRawBusInfo)
+  const getRouteBuses = async (rid: number) => (
+    (await apiReq<ITransportBusRaw[]>({path: `/cities/${cityId}/routes/${rid}/busses`})).map(modRawBusInfo)
   );
 
-  const getBusesAtRoutes = async (routeIds: number[]) => {
-    const arr = await Promise.all(routeIds.map((id) => getBusesAtRoute(id)));
+  const getRoutesBuses = async (rids: number[]) => {
+    const arr = await Promise.all(rids.map((rid) => getRouteBuses(rid)));
     const buses: ITransportBus[] = [];
     arr.forEach((routeBuses) => buses.push(...routeBuses));
     return buses;
   }
 
-  const getBusesShortInfo = async (routeIds: number[]): Promise<ITransportBusesUpdate> => {
-    const buses = await getBusesAtRoutes(routeIds);
+  const getRoutesBusesUpdate = async (rids: number[]): Promise<ITransportBusesUpdate> => {
+    const buses = await getRoutesBuses(rids);
     let res: ITransportBusesUpdate = {};
     buses.forEach((bus) => {
       res = {...res, ...busToShortInfo(bus)}
@@ -127,9 +138,10 @@ export const withCity = (cityId: number) => {
   }
 
   return {
-    getCity, getRoutes, getRoutesCount, getRouteStations, findRoute, getBusesCount, getBusesAtRoute, getBusesAtRoutes,
-    getBusesShortInfo, getRoutesStations,
+    getCity, getRoutes, getRoutesCount, getRouteStations, findRoute, getBusesCount, getRouteBuses, getRoutesBuses,
+    getRoutesBusesUpdate, getRoutesStations, getStationPrediction,
   };
 }
 
 export * from './types';
+export * from './utils';

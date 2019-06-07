@@ -41,6 +41,10 @@ functions:
           cors: true
       - http:
           method: get
+          path: transport/stations/{id}/prediction
+          cors: true
+      - http:
+          method: get
           path: transport/routes/{id}/buses
           cors: true
       - http:
