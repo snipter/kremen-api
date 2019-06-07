@@ -4,11 +4,11 @@ export interface ITransportRouteRaw {
   busreportRouteId: number;
   bussesOnRoute: number;
   routeName: string;
-  routeNumber: string;  
+  routeNumber: string;
 }
 
 export interface ITransportBusRaw {
-  busreportRouteId: number
+  busreportRouteId: number;
   cityId: number;
   direction: number;
   imei: string;
@@ -44,6 +44,11 @@ export interface ITransportPredictionRaw {
   mainPrediction: boolean;
 }
 
+export enum TransportType {
+  Bus = 'B',
+  Trolleybus = 'T',
+}
+
 export interface ITransportStation {
   sid: number;
   rid: number;
@@ -58,14 +63,16 @@ export interface ITransportRoute {
   rid: number;
   path: number[][];
   active: number;
+  type: TransportType;
   name: string;
-  number: string;  
+  number: string;
   stations: ITransportStation[];
 }
 
 export interface ITransportBus {
   tid: string;
   rid: number;
+  type: TransportType;
   direction: number;
   invalidAdapted: boolean;
   lat: number;

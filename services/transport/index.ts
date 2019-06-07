@@ -1,7 +1,7 @@
 import { asyncReq, Log } from 'utils';
 import { flatten, compact } from 'lodash';
 import {
-  ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction,
+  ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction, TransportType,
 } from './types';
 import { ILatLng } from 'core';
 const log = Log('transport.api');
@@ -38,11 +38,20 @@ const apiReq = async <T=any>({ path, qs }: IAPIReqParams): Promise<T> => {
   return body;
 }
 
+const routeNumberToTransportType = (val: string): TransportType => {
+  return val.indexOf('Т') !== -1 ? TransportType.Trolleybus : TransportType.Bus;
+}
+
+const busNameToType = (val: string): TransportType => {
+  return val.indexOf('Т') === 0 ? TransportType.Trolleybus : TransportType.Bus;
+}
+
 const modRawRoute = (input: ITransportRouteRaw): ITransportRoute => {
   const { busreportRouteId, location, bussesOnRoute, routeName, routeNumber } = input;
   const path = parsePathLatLng(location);
+  const type = routeNumberToTransportType(routeNumber);
   return {
-    rid: busreportRouteId, path, active: bussesOnRoute, name: routeName, number: routeNumber, stations: [],
+    rid: busreportRouteId, type, path, active: bussesOnRoute, name: routeName, number: routeNumber, stations: [],
   };
 }
 
@@ -60,7 +69,8 @@ const parsePathLatLng = (val: string): number[][] => {
 
 const modRawBusInfo = (input: ITransportBusRaw): ITransportBus => {
   const { busreportRouteId, cityId, imei, lon, lat, ...data } = input;
-  return { tid: imei, rid: busreportRouteId, lat, lng: lon, ...data };
+  const type = busNameToType(input.name.trim());
+  return { tid: imei, rid: busreportRouteId, type, lat, lng: lon, ...data };
 }
 
 const modRawStationInfo = (input: ITransportStationRaw): ITransportStation => {
