@@ -84,8 +84,8 @@ const modRawStationPrediction = (input: ITransportPredictionRaw): ITransportPred
 }
 
 const busToShortInfo = (input: ITransportBus): ITransportBusesUpdate => {
-  const { tid, lat, lng, direction, speed } = input;
-  return { [tid]: [lat, lng, direction, speed] };
+  const { tid, lat, lng, direction, speed, offline } = input;
+  return { [tid]: [lat, lng, direction, speed, offline ? 1 : 0 ] };
 }
 
 // Country

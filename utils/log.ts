@@ -115,15 +115,13 @@ export const Log = (m: string) => {
   };
 
   const start = (tag: string) => {
-    const symbol = levelToSymbol(LogLevel.Trace);
     // tslint:disable-next-line
-    console.time(`[${symbol}][${m}]: ${tag}`);
+    console.time(`[T][${m}]: ${tag}`);
   };
 
   const end = (tag: string) => {
-    const symbol = levelToSymbol(LogLevel.Trace);
     // tslint:disable-next-line
-    console.timeEnd(`[${symbol}][${m}]: ${tag}`);
+    console.timeEnd(`[T][${m}]: ${tag}`);
   };
 
   return { trace, debug, info, warn, err, start, end, on };
