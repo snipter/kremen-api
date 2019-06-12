@@ -1,6 +1,9 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { withCity, strToLatLng } from 'services/transport';
-import { Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp, daySec, isCacheEnabled, parseIdsStr } from 'utils';
+import { apiWithCity, strToLatLng } from 'services/transport';
+import {
+  Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp,
+  daySec, isCacheEnabled, parseIdsStr,
+} from 'utils';
 import { IStrParams } from 'core';
 import { cacheWithRootKey } from 'core/cache';
 const log = Log('transport.handler');
@@ -10,11 +13,11 @@ const cacheRootKey = `kremen:transport:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
 const cityId = 10;
-const api = withCity(cityId);
+const api = apiWithCity(cityId);
 const defRouteIds = [
-  192, 190, 189, 187, 188, 191, 179, 166, 170,
-  171, 184, 186, 173, 185, 181, 183, 168, 175,
-  172, 182, 167, 178, 180, 169, 174, 193, 
+  166, 167, 168, 169, 170, 171, 172, 173, 174,
+  175, 178, 179, 180, 181, 182, 183, 184, 185,
+  186, 187, 188, 189, 190, 191, 192, 193,
 ];
 
 export const handler: APIGatewayProxyHandler = async (event, _context) => {

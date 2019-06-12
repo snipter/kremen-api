@@ -1,13 +1,5 @@
-import { asyncReq, Log } from 'utils';
-import { flatten, compact } from 'lodash';
-import {
-  ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction, TransportType,
-} from './types';
-import { ILatLng } from 'core';
-const log = Log('transport.api');
-
-const apiRoot = 'http://infobus.kz';
 /*
+
 Ukraine country id = 3
 Kremenchuk city id = 10
 http://infobus.kz/countries
@@ -18,7 +10,47 @@ http://infobus.kz/cities/10/routeamount
 http://infobus.kz/cities/10/busamount
 http://infobus.kz/cities/10/routes/188/stations
 http://infobus.kz/cities/10/routes/188/busses
+
+Routes:
+
+166 - 2
+167 - 17
+168 - 13
+169 - 28
+170 - 2-в
+171 - 3-а
+172 - 15
+173 - 9
+174 - 30
+175 - 15-б
+178 - 18
+179 - 1
+180 - 25
+181 - 11
+182 - 16
+183 - 12
+184 - 3-б
+185 - 10
+186 - 4
+187 - Т 01
+188 - Т 02
+189 - Т 3-Б
+190 - Т 3-Д
+191 - Т 05
+192 - Т 06
+193 - 216
+
 */
+
+import { asyncReq, Log } from 'utils';
+import { flatten, compact } from 'lodash';
+import {
+  ITransportBusRaw, ITransportBus, ITransportRouteRaw, ITransportBusesUpdate, ITransportRoute, ITransportStationRaw, ITransportStation, ITransportPredictionRaw, ITransportPrediction, TransportType,
+} from './types';
+import { ILatLng } from 'core';
+const log = Log('transport.api');
+
+const apiRoot = 'http://infobus.kz';
 
 interface IAPIQueryParams {
   [key: string]: string | number;
@@ -100,7 +132,7 @@ export const getCitites = async (countryId: number) => (
   apiReq({path: `/countries/${countryId}/cities`})
 );
 
-export const withCity = (cityId: number) => {
+export const apiWithCity = (cityId: number) => {
   const getCity = async () => (
     apiReq({path: `/cities/${cityId}`})
   );

@@ -24,6 +24,7 @@ Where:
 ```
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/routes"}'
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses"}'
+sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses", "queryStringParams": {"cache": "false"}}'
 sls invoke local -f transport --stage dev \
   --data '{ "resource": "/transport/find", "queryStringParameters": {"from": "49.060470,33.406315", "to": "49.084064,33.423749" }}'
 
