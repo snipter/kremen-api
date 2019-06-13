@@ -21,12 +21,17 @@ Where:
 
 ## Invoke
 
-```
+```bash
+# Transport
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/routes"}'
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses"}'
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses", "queryStringParams": {"cache": "false"}}'
 sls invoke local -f transport --stage dev \
   --data '{ "resource": "/transport/find", "queryStringParameters": {"from": "49.060470,33.406315", "to": "49.084064,33.423749" }}'
 
+# Cinemas 
 sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas"}'
+
+# Equipment 
+sls invoke local -f equipment --stage dev --data '{ "resource": "/equipment"}'
 ```

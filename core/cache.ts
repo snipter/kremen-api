@@ -35,10 +35,17 @@ export const cacheWithRootKey = (rootKey: string) => {
       try {
         const data = JSON.stringify(value);
         log.debug('setting cache with key=', fkey(key));
+        log.start(`set ${fkey(key)}`);
         if (seconds) {
-          client.setex(fkey(key), seconds, data, (err) => err ? reject(err) : resolve());
+          client.setex(fkey(key), seconds, data, (err) => {
+            log.end(`set ${fkey(key)}`);
+            err ? reject(err) : resolve();
+          });
         } else {
-          client.set(fkey(key), data, (err) => err ? reject(err) : resolve() );
+          client.set(fkey(key), data, (err) => {
+            log.end(`set ${fkey(key)}`);
+            err ? reject(err) : resolve();
+          } );
         }
       } catch(err) {
         return reject(err);
