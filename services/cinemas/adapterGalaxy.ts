@@ -1,5 +1,5 @@
 import cheerio from 'cheerio';
-import { ICinema, ICinemaMovie, ICinemaContact, ICinemaMovieTitle, ICinemaSession, CinemaMovieFormat } from './types';
+import { ICinema, ICinemaMovie, ICinemaContact, ICinemaMovieTitle, ICinemaSession, CinemaMovieFormat, ICinemaLocation } from './types';
 import { Log } from 'utils';
 import { getHtml, urkStrToMonth, dateToStr } from './utils';
 import { pad } from 'utils';
@@ -15,10 +15,14 @@ export const getCinema = async (): Promise<ICinema> => {
   const website = 'http://galaktika-kino.com.ua/';
   const source = 'https://bilet.vkino.com.ua/afisha/galaktika/';
   const contacts: ICinemaContact[] = [
-    { mobile: '0 800 211 504' },
+    { mobile: '0-800-211-504' },
   ];
+  const location: ICinemaLocation = {
+    address: 'м. Кременчук, вул.  Леніна 21 ТРК «Галактика» 4-й поверх',
+    coordinates: { lat: 49.06950786993555, lng: 33.41672313624573 },
+  };
   const movies = await getMovies();
-  return { cid, title, website, source, contacts, movies };
+  return { cid, title, location, website, source, contacts, movies };
 };
 
 
