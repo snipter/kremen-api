@@ -1,6 +1,6 @@
 import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { getGalaxyCinema, ICinema } from 'services/cinemas';
-import { Log, okResp, serverErrResp, notFoundResp, isCacheEnabled } from 'utils';
+import { Log, okResp, serverErrResp, notFoundResp, isCacheEnabled, hourSec } from 'utils';
 import { cacheWithRootKey } from 'core/cache';
 const log = Log('cinemas.handler');
 
@@ -42,7 +42,7 @@ const handleCinemas = async (cache: boolean) => {
   const data = await Promise.all([
     getGalaxyCinema()
   ]);
-  await setCache('all', data);
+  await setCache('all', data, hourSec);
   return okResp(data);
 }
 
@@ -52,7 +52,7 @@ const handleCinema = async (cid: string, cache: boolean) => {
   const cachedData = cache ? await getCache<string>(`cinemas:${cid}`) : null;
   if (cachedData) { return okResp(cachedData); }
   const data = await cinemaHandler();
-  await setCache(`cinemas:${cid}`, data);
+  await setCache(`cinemas:${cid}`, data, hourSec);
   return okResp(data);
 }
 
