@@ -1,23 +1,31 @@
+export type CinemaMovieFormat = '2D' | '3D';
+
 export interface ICinemaSession {
-  time: string;
-  hall?: string;
-  format: string;
+  date: string;
   price: number;
+  format: CinemaMovieFormat;
+}
+
+export interface ICinemaMovieTitle {
+  original?: string;
+  local: string;
 }
 
 export interface ICinemaMovie {
-  title: string;
+  title: ICinemaMovieTitle;
+  poster?: string;
   descr?: string;
   sessions: ICinemaSession[];
 }
 
-export interface IContact {
+export interface ICinemaContact {
   mobile?: string;
 }
 
 export interface ICinema {
+  cid: string;
   title: string;
-  website: string | null;
-  contacts: IContact[];
+  website?: string;
+  contacts: ICinemaContact[];
   movies: ICinemaMovie[];
 }

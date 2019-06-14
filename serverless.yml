@@ -59,6 +59,10 @@ functions:
           method: get
           path: cinemas
           cors: true
+      - http:
+          method: get
+          path: cinemas/{cid}
+          cors: true
 
   equipment:
     handler: handleEquipment.handler

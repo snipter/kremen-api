@@ -35,3 +35,20 @@ sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas"}'
 # Equipment 
 sls invoke local -f equipment --stage dev --data '{ "resource": "/equipment"}'
 ```
+
+## Kremen.Cinema API
+
+Sources:
+
+- https://bilet.vkino.com.ua/afisha/galaktika/
+- http://filmax.net.ua/kremenchuk/фильмы/
+- https://www.kinofilms.ua/ukr/cinema/205/afisha/
+
+Invoke:
+
+```bash
+sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas"}'
+sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas/{cid}", "pathParameters": {"cid": "galaxy"}}'
+```
+
+
