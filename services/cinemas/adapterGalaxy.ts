@@ -1,12 +1,11 @@
 import cheerio from 'cheerio';
 import { ICinema, ICinemaMovie, ICinemaContact, ICinemaMovieTitle, ICinemaSession, CinemaMovieFormat } from './types';
 import { Log } from 'utils';
-import { getHtml } from './utils';
+import { getHtml, urkStrToMonth, dateToStr } from './utils';
 import { pad } from 'utils';
+const log = Log('cinemas.adapters.galaxy');
 
 const scheduleUrl = 'https://bilet.vkino.com.ua/afisha/galaktika/';
-
-const log = Log('cinemas.adapters.galaxy');
 
 // Cinema
 
@@ -14,11 +13,12 @@ export const getCinema = async (): Promise<ICinema> => {
   const cid = 'galaxy';
   const title = 'Галактика';
   const website = 'http://galaktika-kino.com.ua/';
+  const source = 'https://bilet.vkino.com.ua/afisha/galaktika/';
   const contacts: ICinemaContact[] = [
     { mobile: '0 800 211 504' },
   ];
   const movies = await getMovies();
-  return { cid, title, website, contacts, movies };
+  return { cid, title, website, source, contacts, movies };
 };
 
 
@@ -117,26 +117,4 @@ const strToMovieTitle = (val: string): ICinemaMovieTitle => {
   const original = match[2].trim();
   return { local, original };
 }
-
-const urkStrToMonth = (rawVal: string) => {
-  const val = rawVal.toLocaleLowerCase();
-  if (val.indexOf('січ') !== -1) { return 1; }
-  if (val.indexOf('лют') !== -1) { return 2; }
-  if (val.indexOf('берез') !== -1) { return 3; }
-  if (val.indexOf('квіт') !== -1) { return 4; }
-  if (val.indexOf('трав') !== -1) { return 5; }
-  if (val.indexOf('черв') !== -1) { return 6; }
-  if (val.indexOf('лип') !== -1) { return 7; }
-  if (val.indexOf('серп') !== -1) { return 9; }
-  if (val.indexOf('верес') !== -1) { return 9; }
-  if (val.indexOf('жовт') !== -1) { return 10; }
-  if (val.indexOf('лист') !== -1) { return 11; }
-  if (val.indexOf('груд') !== -1) { return 12; }
-  log.err('could not parse urk month from str: ', rawVal);
-  return NaN;
-}
-
-const dateToStr = (val: Date) => (
-  val.toISOString().slice(0, 19).replace('T', ' ')
-);
 

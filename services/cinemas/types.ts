@@ -1,3 +1,5 @@
+import { ILatLng } from 'core';
+
 export type CinemaMovieFormat = '2D' | '3D';
 
 export interface ICinemaSession {
@@ -20,12 +22,20 @@ export interface ICinemaMovie {
 
 export interface ICinemaContact {
   mobile?: string;
+  email?: string;
+}
+
+export interface ICinemaLocation {
+  address?: string;
+  coordinates: ILatLng;
 }
 
 export interface ICinema {
   cid: string;
   title: string;
   website?: string;
+  source: string;
   contacts: ICinemaContact[];
+  location?: ICinemaLocation;
   movies: ICinemaMovie[];
 }
