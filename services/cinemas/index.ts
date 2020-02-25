@@ -1,3 +1,2 @@
-export { getCinema as getGalaxyCinema } from './adapterGalaxy';
-export { getCinema as getFilmaxCinema } from './adapterFilmax';
-export * from './types';
+export { getCinema as getGalaxyCinema } from './galaxy';
+export { getCinema as getFilmaxCinema } from './filmax';

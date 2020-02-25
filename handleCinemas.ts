@@ -1,21 +1,25 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { getGalaxyCinema, ICinema, getFilmaxCinema } from 'services/cinemas';
-import { Log, okResp, serverErrResp, notFoundResp, isCacheEnabled, hourSec } from 'utils';
+import { Cinema } from '@kremen/core';
+import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { cacheWithRootKey } from 'core/cache';
+import { getFilmaxCinema, getGalaxyCinema } from 'services/cinemas';
+import { hourSec, isCacheEnabled, Log, notFoundResp, okResp, serverErrResp } from 'utils';
+
 const log = Log('cinemas.handler');
 
 // Cache
-const { env: { NODE_ENV } } = process;
+const {
+  env: { NODE_ENV },
+} = process;
 const cacheRootKey = `kremen:cinemas:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
-export const handler: APIGatewayProxyHandler = async (event, _context) => {
+export const handler: APIGatewayProxyHandler = async event => {
   log.trace('event=', event);
   log.start(`resource ${event.resource}`);
   const res = await processEvent(event);
   log.end(`resource ${event.resource}`);
   return res;
-}
+};
 
 const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const { resource, queryStringParameters, pathParameters } = event;
@@ -26,40 +30,49 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
       return handleCinemas(cache);
     }
     if (resource === '/cinemas/{cid}') {
-      if (!pathParameters || !pathParameters['cid']) { return notFoundResp('cid not found'); }
+      if (!pathParameters || !pathParameters['cid']) {
+        return notFoundResp('cid not found');
+      }
       return handleCinema(pathParameters['cid'], cache);
     }
     return notFoundResp(`${resource} not found`);
-  } catch(err) {
+  } catch (err) {
     log.err(err);
     return serverErrResp(err.message);
   }
-}
+};
 
 const handleCinemas = async (cache: boolean) => {
   const cachedData = cache ? await getCache<string>('all') : null;
-  if (cachedData) { return okResp(cachedData); }
-  const data = await Promise.all([
-    getGalaxyCinema(),
-    getFilmaxCinema(),
-  ]);
+  if (cachedData) {
+    return okResp(cachedData);
+  }
+  const data = await Promise.all([getGalaxyCinema(), getFilmaxCinema()]);
   await setCache('all', data, hourSec);
   return okResp(data);
-}
+};
 
 const handleCinema = async (cid: string, cache: boolean) => {
   const cinemaHandler = cidToCinemaHandler(cid);
-  if (!cinemaHandler) { return notFoundResp(`cinema not found: ${cid}`); }
+  if (!cinemaHandler) {
+    return notFoundResp(`cinema not found: ${cid}`);
+  }
   const cachedData = cache ? await getCache<string>(`cinemas:${cid}`) : null;
-  if (cachedData) { return okResp(cachedData); }
+  if (cachedData) {
+    return okResp(cachedData);
+  }
   const data = await cinemaHandler();
   await setCache(`cinemas:${cid}`, data, hourSec);
   return okResp(data);
-}
+};
 
-type CinemaHandler = () => Promise<ICinema>;
+type CinemaHandler = () => Promise<Cinema>;
 
 const cidToCinemaHandler = (cid: string): CinemaHandler | undefined => {
-  if (cid === 'galaxy') { return getGalaxyCinema; }
-  if (cid === 'filmax') { return getFilmaxCinema; }
-}
+  if (cid === 'galaxy') {
+    return getGalaxyCinema;
+  }
+  if (cid === 'filmax') {
+    return getFilmaxCinema;
+  }
+};

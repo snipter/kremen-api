@@ -1,22 +1,27 @@
 import { compact } from 'lodash';
-import { IStrParams } from 'core';
+import { HttpReqQs } from '@kremen/core';
 
 // Parsers
 
-export const parseIdsStr = (val: string): number[] => (
-  compact(val.split(',').map((item) => {
-    const val = parseInt(item, 10);
-    return isNaN(val) ? undefined : val;
-  }))
-);
+export const parseIdsStr = (val: string): number[] =>
+  compact(
+    val.split(',').map(item => {
+      const val = parseInt(item, 10);
+      return isNaN(val) ? undefined : val;
+    }),
+  );
 
 // Cache
 
-export const isCacheEnabled = (qs: IStrParams | null): boolean => {
-  if (!qs) { return true; }
-  if (qs.cache === undefined) { return true; }
-  return (qs.cache === 'false') || (qs.cache === '0') ? false : true;
-}
+export const isCacheEnabled = (qs?: HttpReqQs): boolean => {
+  if (!qs) {
+    return true;
+  }
+  if (qs.cache === undefined) {
+    return true;
+  }
+  return qs.cache === 'false' || qs.cache === '0' ? false : true;
+};
 
 // Resp
 
@@ -36,24 +41,24 @@ export const okResp = <T = any>(data: T, cache?: boolean) => ({
 
 export const serverErrResp = (data: string) => ({
   statusCode: 503,
-  headers: {...corsHeaders},
-  body: JSON.stringify({error: data}),
+  headers: { ...corsHeaders },
+  body: JSON.stringify({ error: data }),
 });
 
 export const notFoundResp = (data?: string) => ({
   statusCode: 404,
-  headers: {...corsHeaders},
-  body: JSON.stringify({error: data || ''}),
+  headers: { ...corsHeaders },
+  body: JSON.stringify({ error: data || '' }),
 });
 
 export const paramMissedResp = (paramName: string) => ({
   statusCode: 422,
-  headers: {...corsHeaders},
-  body: JSON.stringify({error: `"${paramName}" param missed`}),
+  headers: { ...corsHeaders },
+  body: JSON.stringify({ error: `"${paramName}" param missed` }),
 });
 
 export const paramWrongFormatResp = (paramName: string) => ({
   statusCode: 422,
-  headers: {...corsHeaders},
-  body: JSON.stringify({error: `Wrong "${paramName}" format`}),
+  headers: { ...corsHeaders },
+  body: JSON.stringify({ error: `Wrong "${paramName}" format` }),
 });

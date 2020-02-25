@@ -1,36 +1,43 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { apiWithCity, strToLatLng } from 'services/transport';
-import {
-  Log, okResp, serverErrResp, notFoundResp, paramMissedResp, paramWrongFormatResp,
-  daySec, isCacheEnabled, parseIdsStr,
-} from 'utils';
-import { IStrParams } from 'core';
+import { getTransportApi, defTransportRoutesIds } from '@kremen/core';
+import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { cacheWithRootKey } from 'core/cache';
+import {
+  daySec,
+  HttpReqParams,
+  isCacheEnabled,
+  Log,
+  notFoundResp,
+  okResp,
+  paramMissedResp,
+  paramWrongFormatResp,
+  parseIdsStr,
+  requestHttpReqHandler,
+  serverErrResp,
+  strToLatLng,
+} from 'utils';
+
 const log = Log('transport.handler');
+
 // Cache
-const { env: { NODE_ENV } } = process;
+const {
+  env: { NODE_ENV },
+} = process;
 const cacheRootKey = `kremen:transport:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
-const cityId = 10;
-const api = apiWithCity(cityId);
-const defRouteIds = [
-  166, 167, 168, 169, 170, 171, 172, 173, 174,
-  175, 178, 179, 180, 181, 182, 183, 184, 185,
-  186, 187, 188, 189, 190, 191, 192, 193,
-];
+const api = getTransportApi({ reqHandler: requestHttpReqHandler, log }).withCity();
 
-export const handler: APIGatewayProxyHandler = async (event, _context) => {
+export const handler: APIGatewayProxyHandler = async event => {
   log.trace('event=', event);
   log.start(`resource ${event.resource}`);
   const res = await processEvent(event);
   log.end(`resource ${event.resource}`);
   return res;
-}
+};
 
-interface IHandlerOpts {
-  pathParams: IStrParams;
-  queryParams: IStrParams;
+interface HandlerOpt {
+  pathParams: HttpReqParams;
+  queryParams: HttpReqParams;
   cache: boolean;
 }
 
@@ -38,10 +45,10 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
   const { resource, pathParameters: pathParams, queryStringParameters: queryParams } = event;
   const cache = isCacheEnabled(queryParams);
   log.debug('cache=', cache);
-  const opts: IHandlerOpts = {
+  const opts: HandlerOpt = {
     pathParams: pathParams ? pathParams : {},
-    queryParams: queryParams ? queryParams: {},
-    cache
+    queryParams: queryParams ? queryParams : {},
+    cache,
   };
   try {
     if (resource === '/transport/routes') {
@@ -69,81 +76,106 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
       return handleRoutesStations(opts);
     }
     return notFoundResp(`${resource} not found`);
-  } catch(err) {
+  } catch (err) {
     log.err(err);
     return serverErrResp(err.message);
   }
-}
+};
 
-const handleRoutes = async ({ cache }: IHandlerOpts) => {
+const handleRoutes = async ({ cache }: HandlerOpt) => {
   const cacheKey = 'routes';
   const cacheData = cache ? await getCache(cacheKey) : undefined;
-  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
-  const [routes, stations] = await Promise.all([
-    api.getRoutes(),
-    api.getRoutesStations(defRouteIds),
-  ]);
-  const data = routes.map((route) => {
+  if (cacheData) {
+    log.debug('found data in cache');
+    return okResp(cacheData, true);
+  }
+  const [routes, stations] = await Promise.all([api.getRoutes(), api.getRoutesStations(defTransportRoutesIds)]);
+  const data = routes.map(route => {
     const routeStations = stations.filter(({ rid }) => rid === route.rid);
-    return {...route, stations: routeStations};
+    return { ...route, stations: routeStations };
   });
   await setCache(cacheKey, data, daySec);
   return okResp(data);
-}
+};
 
-const handleFind = async ({ queryParams }: IHandlerOpts) => {
-  if (!queryParams) { return paramMissedResp('from'); }
+const handleFind = async ({ queryParams }: HandlerOpt) => {
+  if (!queryParams) {
+    return paramMissedResp('from');
+  }
   const { from: fromStr, to: toStr } = queryParams;
-  if (!fromStr) { return paramMissedResp('from'); }
+  if (!fromStr) {
+    return paramMissedResp('from');
+  }
   const from = strToLatLng(fromStr);
-  if (!from) { return paramWrongFormatResp('from'); }
-  if (!toStr) { return paramMissedResp('to'); }
+  if (!from) {
+    return paramWrongFormatResp('from');
+  }
+  if (!toStr) {
+    return paramMissedResp('to');
+  }
   const to = strToLatLng(toStr);
-  if (!to) { return paramWrongFormatResp('to'); }
+  if (!to) {
+    return paramWrongFormatResp('to');
+  }
   const data = await api.findRoute(from, to);
   return okResp(data);
-}
+};
 
-const handleRoutesBuses = async ({ pathParams }: IHandlerOpts) => {
-  if (!pathParams.id) { return paramMissedResp('id'); }
+const handleRoutesBuses = async ({ pathParams }: HandlerOpt) => {
+  if (!pathParams.id) {
+    return paramMissedResp('id');
+  }
   const id = parseInt(pathParams.id, 10);
-  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  if (isNaN(id)) {
+    return paramWrongFormatResp('id');
+  }
   const data = await api.getRouteBuses(id);
   return okResp(data);
-}
+};
 
-const handleRoutesStations = async ({ pathParams }: IHandlerOpts) => {
-  if (!pathParams.id) { return paramMissedResp('id'); }
+const handleRoutesStations = async ({ pathParams }: HandlerOpt) => {
+  if (!pathParams.id) {
+    return paramMissedResp('id');
+  }
   const id = parseInt(pathParams.id, 10);
-  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  if (isNaN(id)) {
+    return paramWrongFormatResp('id');
+  }
   return okResp(await api.getRouteStations(id));
-}
+};
 
-const handleBuses = async ({ queryParams }: IHandlerOpts) => {
-  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+const handleBuses = async ({ queryParams }: HandlerOpt) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defTransportRoutesIds;
   const data = await api.getRoutesBuses(rids);
   return okResp(data);
-}
+};
 
-const handleBusesUpdate = async ({ queryParams }: IHandlerOpts) => {
-  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+const handleBusesUpdate = async ({ queryParams }: HandlerOpt) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defTransportRoutesIds;
   const data = await api.getRoutesBusesUpdate(rids);
   return okResp(data);
-}
+};
 
-const handleStations = async ({ cache, queryParams }: IHandlerOpts) => {
-  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defRouteIds;
+const handleStations = async ({ cache, queryParams }: HandlerOpt) => {
+  const rids = queryParams.rids ? parseIdsStr(queryParams.rids) : defTransportRoutesIds;
   const cacheKey = `stations:${JSON.stringify(rids)}`;
   const cacheData = cache ? await getCache(cacheKey) : undefined;
-  if (cacheData) { log.debug('found data in cache'); return okResp(cacheData, true); }
+  if (cacheData) {
+    log.debug('found data in cache');
+    return okResp(cacheData, true);
+  }
   const data = await api.getRoutesStations(rids);
   await setCache(cacheKey, data, daySec);
   return okResp(data);
-}
+};
 
-const handleStationPrediction = async ({ pathParams }: IHandlerOpts) => {
-  if (!pathParams.id) { return paramMissedResp('id'); }
+const handleStationPrediction = async ({ pathParams }: HandlerOpt) => {
+  if (!pathParams.id) {
+    return paramMissedResp('id');
+  }
   const id = parseInt(pathParams.id, 10);
-  if (isNaN(id)) { return paramWrongFormatResp('id'); }
+  if (isNaN(id)) {
+    return paramWrongFormatResp('id');
+  }
   return okResp(await api.getStationPrediction(id));
-}
+};

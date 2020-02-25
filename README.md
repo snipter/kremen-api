@@ -19,10 +19,11 @@ Where:
 
 - `REDIS_HOST / REDIS_PORT / REDIS_PASS` - redis credentials
 
-## Invoke
+## Use
+
+Transport
 
 ```bash
-# Transport
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/routes"}'
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses"}'
 sls invoke local -f transport --stage dev --data '{ "resource": "/transport/buses", "queryStringParams": {"cache": "false"}}'
@@ -51,4 +52,9 @@ sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas"}'
 sls invoke local -f cinemas --stage dev --data '{ "resource": "/cinemas/{cid}", "pathParameters": {"cid": "galaxy"}}'
 ```
 
+## Contacts
+
+Jaroslav Khorishchenko
+
+[Facebook](https://fb.me/snipter), [Twitter](https://twitter.com/snipter), [Telegram](https://t.me/ideveloper)
 

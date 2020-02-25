@@ -1,5 +1,4 @@
-// import { Log } from 'utils';
-import { ICinema, ICinemaContact, ICinemaLocation } from './types';
+import { Cinema, CinemaContact, CinemaLocation } from '@kremen/core';
 
 // http://filmax.net.ua/kremenchuk/
 
@@ -8,19 +7,19 @@ import { ICinema, ICinemaContact, ICinemaLocation } from './types';
 
 // Cinema
 
-export const getCinema = async (): Promise<ICinema> => {
+export const getCinema = async (): Promise<Cinema> => {
   const cid = 'filmax';
   const title = 'Filmax';
   const website = 'http://filmax.net.ua/';
   const source = 'http://filmax.net.ua/kremenchuk/фильмы/';
-  const contacts: ICinemaContact[] = [
+  const contacts: CinemaContact[] = [
     { mobile: '+380997362975' },
     { mobile: '+380981099973' },
     { email: 'filmaxcinema@gmail.com' },
   ];
-  const location: ICinemaLocation = {
+  const location: CinemaLocation = {
     address: 'пр. Лесі Українки, 96, Кременчук, Полтавська область, 39600',
-    coordinates: { lat: 49.133310, lng: 33.442220 },
+    coordinates: { lat: 49.13331, lng: 33.44222 },
   };
   const movies = [];
   return { cid, title, website, source, location, contacts, movies };

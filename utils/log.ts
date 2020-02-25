@@ -1,4 +1,5 @@
-import { isDate, isError, isNumber, isString, reduce } from 'lodash';
+/* eslint-disable no-console */
+import { isDate, isNumber, isString, reduce } from 'lodash';
 
 export enum LogLevel {
   Error = 0,
@@ -6,123 +7,222 @@ export enum LogLevel {
   Info = 2,
   Debug = 3,
   Trace = 4,
+  Time = 5,
 }
 
 type LogEventName = 'log';
 
-type LogEventHandlerRecord = (m: string, level: LogLevel, data: any[]) => void;
+type LogEventHandler = (m: string, level: LogLevel, data: unknown[]) => void;
 
-interface ILogEventHandlerRecord {
+interface LogEventHandlerRec {
   name: string;
-  handler: LogEventHandlerRecord;
+  handler: LogEventHandler;
 }
 
-const handlers: ILogEventHandlerRecord[] = [];
+const handlers: LogEventHandlerRec[] = [];
 
-const emit = (name: LogEventName, mod: string, level: LogLevel, data: any[]) => {
-  handlers.forEach((item) => {
+const emit = (name: LogEventName, mod: string, level: LogLevel, data: unknown[]) => {
+  handlers.forEach(item => {
     if (item.name === name) {
       item.handler(mod, level, data);
     }
   });
 };
 
-const on = (name: LogEventName, handler: LogEventHandlerRecord) => {
+const on = (name: LogEventName, handler: LogEventHandler) => {
   handlers.push({ name, handler });
 };
 
-const levelToSymbol = (level: LogLevel) => {
+let enabled: boolean = true;
+let colorized: boolean = false;
+const minLevel: LogLevel = LogLevel.Debug;
+
+export const setLogEnabled = (val: boolean) => {
+  enabled = val;
+};
+
+export const setLogColorized = (val: boolean) => {
+  colorized = val;
+};
+
+export const logLevelToSymbol = (level: LogLevel) => {
   switch (level) {
-  case LogLevel.Debug: return '-';
-  case LogLevel.Info: return '+';
-  case LogLevel.Warn: return '!';
-  case LogLevel.Error: return 'x';
-  case LogLevel.Trace: return '*';
-  default: return '';
+    case LogLevel.Debug:
+      return '-';
+    case LogLevel.Info:
+      return '+';
+    case LogLevel.Warn:
+      return '!';
+    case LogLevel.Error:
+      return 'x';
+    case LogLevel.Trace:
+      return '*';
+    case LogLevel.Time:
+      return 'T';
+    default:
+      return '';
   }
 };
 
-const logDataItemToStr = (data: any): string => {
-  if (data === undefined) { return 'undefined'; }
-  if (data === null) { return 'null'; }
-  if (isString(data)) { return data; }
-  if (isNumber(data)) { return `${data}`; }
-  if (isDate(data) || isError(data)) { return data.toString(); }
-  if (!data) { return ''; }
+const logDataItemToStr = (data: unknown): string => {
+  if (data === undefined) {
+    return 'undefined';
+  }
+  if (data === null) {
+    return 'null';
+  }
+  if (!data) {
+    return 'undefined';
+  }
+  if (isString(data)) {
+    return data;
+  }
+  if (isNumber(data)) {
+    return `${data}`;
+  }
+  if (isDate(data)) {
+    return data.toString();
+  }
+  if (!data) {
+    return '';
+  }
   try {
     return JSON.stringify(data);
   } catch (err) {
-    if (data.toString) { return data.toString(); }
+    if (typeof data === 'object' && data && data.toString) {
+      return data.toString();
+    }
     return '';
   }
 };
 
-const logDataArrToStr = (data: any[]): string => {
-  if (!data.length) { return ''; }
-  return reduce(data, (memo, item) => (
-    memo ? `${memo} ${logDataItemToStr(item)}` : logDataItemToStr(item)
-  ), '');
+export const logDataArrToStr = (data: unknown[]): string => {
+  if (!data.length) {
+    return '';
+  }
+  return reduce(data, (memo, item) => (memo ? `${memo} ${logDataItemToStr(item)}` : logDataItemToStr(item)), '');
 };
 
-export const logToStr = (m: string, level: LogLevel, data: any[]): string => {
+interface LogColor {
+  color: string;
+  background?: string;
+}
+
+const logLevelToColor = (level: LogLevel): LogColor => {
+  const defColor: LogColor = { color: '#000000' };
+  switch (level) {
+    case LogLevel.Trace:
+      return { color: '#a3a3a3' };
+    case LogLevel.Debug:
+      return { color: '#51555A' };
+    case LogLevel.Info:
+      return { color: '#FFFFFF', background: '#0022F5' };
+    case LogLevel.Warn:
+      return { color: '#FFFFFF', background: '#FF9501' };
+    case LogLevel.Error:
+      return { color: '#FFFFFF', background: '#FC2500' };
+    default:
+      return defColor;
+  }
+};
+
+const logColorsToStr = ({ color, background }: LogColor) => {
+  if (!background) {
+    return `color: ${color}`;
+  }
+  return `background: ${background}; color: ${color}`;
+};
+
+const logPrefixData = (level: LogLevel, module: string): string[] => {
+  const symbol = logLevelToSymbol(level);
+  if (!colorized) {
+    return [`[${symbol}][${module}]:`];
+  }
+  const colorStr = logColorsToStr(logLevelToColor(level));
+  return [`%c[${symbol}][${module}]:`, colorStr];
+};
+
+const levelToSymbol = (level: LogLevel) => {
+  switch (level) {
+    case LogLevel.Debug:
+      return '-';
+    case LogLevel.Info:
+      return '+';
+    case LogLevel.Warn:
+      return '!';
+    case LogLevel.Error:
+      return 'x';
+    case LogLevel.Trace:
+      return '*';
+    default:
+      return '';
+  }
+};
+
+export const logToStr = (m: string, level: LogLevel, data: unknown[]): string => {
   const symbol = levelToSymbol(level);
   const str = logDataArrToStr(data);
   return `[${symbol}][${m}]: ${str}`;
 };
 
 export const Log = (m: string) => {
-  // tslint:disable:no-console
-  const logWithLevel = (data: any[], level: LogLevel) => {
+  const logWithLevel = (level: LogLevel, data: unknown[]) => {
     emit('log', m, level, data);
-    const symbol = levelToSymbol(level);
-    const prefix = `[${symbol}][${m}]`;
-    const dataStr = logDataArrToStr(data);
+    if (!enabled || level > minLevel) {
+      return;
+    }
+    const prefix = logPrefixData(level, m);
     switch (level) {
-    case LogLevel.Debug:
-      return console.log(`${prefix}:`, dataStr);
-    case LogLevel.Info:
-      return console.log(`${prefix}:`, dataStr);
-    case LogLevel.Warn:
-      return console.warn(`${prefix}:`, dataStr);
-    case LogLevel.Error:
-      return console.error(`${prefix}:`, dataStr);
-    case LogLevel.Trace:
-      return console.log(`${prefix}:`, dataStr);
-    default:
-      return console.trace(`${prefix}: `, dataStr);
+      case LogLevel.Debug:
+        return console.log(...prefix, ...data);
+      case LogLevel.Info:
+        return console.log(...prefix, ...data);
+      case LogLevel.Warn:
+        return console.log(...prefix, ...data);
+      case LogLevel.Error:
+        return console.log(...prefix, ...data);
+      case LogLevel.Trace:
+        return console.log(...prefix, ...data);
+      default:
+        return console.log(...prefix, ...data);
     }
   };
-  // tslint:enable:no-console
 
-  const trace = (...data: any[]) => {
-    logWithLevel(data, LogLevel.Trace);
+  const trace = (...data: unknown[]) => {
+    logWithLevel(LogLevel.Trace, data);
   };
 
-  const debug = (...data: any[]) => {
-    logWithLevel(data, LogLevel.Debug);
+  const debug = (...data: unknown[]) => {
+    logWithLevel(LogLevel.Debug, data);
   };
 
-  const info = (...data: any[]) => {
-    logWithLevel(data, LogLevel.Info);
+  const info = (...data: unknown[]) => {
+    logWithLevel(LogLevel.Info, data);
   };
 
-  const warn = (...data: any[]) => {
-    logWithLevel(data, LogLevel.Warn);
+  const warn = (...data: unknown[]) => {
+    logWithLevel(LogLevel.Warn, data);
   };
 
-  const err = (...data: any[]) => {
-    logWithLevel(data, LogLevel.Error);
+  const err = (...data: unknown[]) => {
+    logWithLevel(LogLevel.Error, data);
   };
 
-  const start = (tag: string) => {
-    // tslint:disable-next-line
-    console.time(`[T][${m}]: ${tag}`);
+  const start = (marker: string) => {
+    if (!enabled) {
+      return;
+    }
+    console.time(`${logPrefixData(LogLevel.Time, m)} ${marker}`);
   };
 
-  const end = (tag: string) => {
-    // tslint:disable-next-line
-    console.timeEnd(`[T][${m}]: ${tag}`);
+  const end = (marker: string) => {
+    if (!enabled) {
+      return;
+    }
+    console.timeEnd(`${logPrefixData(LogLevel.Time, m)} ${marker}`);
   };
 
-  return { trace, debug, info, warn, err, start, end, on };
+  return { trace, debug, info, warn, err, on, start, end };
 };
+
+export type LogHandler = ReturnType<typeof Log>;

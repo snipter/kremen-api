@@ -1,23 +1,23 @@
-import { APIGatewayProxyHandler, APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import EquipmentParser, { IEquipTimer } from 'services/equipment';
-import { Log, isCacheEnabled, serverErrResp, notFoundResp, okResp, minSec } from 'utils';
+import { EquipmentTimer, getEquipmentApi } from '@kremen/core';
+import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { cacheWithRootKey } from 'core/cache';
+import { isCacheEnabled, Log, minSec, notFoundResp, okResp, requestHttpReqHandler, serverErrResp } from 'utils';
 
-// Log
 const log = Log('equipment.handler');
 
-// Cache
-const { env: { NODE_ENV } } = process;
+const {
+  env: { NODE_ENV },
+} = process;
 const cacheRootKey = `kremen:equipment:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
-export const handler: APIGatewayProxyHandler = async (event, _context) => {
+export const handler: APIGatewayProxyHandler = async (event) => {
   log.trace('event=', event);
   log.start(`resource ${event.resource}`);
   const res = await processEvent(event);
   log.end(`resource ${event.resource}`);
   return res;
-}
+};
 
 const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const { resource, queryStringParameters } = event;
@@ -28,18 +28,20 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
       return handleEquipmentList(cache);
     }
     return notFoundResp(`${resource} not found`);
-  } catch(err) {
+  } catch (err) {
     log.err(err);
     return serverErrResp(err.message);
   }
-}
+};
 
 export const handleEquipmentList = async (cache: boolean) => {
-  const sid = cache ? await getCache<string>('sid') : null;
-  const timer = cache ? await getCache<IEquipTimer>('timer') : null;
-  const parser = new EquipmentParser(sid);
-  const data = await parser.list(timer);
-  if (!data) { throw new Error('Parser dat is empty'); }
+  // const sid = cache ? await getCache<string>('sid') : undefined;
+  const timer = cache ? await getCache<EquipmentTimer>('timer') : undefined;
+  const api = getEquipmentApi({ reqHandler: requestHttpReqHandler, log });
+  const data = await api.list(timer);
+  if (!data) {
+    throw new Error('Parser dat is empty');
+  }
   const { equipment, system } = data;
   await setCache('sid', system.sid, minSec * 5);
   await setCache('timer', system.timer, minSec * 5);
