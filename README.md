@@ -2,7 +2,7 @@
 
 Set of different APIs based on Kremenchuk's open data.
 
-![](https://github.com/snipter/kremen-core/workflows/Lint/badge.svg)
+![](https://github.com/snipter/kremen-api/workflows/Lint/badge.svg)
 
 ## Init
 
