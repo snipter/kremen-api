@@ -1,5 +1,5 @@
 import redis from 'redis';
-import { Log } from 'utils';
+import { Log } from '@kremen/core';
 
 const log = Log('core.redis');
 

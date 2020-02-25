@@ -1,11 +1,10 @@
-import { getTransportApi, defTransportRoutesIds } from '@kremen/core';
+import { defTransportRoutesIds, getTransportApi, Log } from '@kremen/core';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { cacheWithRootKey } from 'core/cache';
 import {
   daySec,
   HttpReqParams,
   isCacheEnabled,
-  Log,
   notFoundResp,
   okResp,
   paramMissedResp,

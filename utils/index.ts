@@ -1,4 +1,3 @@
-export * from './log';
 export * from './http';
 export * from './lambda';
 export * from './date';

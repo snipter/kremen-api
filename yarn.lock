@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@kremen/core@1.0.9":
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/@kremen/core/-/core-1.0.9.tgz#c891b1a2c3b2a58bb8cf9355944c0c6b2cdc0e48"
-  integrity sha512-xayCJNut7MbgVjZD60/oOa10y9EnKOLCOzer3aSfSEcfNJQhdnIj8ZfsdDYRgHBZpnsEormBvano5aVYw5O9XA==
+"@kremen/core@1.0.11":
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/@kremen/core/-/core-1.0.11.tgz#34f7727baff84380d90b076e7034f70b52660abf"
+  integrity sha512-WZQDgGj09zZcy7uIS6yr+ETUlaLTF5KvqsDoFtAAt2d1+dXecbBOU8JEqS/4qEfVBVBQYLONZNrNysM68naVdw==
   dependencies:
     "@types/lodash" "4.14.149"
     "@types/md5" "2.1.33"

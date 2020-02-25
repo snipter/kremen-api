@@ -1,17 +1,21 @@
-import { Cinema } from '@kremen/core';
+import { CinemaApiOpt, cinemaIdToHandler, getCinemasApis, Log } from '@kremen/core';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import cheerio from 'cheerio';
 import { cacheWithRootKey } from 'core/cache';
-import { getFilmaxCinema, getGalaxyCinema } from 'services/cinemas';
-import { hourSec, isCacheEnabled, Log, notFoundResp, okResp, serverErrResp } from 'utils';
+import { hourSec, isCacheEnabled, notFoundResp, okResp, requestHttpReqHandler, serverErrResp } from 'utils';
 
 const log = Log('cinemas.handler');
 
-// Cache
 const {
   env: { NODE_ENV },
 } = process;
 const cacheRootKey = `kremen:cinemas:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
+
+const defApiOpt: CinemaApiOpt = {
+  reqHandler: requestHttpReqHandler,
+  htmlParser: cheerio,
+};
 
 export const handler: APIGatewayProxyHandler = async event => {
   log.trace('event=', event);
@@ -43,36 +47,29 @@ const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProx
 };
 
 const handleCinemas = async (cache: boolean) => {
-  const cachedData = cache ? await getCache<string>('all') : null;
+  const cachedData = cache ? await getCache<string>('all') : undefined;
   if (cachedData) {
     return okResp(cachedData);
   }
-  const data = await Promise.all([getGalaxyCinema(), getFilmaxCinema()]);
+  const data = await Promise.all(
+    getCinemasApis()
+      .map(handler => handler(defApiOpt))
+      .map(api => api.getCinema()),
+  );
   await setCache('all', data, hourSec);
   return okResp(data);
 };
 
 const handleCinema = async (cid: string, cache: boolean) => {
-  const cinemaHandler = cidToCinemaHandler(cid);
-  if (!cinemaHandler) {
+  const getCinemaApi = cinemaIdToHandler(cid);
+  if (!getCinemaApi) {
     return notFoundResp(`cinema not found: ${cid}`);
   }
-  const cachedData = cache ? await getCache<string>(`cinemas:${cid}`) : null;
+  const cachedData = cache ? await getCache<string>(`cinemas:${cid}`) : undefined;
   if (cachedData) {
     return okResp(cachedData);
   }
-  const data = await cinemaHandler();
+  const data = await getCinemaApi({ ...defApiOpt, log: Log(`cinemas.handler.${cid}`) });
   await setCache(`cinemas:${cid}`, data, hourSec);
   return okResp(data);
-};
-
-type CinemaHandler = () => Promise<Cinema>;
-
-const cidToCinemaHandler = (cid: string): CinemaHandler | undefined => {
-  if (cid === 'galaxy') {
-    return getGalaxyCinema;
-  }
-  if (cid === 'filmax') {
-    return getFilmaxCinema;
-  }
 };

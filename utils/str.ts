@@ -1,27 +1,4 @@
-import { isString, isNumber, isDate, isError, isFunction } from 'lodash';
 import { LatLng } from '@kremen/core';
-
-export const anyToStr = (val: any): string => {
-  if (val === undefined) {
-    return 'undefined';
-  }
-  if (val === null) {
-    return 'null';
-  }
-  if (isString(val)) {
-    return val;
-  }
-  if (isNumber(val)) {
-    return `${val}`;
-  }
-  if (isDate(val) || isError(val) || isFunction(val.toString)) {
-    return val.toString();
-  }
-  if (!val) {
-    return '';
-  }
-  return '';
-};
 
 export const strToLatLng = (val: string): LatLng | undefined => {
   if (!val) {

@@ -1,7 +1,7 @@
-import { EquipmentTimer, getEquipmentApi } from '@kremen/core';
+import { EquipmentTimer, getEquipmentApi, Log } from '@kremen/core';
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
 import { cacheWithRootKey } from 'core/cache';
-import { isCacheEnabled, Log, minSec, notFoundResp, okResp, requestHttpReqHandler, serverErrResp } from 'utils';
+import { isCacheEnabled, minSec, notFoundResp, okResp, requestHttpReqHandler, serverErrResp } from 'utils';
 
 const log = Log('equipment.handler');
 
@@ -11,7 +11,7 @@ const {
 const cacheRootKey = `kremen:equipment:${NODE_ENV}`;
 const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 
-export const handler: APIGatewayProxyHandler = async (event) => {
+export const handler: APIGatewayProxyHandler = async event => {
   log.trace('event=', event);
   log.start(`resource ${event.resource}`);
   const res = await processEvent(event);

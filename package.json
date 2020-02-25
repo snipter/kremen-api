@@ -10,7 +10,7 @@
     "format": "prettier --write \"{core,services,utils}/**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@kremen/core": "1.0.9",
+    "@kremen/core": "1.0.11",
     "cheerio": "1.0.0-rc.3",
     "iconv-lite": "0.5.1",
     "redis": "3.0.2",
