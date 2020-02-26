@@ -13,9 +13,9 @@ module.exports = {
   devtool: 'source-map',
   resolve: {
     alias: {
-      services: path.resolve(__dirname, 'services/'),
-      utils: path.resolve(__dirname, 'utils/'),
-      core: path.resolve(__dirname, 'core/'),
+      core: path.resolve(__dirname, 'src/core/'),
+      utils: path.resolve(__dirname, 'src/utils/'),
+      handlers: path.resolve(__dirname, 'src/handlers/'),
     },
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
   },

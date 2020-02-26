@@ -17,7 +17,7 @@ provider:
 
 functions:
   transport:
-    handler: handleTransport.handler
+    handler: src/handlers/transport.handler
     events:
       - http:
           method: get
@@ -53,7 +53,7 @@ functions:
           cors: true
 
   cinemas:
-    handler: handleCinemas.handler
+    handler: src/handlers/cinemas.handler
     events:
       - http:
           method: get
@@ -65,7 +65,7 @@ functions:
           cors: true
 
   equipment:
-    handler: handleEquipment.handler
+    handler: src/handlers/equipment.handler
     events:
       - http:
           method: get

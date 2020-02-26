@@ -5,9 +5,9 @@
   "main": "handler.js",
   "scripts": {
     "lint": "yarn lint:types && yarn lint:eslint",
-    "lint:eslint": "eslint \"{core,services,utils}/**\"",
+    "lint:eslint": "eslint \"src/**\"",
     "lint:types": "tsc --noEmit --skipLibCheck",
-    "format": "prettier --write \"{core,services,utils}/**/*.{ts,tsx}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "cheerio": "1.0.0-rc.3",

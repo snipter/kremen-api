@@ -14,30 +14,31 @@ const { getCache, setCache } = cacheWithRootKey(cacheRootKey);
 export const handler: APIGatewayProxyHandler = async event => {
   log.trace('event=', event);
   log.start(`resource ${event.resource}`);
-  const res = await processEvent(event);
-  log.end(`resource ${event.resource}`);
-  return res;
+  try {
+    const res = await processEvent(event);
+    log.end(`resource ${event.resource}`);
+    return res;
+  } catch (err) {
+    log.end(`resource ${event.resource}`);
+    log.err(err);
+    return serverErrResp(err.message);
+  }
 };
 
 const processEvent = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const { resource, queryStringParameters } = event;
   const cache = isCacheEnabled(queryStringParameters);
   log.debug('cache=', cache);
-  try {
-    if (resource === '/equipment') {
-      return handleEquipmentList(cache);
-    }
-    return notFoundResp(`${resource} not found`);
-  } catch (err) {
-    log.err(err);
-    return serverErrResp(err.message);
+  if (resource === '/equipment') {
+    return handleEquipmentList(cache);
   }
+  return notFoundResp(`${resource} not found`);
 };
 
 export const handleEquipmentList = async (cache: boolean) => {
-  // const sid = cache ? await getCache<string>('sid') : undefined;
+  const sid = cache ? await getCache<string>('sid') : undefined;
   const timer = cache ? await getCache<EquipmentTimer>('timer') : undefined;
-  const api = getEquipmentApi({ reqHandler: requestHttpReqHandler, log });
+  const api = getEquipmentApi({ reqHandler: requestHttpReqHandler, log, sid });
   const data = await api.list(timer);
   if (!data) {
     throw new Error('Parser dat is empty');

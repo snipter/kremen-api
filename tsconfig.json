@@ -10,14 +10,14 @@
     "sourceMap": true,
     "target": "es2017",
     "outDir": "lib",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "services": ["./services"],
-      "services/*": ["./services/*"],
-      "utils": ["./utils"],
-      "utils/*": ["./utils/*"],
-      "core": ["./core"],
-      "core/*": ["./core/*"]
+      "utils": ["utils"],
+      "utils/*": ["utils/*"],
+      "handlers": ["handlers"],
+      "handlers/*": ["handlers/*"],
+      "core": ["core"],
+      "core/*": ["core/*"]
     }
   },
   "exclude": [
