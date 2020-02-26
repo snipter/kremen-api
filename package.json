@@ -16,7 +16,7 @@
     "request": "2.88.2"
   },
   "devDependencies": {
-    "@kremen/core": "1.0.12",
+    "@kremen/core": "1.0.13",
     "@types/aws-lambda": "8.10.44",
     "@types/cheerio": "0.22.16",
     "@types/node": "13.7.4",
