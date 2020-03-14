@@ -16,8 +16,6 @@ export const requestHttpReqHandler: HttpReqHandler = <T>({
   new Promise((resolve, reject) => {
     request({ url, qs, json, timeout }, (err, res, body) => {
       if (err) {
-        console.log('11111');
-        console.log(err);
         return reject(err);
       }
       const { statusCode } = res;
