@@ -35,4 +35,4 @@ jobs:
         token: ${{ secrets.TELEGRAM_TOKEN }}
         format: markdown
         args: |
-          🆕 *kremen-api:* new version pushed successfully
+          🏁 *kremen-api:* new version pushed successfully
