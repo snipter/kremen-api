@@ -8,6 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - name: 'Notify: preparing'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        args: |
+          🆕 *kremen-api:* preparing for the new build
     - uses: actions/checkout@v1
     -
       name: Login to GitHub Packages Docker Registry
@@ -20,3 +28,11 @@ jobs:
       run: make build
     - name: Push
       run: make push
+    - name: 'Notify: done'
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        format: markdown
+        args: |
+          🆕 *kremen-api:* new version pushed successfully
