@@ -17,7 +17,9 @@
       "handlers": ["handlers"],
       "handlers/*": ["handlers/*"],
       "core": ["core"],
-      "core/*": ["core/*"]
+      "core/*": ["core/*"],
+      "services": ["services"],
+      "services/*": ["services/*"]
     }
   },
   "exclude": [
