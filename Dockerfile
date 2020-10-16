@@ -1,4 +1,4 @@
-FROM node:14-alpine3.10
+FROM node:14-alpine3.10 AS builder
 
 WORKDIR /usr/src/app
 COPY package.json yarn.lock webpack.config.js tsconfig.json ./
@@ -15,6 +15,6 @@ WORKDIR /usr/src/app
 
 COPY package.json yarn.lock ./
 RUN yarn install --production
-COPY --from=0 /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/dist ./dist
 
 CMD ["yarn", "start"]
