@@ -1,13 +1,13 @@
 version: "3.7"
 
 services:
-  api:
+  kremen-api:
     image: node:14-alpine3.10
-    container_name: api
+    container_name: kremen-api
     hostname: api
     working_dir: /usr/src/app
     volumes:
-      - "./server:/usr/src/app"
+      - ".:/usr/src/app"
     command: "yarn start:dev"
     ports:
       - "8080:8080"
