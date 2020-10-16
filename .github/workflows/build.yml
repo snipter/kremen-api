@@ -9,5 +9,14 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    -
+      name: Login to GitHub Packages Docker Registry
+      uses: docker/login-action@v1
+      with:
+        registry: docker.pkg.github.com
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build
       run: make build
+    - name: Push
+      run: make push
