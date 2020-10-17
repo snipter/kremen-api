@@ -1,6 +1,7 @@
-import { m, Style, Styles, View } from '@kremen/react';
 import React, { FC, SyntheticEvent } from 'react';
-import { colors } from 'styles';
+import { colors, m, Style, Styles } from 'styles';
+
+import View from '../View';
 
 interface Props {
   style?: Style;

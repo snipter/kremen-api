@@ -1,4 +1,4 @@
-import { Style } from '@kremen/react';
+import { Style } from 'styles';
 
 export const fullScreen: Style = {
   bottom: 0,

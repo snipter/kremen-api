@@ -1,8 +1,9 @@
-import { TransportBus, TransportRoute } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
+import { View } from 'components/Common';
 import { RouteCircle } from 'components/Transport';
+import { TransportBus, TransportRoute } from 'core/api';
 import React, { FC } from 'react';
 import { InfoWindow } from 'react-google-maps';
+import { m, Style, Styles } from 'styles';
 
 interface Props {
   style?: Style;

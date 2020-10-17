@@ -1,5 +1,5 @@
 import { TransportBus, TransportRoute } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
+import { m, Style, Styles } from 'styles';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import IconEdit from '@material-ui/icons/KeyboardArrowDown';
@@ -12,6 +12,7 @@ import React, { FC, useState } from 'react';
 import { colors } from 'styles';
 
 import RouteSelectGroup from './components/RouteSelectGroup';
+import View from 'components/Common/View';
 
 interface Props {
   style?: Style;

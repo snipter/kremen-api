@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { m, Style, Styles, View } from '@kremen/react';
+import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
@@ -10,7 +10,7 @@ import React, { PureComponent } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { connect } from 'react-redux';
 import { manager } from 'store';
-import { fullScreen } from 'styles';
+import { fullScreen, m, Style, Styles } from 'styles';
 import { LatLng, Log, Timer } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';

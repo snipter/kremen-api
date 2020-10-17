@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import content from './content.md';
 import { Paper } from '@material-ui/core';
-import { Styles } from '@kremen/react';
+import { Styles } from 'styles';
 
 export const PrivacyScreen: FC = () => (
   <Paper style={styles.content}>

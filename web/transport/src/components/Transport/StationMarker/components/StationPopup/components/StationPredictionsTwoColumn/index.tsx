@@ -1,10 +1,11 @@
-import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
+import { View } from 'components/Common';
 import { RouteCircle } from 'components/Transport';
 import { sortRoutes } from 'core';
+import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
 import { compact, sortBy, uniq } from 'lodash';
 import React, { FC } from 'react';
 import { manager } from 'store';
+import { m, Style, Styles } from 'styles';
 
 interface Props {
   style?: Style;

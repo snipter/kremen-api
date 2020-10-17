@@ -1,4 +1,4 @@
-import { m, Style, Styles } from '@kremen/react';
+import { m, Style, Styles } from 'styles';
 import React, { FC, SyntheticEvent } from 'react';
 import { colors } from 'styles';
 

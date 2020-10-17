@@ -1,6 +1,6 @@
 import { TransportRoute } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
-import { Checkbox } from 'components/Common';
+import { m, Style, Styles } from 'styles';
+import { Checkbox, View } from 'components/Common';
 import { clearRouteNumber, routeNumberToColor } from 'core';
 import React, { FC } from 'react';
 

@@ -1,8 +1,8 @@
-import { TransportRoute } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
+import { View } from 'components/Common';
 import { clearRouteNumber, routeNumberToColor } from 'core';
+import { TransportRoute } from 'core/api';
 import React, { FC } from 'react';
-import { colors, ColorsSet } from 'styles';
+import { colors, ColorsSet, m, Style, Styles } from 'styles';
 
 interface Props {
   style?: Style;

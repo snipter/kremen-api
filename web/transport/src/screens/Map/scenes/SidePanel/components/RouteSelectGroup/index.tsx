@@ -1,8 +1,8 @@
+import { Checkbox, View } from 'components/Common';
 import { TransportRoute } from 'core/api';
-import { m, Style, Styles, View } from '@kremen/react';
-import { Checkbox } from 'components/Common';
 import { includes, uniq } from 'lodash';
 import React, { FC, ReactNode } from 'react';
+import { m, Style, Styles } from 'styles';
 
 import RouteSelectItem from './components/RouteSelectItem';
 
