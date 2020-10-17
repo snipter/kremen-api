@@ -1,4 +1,4 @@
-default: run
+default: build
 
 run: FORCE
 	docker-compose run --service-ports kremen-api

@@ -1,11 +1,22 @@
 version: "3.7"
 
 services:
-  api:
-    image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
-    container_name: kremen-api
-    hostname: api
+
+  entry:
+    image: docker.pkg.github.com/husky-dev/kremen-api/entry:latest
+    container_name: entry
+    hostname: entry
+    depends_on:
+      - api
+    volumes:
+      - './creds/ssl:/etc/letsencrypt'
     ports:
-      - "8080:8080"
+      - '80:80'
+      - '443:443'
     restart: always
 
+  api:
+    image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
+    container_name: api
+    hostname: api
+    restart: always

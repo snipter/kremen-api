@@ -1,6 +1,11 @@
 version: "3.7"
 
 services:
+  entry:
+    image: docker.pkg.github.com/husky-dev/kremen-api/entry:latest
+    build:
+      context: ./services/entry
+      dockerfile: Dockerfile
   api:
     image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
     build:
