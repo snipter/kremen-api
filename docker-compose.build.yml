@@ -5,12 +5,12 @@ services:
     image: kremen-web-dev
     build:
       context: ./web/dev
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.build
   web-transport:
     image: kremen-web-transport
     build:
       context: ./web/transport
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.build
   entry:
     image: docker.pkg.github.com/husky-dev/kremen-api/entry:latest
     build:

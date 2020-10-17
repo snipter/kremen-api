@@ -4,15 +4,13 @@
   "title": "Транспорт",
   "description": "Карта кременчуцького транспорту",
   "company": "Кремінь",
-  "url": "https://transport.io.kr.ua",
+  "url": "https://transport.kremen.dev",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "webpack-dev-server --mode development --env.ENV=dev --port=6005",
+    "start": "webpack-dev-server --mode development --env.ENVFILE=.env.dev",
     "dist": "yarn dist:dev",
-    "dist:dev": "rm -rf dist/* && webpack -p --progress --env.ENV=dev",
-    "dist:prod": "rm -rf dist/* && webpack -p --env.ENV=prod",
-    "deploy": "yarn deploy:prod",
-    "deploy:prod": "yarn dist:prod && firebase deploy --only hosting",
+    "dist:dev": "rm -rf dist/* && webpack -p --env.ENVFILE=.env.dev",
+    "dist:prd": "rm -rf dist/* && webpack -p --env.ENVFILE=.env.prd",
     "lint": "yarn lint:types && yarn lint:eslint",
     "lint:types": "tsc --noEmit --skipLibCheck",
     "lint:eslint": "eslint \"src/**\"",
@@ -80,6 +78,6 @@
     "url-loader": "3.0.0",
     "webpack": "4.41.6",
     "webpack-cli": "3.3.11",
-    "webpack-dev-server": "3.10.3"
+    "webpack-dev-server": "3.11.0"
   }
 }

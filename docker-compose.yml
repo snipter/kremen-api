@@ -1,6 +1,18 @@
 version: "3.7"
 
 services:
+  web-transport:
+    build:
+      context: ./web/transport
+      dockerfile: Dockerfile.dev
+    container_name: kremen-web-transport
+    hostname: web-transport
+    working_dir: /usr/src/app
+    volumes:
+      - "./web/transport:/usr/src/app"
+    command: "yarn start"
+    ports:
+      - "6005:6005"
   api:
     image: node:14-alpine3.10
     container_name: kremen-api
