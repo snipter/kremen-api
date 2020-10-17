@@ -11,8 +11,17 @@ import { ApiReqOpt, getErrFromResp } from './utils';
 
 const log = Log('core.api');
 
+const getApiRoot = () => {
+  switch (ENV) {
+    case 'loc':
+      return 'http://localhost:8080';
+    default:
+      return 'https://api.kremen.dev';
+  }
+};
+
 const getApi = () => {
-  const apiRoot = 'https://api.kremen.dev';
+  const apiRoot = getApiRoot();
 
   const apiReq = async <T>(opt: ApiReqOpt): Promise<T> => {
     const { path, method = 'get', params } = opt;

@@ -21,7 +21,7 @@ export const parseDataSourceRoute = (input: TransportDataSourceRoute): Transport
   const { busreportRouteId, location, bussesOnRoute, routeName, routeNumber } = input;
   const path = parseLatLngPath(location);
   const type = routeNumberToTransportType(routeNumber);
-  const color = tranpsortRouteColors[routeName] || defTransportRouteColor;
+  const color = tranpsortRouteColors[routeNumber] || defTransportRouteColor;
   return {
     rid: busreportRouteId,
     type,
@@ -58,10 +58,10 @@ export const busToCompactUpdate = (input: TransportBus): TransportBusesCompactUp
 // Parsers
 
 const routeNumberToTransportType = (val: string): TransportType =>
-  val.indexOf('Т') !== -1 ? TransportType.Trolleybus : TransportType.Bus;
+  /^[TТ]/g.test(val) ? TransportType.Trolleybus : TransportType.Bus;
 
 const busNameToType = (val: string): TransportType =>
-  val.indexOf('Т') === 0 ? TransportType.Trolleybus : TransportType.Bus;
+  /^[TТ]/g.test(val) ? TransportType.Trolleybus : TransportType.Bus;
 
 const parseLatLngPath = (val: string): number[][] => {
   if (!val) {

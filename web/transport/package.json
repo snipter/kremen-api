@@ -9,7 +9,9 @@
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "ISC",
   "scripts": {
-    "start": "webpack-dev-server --mode development --env.ENVFILE=.env.dev",
+    "start": "yarn start:dev",
+    "start:dev": "webpack-dev-server --mode development --env.ENVFILE=.env.dev",
+    "start:loc": "webpack-dev-server --mode development --env.ENVFILE=.env.loc",
     "dist": "yarn dist:dev",
     "dist:dev": "rm -rf dist/* && webpack -p --env.ENVFILE=.env.dev",
     "dist:prd": "rm -rf dist/* && webpack -p --env.ENVFILE=.env.prd",

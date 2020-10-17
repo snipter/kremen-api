@@ -7,7 +7,7 @@ interface RoutesColorsMap {
   [key: string]: ColorsSet;
 }
 
-const colorSetFromColor = (val: string): ColorsSet => ({
+export const colorSetFromColor = (val: string): ColorsSet => ({
   light: val,
   dark: color(val)
     .darken(0.5)
@@ -44,11 +44,11 @@ const routeColors: RoutesColorsMap = {
   default: colorSetFromColor('#000000'),
 };
 
-export const defaultRouteColors = colorSetFromColor('#000000');
+export const defRouteColors = colorSetFromColor('#000000');
 
 export const offlineColors = colorSetFromColor('#BDC3C7');
 
-export const routeNumberToColor = (val: string) => routeColors[val] || defaultRouteColors;
+export const routeNumberToColor = (val: string) => routeColors[val] || defRouteColors;
 
 export const clearRouteNumber = (val: string): string => {
   let mod: string = val.replace(/Т\s+0*/g, '');

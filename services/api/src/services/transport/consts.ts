@@ -57,11 +57,22 @@ export const tranpsortRouteColors: TransportRouteColorsMap = {
   '30': '#D970AD',
   '216': '#7277D5',
   'Т 01': '#E0535D',
+  'Т 1': '#E0535D',
+  'Т 1+': '#AB003A',
   'Т 02': '#449BB8',
+  'Т 2': '#449BB8',
   'Т 3-Б': '#8E44AD',
+  Т3Б: '#8E44AD',
   'Т 3-Д': '#F0C40B',
+  Т3Д: '#F0C40B',
   'Т 05': '#E67E23',
+  T5: '#E67E23',
+  'Т 5': '#E67E23',
   'Т 06': '#A7B23C',
+  'Т 6': '#A7B23C',
+  T26А: '#D5AA00',
+  T28А: '#9ED8EE',
+  'А 25': '#89A1E2',
 };
 
 export const defTransportRouteColor = '#000000';

@@ -12,7 +12,7 @@ services:
       - "./web/transport:/usr/src/app"
     command: "yarn start"
     ports:
-      - "6005:6005"
+      - "6001:6001"
   api:
     image: node:14-alpine3.10
     container_name: kremen-api
@@ -20,6 +20,8 @@ services:
     working_dir: /usr/src/app
     volumes:
       - "./services/api:/usr/src/app"
+    environment:
+      PORT: 8080
     command: "yarn start:dev"
     ports:
       - "8080:8080"

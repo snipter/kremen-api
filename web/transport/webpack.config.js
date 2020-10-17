@@ -77,7 +77,7 @@ module.exports = env => {
       }),
     ],
     devServer: {
-      port: 6005,
+      port: 6001,
       historyApiFallback: true,
       headers: {
         'Access-Control-Allow-Origin': '*',
