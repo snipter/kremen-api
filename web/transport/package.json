@@ -20,7 +20,6 @@
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "@kremen/core": "1.0.14",
     "@kremen/react": "1.0.0",
     "@material-ui/core": "3.9.3",
     "@material-ui/icons": "3.0.2",

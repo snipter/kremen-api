@@ -1,6 +1,6 @@
 import React, { CSSProperties, RefObject, FC, MutableRefObject } from 'react';
 import { GoogleMap, GoogleMapProps, withGoogleMap, withScriptjs } from 'react-google-maps';
-import { Log } from '@kremen/core';
+import { Log } from 'utils';
 
 const log = Log('components.Map');
 

@@ -1,7 +1,7 @@
 import color from 'color';
 import { sortBy } from 'lodash';
 import { ColorsSet } from 'styles';
-import { TransportRoute } from '@kremen/core';
+import { TransportRoute } from 'core/api';
 
 interface RoutesColorsMap {
   [key: string]: ColorsSet;

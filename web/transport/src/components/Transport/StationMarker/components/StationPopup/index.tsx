@@ -1,14 +1,14 @@
-import { Log, TransportPrediction, TransportRoute, TransportStation } from '@kremen/core';
 import { m, Style, Styles, Text, View } from '@kremen/react';
 import { CircularProgress } from '@material-ui/core';
 import IconArrowDownward from '@material-ui/icons/ArrowDownward';
 import IconArrowUpward from '@material-ui/icons/ArrowUpward';
 import { RouteCircle } from 'components/Transport';
 import { api } from 'core';
+import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
 import React, { FC, useEffect, useState } from 'react';
 import { InfoWindow } from 'react-google-maps';
 import { colors } from 'styles';
-import { Timer } from 'utils';
+import { Log, Timer } from 'utils';
 
 import StationPredictionsList from './components/StationPredictionsList';
 

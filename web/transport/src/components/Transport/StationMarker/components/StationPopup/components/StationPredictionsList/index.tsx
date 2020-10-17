@@ -1,4 +1,4 @@
-import { TransportPrediction, TransportStation } from '@kremen/core';
+import { TransportPrediction, TransportStation } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import { RouteCircle } from 'components/Transport';
 import { sortBy } from 'lodash';

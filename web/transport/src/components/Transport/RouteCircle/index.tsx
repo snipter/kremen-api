@@ -1,4 +1,4 @@
-import { TransportRoute } from '@kremen/core';
+import { TransportRoute } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import { clearRouteNumber, routeNumberToColor } from 'core';
 import React, { FC } from 'react';

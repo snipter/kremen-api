@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { TransportBus, TransportRoute, TransportType } from '@kremen/core';
+import { TransportBus, TransportRoute, TransportType } from 'core/api';
 import { offlineColors } from 'core';
 import React, { FC } from 'react';
 import { Marker } from 'react-google-maps';

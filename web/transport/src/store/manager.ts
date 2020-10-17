@@ -1,7 +1,7 @@
-import { Log, TransportRoute } from '@kremen/core';
-import { api, defaultRouteColors, routeNumberToColor, sortRoutes } from 'core';
+import { api, defaultRouteColors, routeNumberToColor, sortRoutes, TransportRoute } from 'core';
 import { Store } from 'redux';
 import { PersistedState } from 'redux-persist';
+import { Log } from 'utils';
 
 import { ActionType, StoreAction } from './actions';
 import { StoreState } from './reducers';

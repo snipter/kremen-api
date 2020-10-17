@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Polyline } from 'react-google-maps';
 import { ColorsSet } from 'styles';
-import { TransportRoute } from '@kremen/core';
+import { TransportRoute } from 'core/api';
 
 interface Props {
   route: TransportRoute;

@@ -1,3 +1,5 @@
+import { reduce } from 'lodash';
+
 export const pad = (val: number | string, max: number): string => {
   const str = val.toString();
   return str.length < max ? pad(`0${str}`, max) : str;
@@ -37,3 +39,5 @@ export const monthNumberToStr = (val: number): string => {
       return '';
   }
 };
+
+export const numbersArrToStr = (arr: number[]) => reduce(arr, (memo, val) => (memo ? `${memo},${val}` : `${val}`), '');

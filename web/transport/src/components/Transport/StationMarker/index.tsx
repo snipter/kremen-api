@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { TransportRoute, TransportStation } from '@kremen/core';
+import { TransportRoute, TransportStation } from 'core/api';
 import React, { PureComponent } from 'react';
 import { Marker } from 'react-google-maps';
 

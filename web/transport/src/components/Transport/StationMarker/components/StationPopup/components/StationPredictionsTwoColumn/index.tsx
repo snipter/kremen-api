@@ -1,4 +1,4 @@
-import { TransportPrediction, TransportRoute, TransportStation } from '@kremen/core';
+import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import { RouteCircle } from 'components/Transport';
 import { sortRoutes } from 'core';

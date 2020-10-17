@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { LatLng, Log, TransportBus, TransportRoute, TransportStation } from '@kremen/core';
 import { m, Style, Styles, View } from '@kremen/react';
 import DocTitle from 'components/DocTitle';
 import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
 import { coordinates, routeNumberToColor, track } from 'core';
+import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { includes, uniqBy } from 'lodash';
 import React, { PureComponent } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { connect } from 'react-redux';
 import { manager } from 'store';
 import { fullScreen } from 'styles';
-import { Timer } from 'utils';
+import { LatLng, Log, Timer } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
 import AboutDialog from './scenes/AboutDialog';

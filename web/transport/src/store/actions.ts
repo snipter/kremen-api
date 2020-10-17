@@ -1,4 +1,4 @@
-import { TransportBus, TransportBusesCompactUpdate, TransportRoute } from '@kremen/core';
+import { TransportBus, TransportBusesCompactUpdate, TransportRoute } from 'core/api';
 import { Action } from 'redux';
 
 export enum ActionType {

@@ -1,4 +1,4 @@
-import { TransportBus, TransportRoute } from '@kremen/core';
+import { TransportBus, TransportRoute } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import { RouteCircle } from 'components/Transport';
 import React, { FC } from 'react';

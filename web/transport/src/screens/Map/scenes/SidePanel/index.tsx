@@ -1,4 +1,4 @@
-import { TransportBus, TransportRoute } from '@kremen/core';
+import { TransportBus, TransportRoute } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';

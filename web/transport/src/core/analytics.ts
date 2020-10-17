@@ -1,4 +1,4 @@
-import { Log } from '@kremen/core';
+import { Log } from 'utils';
 import mixpanel, { Dict } from 'mixpanel-browser';
 import { genId } from 'utils';
 

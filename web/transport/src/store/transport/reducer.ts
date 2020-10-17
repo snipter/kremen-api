@@ -1,5 +1,6 @@
+import { TransportBus, TransportRoute } from 'core/api';
 import { ActionType, StoreAction } from 'store/actions';
-import { TransportRoute, TransportBus } from '@kremen/core';
+
 import initData from './init.json';
 
 export interface TransportState {

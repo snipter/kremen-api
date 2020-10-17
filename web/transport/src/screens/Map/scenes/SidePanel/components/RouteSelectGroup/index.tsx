@@ -1,4 +1,4 @@
-import { TransportRoute } from '@kremen/core';
+import { TransportRoute } from 'core/api';
 import { m, Style, Styles, View } from '@kremen/react';
 import { Checkbox } from 'components/Common';
 import { includes, uniq } from 'lodash';

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Log } from '@kremen/core';
+import { Log } from 'utils';
 import { isString } from 'lodash';
 
 const log = Log('core.configs');

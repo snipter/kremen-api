@@ -1,5 +1,5 @@
 import { getConf, setConf } from 'core';
-import { LatLng } from '@kremen/core';
+import { LatLng } from 'utils';
 
 export const getSelectedRoutesConf = (def: number[]): number[] => {
   const val = getConf<number[]>('routes');
