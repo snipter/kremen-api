@@ -18,3 +18,4 @@ export const persistor = persistStore(store);
 // persistor.purge(); // { type: 'persist/PURGE' }
 export { StoreAction, ActionType } from './actions';
 export { StoreState } from './reducers';
+export * from './selectors';

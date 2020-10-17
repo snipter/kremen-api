@@ -1,5 +1,5 @@
 import { View } from 'components/Common';
-import { clearRouteNumber, colorSetFromColor, defRouteColors } from 'core';
+import { clearRouteNumber, routeToColor } from 'core';
 import { TransportRoute } from 'core/api';
 import React, { FC } from 'react';
 import { colors, ColorsSet, m, Style, Styles } from 'styles';
@@ -12,7 +12,7 @@ interface Props {
 
 export const RouteCircle: FC<Props> = ({ style, route, size }) => {
   const text = clearRouteNumber(route.number);
-  const colorsSet = route.color ? colorSetFromColor(route.color) : defRouteColors;
+  const colorsSet = routeToColor(route);
   const fontSize = basicFontSize(text);
   const styles = getStyles(size, colorsSet, fontSize);
   return <View style={m(styles.container, style)}>{text}</View>;

@@ -3,7 +3,7 @@ import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
-import { coordinates, routeNumberToColor, track } from 'core';
+import { coordinates, routeToColor, track } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { includes, uniqBy } from 'lodash';
 import React, { PureComponent } from 'react';
@@ -208,7 +208,7 @@ class MapScreen extends PureComponent<Props, State> {
             />
           ))}
           {routes.map(route => (
-            <RoutePath key={`path-${route.rid}`} route={route} colors={routeNumberToColor(route.number)} />
+            <RoutePath key={`path-${route.rid}`} route={route} colors={routeToColor(route)} />
           ))}
           {stations.map(station => (
             <StationMarker

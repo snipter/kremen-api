@@ -1,7 +1,7 @@
 import { TransportRoute } from 'core/api';
 import { m, Style, Styles } from 'styles';
 import { Checkbox, View } from 'components/Common';
-import { clearRouteNumber, routeNumberToColor } from 'core';
+import { clearRouteNumber, routeToColor } from 'core';
 import React, { FC } from 'react';
 
 interface Props {
@@ -13,11 +13,7 @@ interface Props {
 
 export const RouteSelectItem: FC<Props> = ({ style, checked, route, onChange }) => (
   <View style={m(styles.container, style)} row={true}>
-    <Checkbox
-      checked={checked}
-      color={routeNumberToColor(route.number).light}
-      onChange={(val: boolean) => onChange(route, val)}
-    />
+    <Checkbox checked={checked} color={routeToColor(route).light} onChange={(val: boolean) => onChange(route, val)} />
     <div style={styles.title}>{clearRouteNumber(route.number)}</div>
   </View>
 );

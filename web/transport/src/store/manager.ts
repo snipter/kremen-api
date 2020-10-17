@@ -1,4 +1,4 @@
-import { api, defRouteColors, routeNumberToColor, sortRoutes, TransportRoute } from 'core';
+import { api, routeToColor, sortRoutes, TransportRoute } from 'core';
 import { Store } from 'redux';
 import { PersistedState } from 'redux-persist';
 import { Log } from 'utils';
@@ -70,17 +70,11 @@ export class SateManager {
   }
 
   public routeToColors(route?: TransportRoute) {
-    if (!route) {
-      return defRouteColors;
-    }
-    return routeNumberToColor(route.number);
+    return routeToColor(route);
   }
 
   public routeIdToColors(rid: number) {
     const route = this.state.transport.routes.find(item => item.rid === rid);
-    if (!route) {
-      return defRouteColors;
-    }
-    return this.routeToColors(route);
+    return routeToColor(route);
   }
 }
