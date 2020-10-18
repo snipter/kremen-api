@@ -5,10 +5,9 @@ import { TransportPrediction, TransportRoute, TransportStation } from 'core/api'
 import { compact, sortBy, uniq } from 'lodash';
 import React, { FC } from 'react';
 import { manager } from 'store';
-import { m, Style, Styles } from 'styles';
+import { m, Styles, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   station: TransportStation;
   predictions: TransportPrediction[];
 }

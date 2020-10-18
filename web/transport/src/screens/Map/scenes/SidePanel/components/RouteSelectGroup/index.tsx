@@ -2,12 +2,11 @@ import { Checkbox, View } from 'components/Common';
 import { TransportRoute } from 'core/api';
 import { includes, uniq } from 'lodash';
 import React, { FC, ReactNode } from 'react';
-import { m, Style, Styles } from 'styles';
+import { m, Styles, ViewStyleProps } from 'styles';
 
 import RouteSelectItem from './components/RouteSelectItem';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   title: string;
   routes: TransportRoute[];
   selected: number[];

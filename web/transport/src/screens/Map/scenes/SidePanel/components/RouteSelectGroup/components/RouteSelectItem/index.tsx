@@ -1,11 +1,10 @@
-import { TransportRoute } from 'core/api';
-import { m, Style, Styles } from 'styles';
 import { Checkbox, View } from 'components/Common';
 import { clearRouteNumber, routeToColor } from 'core';
+import { TransportRoute } from 'core/api';
 import React, { FC } from 'react';
+import { m, Styles, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   checked?: boolean;
   route: TransportRoute;
   onChange: (route: TransportRoute, val: boolean) => void;

@@ -7,15 +7,14 @@ import { api } from 'core';
 import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
 import React, { FC, useEffect, useState } from 'react';
 import { InfoWindow } from 'react-google-maps';
-import { colors, m, Style, Styles } from 'styles';
+import { colors, m, Styles, ViewStyleProps } from 'styles';
 import { Log, Timer } from 'utils';
 
 import StationPredictionsList from './components/StationPredictionsList';
 
 const log = Log('components.StationPopup');
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   station: TransportStation;
   route?: TransportRoute;
   selectedRoutes: number[];

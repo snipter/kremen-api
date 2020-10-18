@@ -10,7 +10,7 @@ import React, { PureComponent } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { connect } from 'react-redux';
 import { manager } from 'store';
-import { fullScreen, m, Style, Styles } from 'styles';
+import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { LatLng, Log, Timer } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
@@ -40,11 +40,7 @@ interface ConnectedProps {
   buses: TransportBus[];
 }
 
-interface OwnProps {
-  style?: Style;
-}
-
-type Props = ConnectedProps & OwnProps;
+type Props = ConnectedProps & ViewStyleProps;
 
 interface State {
   center?: LatLng;
@@ -268,7 +264,7 @@ const styles: Styles = {
   },
 };
 
-export default connect<ConnectedProps, unknown, OwnProps>(() => ({
+export default connect<ConnectedProps, unknown, ViewStyleProps>(() => ({
   routes: manager.transportRoutes(),
   buses: manager.state.transport.buses,
 }))(MapScreen);

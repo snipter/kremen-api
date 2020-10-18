@@ -2,10 +2,9 @@ import { View } from 'components/Common';
 import { clearRouteNumber, routeToColor } from 'core';
 import { TransportRoute } from 'core/api';
 import React, { FC } from 'react';
-import { colors, ColorsSet, m, Style, Styles } from 'styles';
+import { colors, ColorsSet, m, Styles, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   route: TransportRoute;
   size?: number;
 }

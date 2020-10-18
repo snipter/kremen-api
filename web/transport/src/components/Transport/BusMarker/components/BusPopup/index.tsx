@@ -3,10 +3,9 @@ import { RouteCircle } from 'components/Transport';
 import { TransportBus, TransportRoute } from 'core/api';
 import React, { FC } from 'react';
 import { InfoWindow } from 'react-google-maps';
-import { m, Style, Styles } from 'styles';
+import { m, Styles, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   bus: TransportBus;
   route?: TransportRoute;
   onClose: () => void;

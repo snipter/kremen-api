@@ -3,7 +3,7 @@
 /* eslint-disable react/no-deprecated */
 import React, { PureComponent, ReactNode } from 'react';
 import { Motion, spring } from 'react-motion';
-import { Style } from 'styles';
+import { Style, ViewStyleProps } from 'styles';
 
 const SpringPrecision = 1;
 
@@ -25,8 +25,7 @@ interface CollabsibleSpringConf {
   [key: string]: number;
 }
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   opened: boolean;
   forceInitialAnimation?: boolean;
   fixedHeight?: number;

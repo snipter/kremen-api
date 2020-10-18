@@ -1,9 +1,7 @@
-import { m, Style, Styles } from 'styles';
 import React, { FC, SyntheticEvent } from 'react';
-import { colors } from 'styles';
+import { colors, m, Styles, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   href?: string;
   target?: string;
   onClick?: () => void;

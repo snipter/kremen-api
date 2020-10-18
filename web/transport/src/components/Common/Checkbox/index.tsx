@@ -1,10 +1,9 @@
 import React, { FC, SyntheticEvent } from 'react';
-import { colors, m, Style, Styles } from 'styles';
+import { colors, m, Styles, ViewStyleProps } from 'styles';
 
 import View from '../View';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   size?: number;
   color?: string;
   checked?: boolean;

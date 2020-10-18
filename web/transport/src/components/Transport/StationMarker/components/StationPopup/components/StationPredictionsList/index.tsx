@@ -4,12 +4,11 @@ import { TransportPrediction, TransportStation } from 'core/api';
 import { sortBy } from 'lodash';
 import React, { FC } from 'react';
 import { manager } from 'store';
-import { m, Style, Styles } from 'styles';
+import { m, Styles, ViewStyleProps } from 'styles';
 
 import { getItemsSplitByColumns, numToTimeStr } from './utils';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   station: TransportStation;
   predictions: TransportPrediction[];
 }

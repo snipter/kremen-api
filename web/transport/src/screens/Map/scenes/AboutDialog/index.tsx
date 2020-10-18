@@ -1,9 +1,8 @@
-import { Style } from 'styles';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import React, { FC } from 'react';
+import { ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: Style;
+interface Props extends ViewStyleProps {
   open: boolean;
   onClose: () => void;
 }

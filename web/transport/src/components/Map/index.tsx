@@ -1,5 +1,6 @@
 import React, { CSSProperties, RefObject, FC, MutableRefObject } from 'react';
 import { GoogleMap, GoogleMapProps, withGoogleMap, withScriptjs } from 'react-google-maps';
+import { ViewStyleProps } from 'styles';
 import { Log } from 'utils';
 
 const log = Log('components.Map');
@@ -19,9 +20,7 @@ const Map: FC<MapProps> = ({ mapRef, ...props }) => <GoogleMap ref={mapRef} {...
 
 const WrappedMap = withScriptjs(withGoogleMap(Map));
 
-interface WrappedMapProps extends MapProps {
-  style?: CSSProperties;
-}
+type WrappedMapProps = MapProps & ViewStyleProps;
 
 const WrappedMapWithDefault: FC<WrappedMapProps> = ({ style, ...props }) => {
   return (
