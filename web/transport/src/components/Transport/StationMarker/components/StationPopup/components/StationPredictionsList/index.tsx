@@ -1,9 +1,10 @@
 import { View } from 'components/Common';
 import { RouteCircle } from 'components/Transport';
+import { findRouteWithId } from 'core';
 import { TransportPrediction, TransportStation } from 'core/api';
 import { sortBy } from 'lodash';
 import React, { FC } from 'react';
-import { manager } from 'store';
+import { useSelector } from 'store';
 import { m, Styles, ViewStyleProps } from 'styles';
 
 import { getItemsSplitByColumns, numToTimeStr } from './utils';
@@ -17,8 +18,10 @@ const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions: prediction
   const stationPrediction = predictionsRaw.filter(item => item.reverse !== station.directionForward);
   const predictions = sortBy(stationPrediction, item => item.prediction);
 
+  const routes = useSelector(s => s.transport.routes);
+
   const renderPrediction = (item: TransportPrediction, index: number) => {
-    const route = manager.routeWithId(item.rid);
+    const route = findRouteWithId(routes, item.rid);
     if (!route) {
       return null;
     }

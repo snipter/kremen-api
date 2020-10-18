@@ -2,9 +2,9 @@ import { TransportBus, TransportBusesCompactUpdate, TransportRoute } from 'core/
 import { Action } from 'redux';
 
 export enum ActionType {
-  TransportRoutesSet = 'transport/routes/set',
-  TransportBusesSet = 'transport/buses/set',
-  TransportBusesCompactUpdate = 'transport/buses/update',
+  TransportRoutesSet = 'transport/RoutesSet',
+  TransportBusesSet = 'transport/BusesSet',
+  TransportBusesCompactUpdate = 'transport/BusesUpdate',
 }
 
 export type StoreAction =

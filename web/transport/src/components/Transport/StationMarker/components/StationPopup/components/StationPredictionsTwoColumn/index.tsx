@@ -1,10 +1,10 @@
 import { View } from 'components/Common';
 import { RouteCircle } from 'components/Transport';
-import { sortRoutes } from 'core';
+import { findRouteWithId, sortRoutes } from 'core';
 import { TransportPrediction, TransportRoute, TransportStation } from 'core/api';
 import { compact, sortBy, uniq } from 'lodash';
 import React, { FC } from 'react';
-import { manager } from 'store';
+import { useSelector } from 'store';
 import { m, Styles, ViewStyleProps } from 'styles';
 
 interface Props extends ViewStyleProps {
@@ -22,7 +22,8 @@ const numToTimeStr = (val: number): string => {
 
 const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions, station }) => {
   const rids = uniq(predictions.map(item => item.rid));
-  const routes = sortRoutes(compact(rids.map(rid => manager.routeWithId(rid))));
+  const routes = useSelector(s => s.transport.routes);
+  const predictionRoutes = sortRoutes(compact(rids.map(rid => findRouteWithId(routes, rid))));
 
   const timesForRoute = (route: TransportRoute): number[] => {
     const items = predictions.filter(item => item.rid === route.rid && item.reverse !== station.directionForward);
@@ -52,7 +53,7 @@ const StationPredictionsTwoColumn: FC<Props> = ({ style, predictions, station })
         <View style={styles.rowVal}>{'Найближч.'}</View>
         <View style={styles.rowVal}>{'Наступ.'}</View>
       </View>
-      {routes.map(renderRoute)}
+      {predictionRoutes.map(renderRoute)}
     </View>
   );
 };

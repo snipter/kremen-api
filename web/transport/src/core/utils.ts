@@ -15,6 +15,11 @@ export const offlineColors = colorSetFromColor('#BDC3C7');
 export const routeToColor = (route?: TransportRoute) =>
   route && route.color ? colorSetFromColor(route.color) : defRouteColors;
 
+export const routeIdToColor = (rid: number, routes: TransportRoute[]) => {
+  const route = routes.find(itm => itm.rid === rid);
+  return route ? routeToColor(route) : defRouteColors;
+};
+
 export const clearRouteNumber = (val: string): string => {
   let mod: string = val.replace(/^[ТT]/g, '');
   mod = mod.trim();
@@ -34,3 +39,5 @@ export const sortRoutes = (arr: TransportRoute[]): TransportRoute[] =>
     }
     return parseInt(match[0], 10) * base + match[3].charCodeAt(0);
   });
+
+export const findRouteWithId = (itms: TransportRoute[], rid: number) => itms.find(itm => itm.rid === rid);

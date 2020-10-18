@@ -1,80 +1,48 @@
-import { api, routeToColor, sortRoutes, TransportRoute } from 'core';
-import { Store } from 'redux';
-import { PersistedState } from 'redux-persist';
+import { api } from 'core';
+import { Dispatch } from 'react';
+import { useDispatch } from 'react-redux';
 import { Log } from 'utils';
 
 import { ActionType, StoreAction } from './actions';
-import { StoreState } from './reducers';
 
-const log = Log('store.SateManager');
+const log = Log('store.Manager');
 
-export class SateManager {
-  private store: Store<StoreState & PersistedState>;
+export const useStoreManager = () => {
+  const dispatch = useDispatch<Dispatch<StoreAction>>();
 
-  constructor(store: Store<StoreState & PersistedState>) {
-    this.store = store;
-    store.subscribe(this.onStoreChange);
-  }
-
-  public get state() {
-    return this.store.getState();
-  }
-
-  public dispatch(action: StoreAction) {
-    return this.store.dispatch(action);
-  }
-
-  private onStoreChange = () => {
-    //
-  };
-
-  // Transport
-
-  public routeWithId(rid: number): TransportRoute | undefined {
-    return this.state.transport.routes.find(item => item.rid === rid);
-  }
-
-  public transportRoutes(): TransportRoute[] {
-    return sortRoutes(this.state.transport.routes);
-  }
-
-  public async transportDataUpdate() {
-    return Promise.all([this.transportRoutesUpdate(), this.transportBusesUpdate()]);
-  }
-
-  public async transportRoutesUpdate() {
+  const updateRoutes = async () => {
     log.debug('getting routes');
     log.start('getRoutes');
     const routes = await api.transport.routes();
     log.end('getRoutes');
     log.debug('getting routes done');
-    this.dispatch({ type: ActionType.TransportRoutesSet, routes });
-  }
+    dispatch({ type: ActionType.TransportRoutesSet, routes });
+  };
 
-  public async transportBusesUpdate() {
+  const updateBusses = async () => {
     log.debug('getting buses');
     log.start('getBuses');
     const buses = await api.transport.buses();
     log.end('getBuses');
     log.debug('getting buses done');
-    this.dispatch({ type: ActionType.TransportBusesSet, buses });
-  }
+    dispatch({ type: ActionType.TransportBusesSet, buses });
+  };
 
-  public async transportBusesUpdateState(routesIds?: number[]) {
+  const updateBussesState = async (routesIds?: number[]) => {
     log.debug('getting buses update');
     log.start('getBusesUpdate');
     const update = await api.transport.busesUpdate(routesIds);
     log.end('getBusesUpdate');
     log.debug('getting buses done');
-    this.dispatch({ type: ActionType.TransportBusesCompactUpdate, update });
-  }
+    dispatch({ type: ActionType.TransportBusesCompactUpdate, update });
+  };
 
-  public routeToColors(route?: TransportRoute) {
-    return routeToColor(route);
-  }
+  const updateCommonData = async () => Promise.all([updateRoutes(), updateBusses()]);
 
-  public routeIdToColors(rid: number) {
-    const route = this.state.transport.routes.find(item => item.rid === rid);
-    return routeToColor(route);
-  }
-}
+  return {
+    updateRoutes,
+    updateBusses,
+    updateBussesState,
+    updateCommonData,
+  };
+};

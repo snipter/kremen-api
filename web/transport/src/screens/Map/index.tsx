@@ -3,13 +3,12 @@ import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
-import { coordinates, routeToColor, track } from 'core';
+import { coordinates, findRouteWithId, routeIdToColor, routeToColor, track } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { includes, uniqBy } from 'lodash';
-import React, { PureComponent } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
-import { connect } from 'react-redux';
-import { manager } from 'store';
+import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { LatLng, Log, Timer } from 'utils';
 
@@ -35,66 +34,46 @@ const routesToStatiosn = (routes: TransportRoute[]): TransportStation[] => {
   return uniqBy(stations, station => station.sid);
 };
 
-interface ConnectedProps {
-  routes: TransportRoute[];
-  buses: TransportBus[];
-}
+type Props = ViewStyleProps;
 
-type Props = ConnectedProps & ViewStyleProps;
+export const MapScreen: FC<Props> = ({ style }) => {
+  const mapRef = useRef<GoogleMap>(null);
 
-interface State {
-  center?: LatLng;
-  aboutOpen: boolean;
-  displayerRoutes: number[];
-  busPopupId: string | null;
-  stationPopupId: number | null;
-}
+  const manager = useStoreManager();
+  const allRoutes = useSelector(s => s.transport.routes);
+  const allBuses = useSelector(s => s.transport.buses);
 
-class MapScreen extends PureComponent<Props, State> {
-  private map: GoogleMap | null = null;
-  private busesUpdateTimer: Timer | null = null;
+  const [center, setCenter] = useState<LatLng | undefined>(undefined);
+  const [busPopupId, setBusPopupId] = useState<string | undefined>(undefined);
+  const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
+  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+  const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
+    getSelectedRoutesConf([189, 188, 192, 187, 190, 191]),
+  );
+  const [busesUpdateTimer, setBusesUpdateTimer] = useState<Timer | undefined>(undefined);
 
-  state: State = {
-    displayerRoutes: getSelectedRoutesConf([189, 188, 192, 187, 190, 191]),
-    aboutOpen: false,
-    busPopupId: null,
-    stationPopupId: null,
-  };
-
-  public componentDidMount() {
+  useEffect(() => {
     track('MapScreenVisit');
-    manager.transportDataUpdate();
-    this.busesUpdateTimer = new Timer(() => this.updateBusesState(), 3000, false);
-    this.busesUpdateTimer.start(false);
-  }
+    manager.updateCommonData();
+    const t = new Timer(() => updateBusesState(), 3000, false);
+    t.start(false);
+    setBusesUpdateTimer(t);
+    return () => {
+      busesUpdateTimer?.stop();
+    };
+  }, []);
 
-  public componentWillUnmount() {
-    if (this.busesUpdateTimer) {
-      this.busesUpdateTimer.stop();
-      this.busesUpdateTimer = null;
-    }
-  }
-
-  // Data
-
-  private async updateBusesState() {
-    return manager.transportBusesUpdateState(this.state.displayerRoutes);
-  }
+  const updateBusesState = async () => {
+    return manager.updateBussesState();
+  };
 
   // Map
 
-  private onMapRef = (el: GoogleMap | null) => {
-    if (this.map || !el) {
+  const handleMapZoomChanged = () => {
+    if (!mapRef.current) {
       return;
     }
-    this.map = el;
-  };
-
-  private onMapZoomChanged = () => {
-    if (!this.map) {
-      return;
-    }
-    const zoom = this.map.getZoom();
+    const zoom = mapRef.current.getZoom();
     if (isNaN(zoom)) {
       return;
     }
@@ -102,11 +81,11 @@ class MapScreen extends PureComponent<Props, State> {
     setMapZoomConf(zoom);
   };
 
-  private onMapCenterChanged = () => {
-    if (!this.map) {
+  const handleMapCenterChanged = () => {
+    if (!mapRef.current) {
       return;
     }
-    const coord = this.map.getCenter();
+    const coord = mapRef.current.getCenter();
     const lat = coord.lat();
     const lng = coord.lng();
     if (!lat || !lng) {
@@ -115,127 +94,119 @@ class MapScreen extends PureComponent<Props, State> {
     setMapCenterConf({ lat, lng });
   };
 
-  private onMapClick = () => {
+  const handleMapClick = () => {
     track('MapClick');
     log.debug('map click');
-    this.setState({ busPopupId: null, stationPopupId: null });
+    setBusPopupId(undefined);
+    setStationPopupId(undefined);
   };
 
-  private onDisplayedRoutesChange = (displayerRoutes: number[]) => {
-    track('DisplayedRoutesChange', { routes: displayerRoutes });
-    setSelectedRoutesConf(displayerRoutes);
-    this.setState({ displayerRoutes });
+  const handleDisplayedRoutesChange = (val: number[]) => {
+    track('DisplayedRoutesChange', { routes: val });
+    setSelectedRoutesConf(val);
+    setDisplayedRoutes(val);
   };
 
   // Bus
 
-  private onBusMarkerClick = (bus: TransportBus) => {
+  const handleBusMarkerClick = (bus: TransportBus) => {
     log.info('bus marker click, bus=', bus);
     track('BusMarkerClick', { tid: bus.tid, rid: bus.rid, name: bus.name });
-    this.setState({ busPopupId: bus.tid, stationPopupId: null });
+    setBusPopupId(bus.tid);
+    setStationPopupId(undefined);
   };
 
-  private onBusMarkerPopupClose = () => {
-    this.setState({ busPopupId: null });
-  };
+  const handleBusMarkerPopupClose = () => setBusPopupId(undefined);
 
   // Station
 
-  private onStationMarkerClick = (station: TransportStation) => {
+  const handleStationMarkerClick = (station: TransportStation) => {
     log.info('station marker click, station=', station);
     track('StationMarkerClick', { sid: station.sid, name: station.name });
-    this.setState({ stationPopupId: station.sid, busPopupId: null });
+    setStationPopupId(station.sid);
+    setBusPopupId(undefined);
   };
 
-  private onStationMarkerPopupClose = () => {
-    this.setState({ stationPopupId: null });
+  const handleStationMarkerPopupClose = () => {
+    setStationPopupId(undefined);
   };
 
   // About dialog
 
-  private onAboutClick = () => {
+  const handleAboutPress = () => {
     track('AboutBtnClick');
-    this.setState({ aboutOpen: true });
-  };
-
-  private onAboutClose = () => {
-    this.setState({ aboutOpen: false });
+    setAboutOpen(false);
   };
 
   // Render
-
-  public render() {
-    const { style, routes: allRoutes, buses: allBuses } = this.props;
-    const { center, displayerRoutes, busPopupId, stationPopupId, aboutOpen } = this.state;
-    const mapOpt: any = {
-      fullscreenControl: false,
-      mapTypeControlOptions: {
-        mapTypeIds: ['HYBRID', 'SATELLITE'],
-        position: 'TOP_RIGHT',
-        style: 'DEFAULT',
-      },
-    };
-    const routes = allRoutes.filter(({ rid }) => includes(displayerRoutes, rid));
-    const buses = allBuses.filter(({ rid }) => includes(displayerRoutes, rid));
-    const stations = routesToStatiosn(routes);
-    return (
-      <View style={m(styles.container, style)}>
-        <DocTitle title={'Транспорт'} />
-        <Map
-          mapRef={this.onMapRef}
-          style={styles.map}
-          defaultZoom={getMapZoomConf(14)}
-          defaultCenter={getMapCenterConf(coordinates.kremen)}
-          options={mapOpt}
-          onZoomChanged={this.onMapZoomChanged}
-          onCenterChanged={this.onMapCenterChanged}
-          onClick={this.onMapClick}
-          center={center || getMapCenterConf(coordinates.kremen)}
-        >
-          {buses.map(bus => (
-            <BusMarker
-              key={`bus-${bus.tid}`}
-              bus={bus}
-              route={manager.routeWithId(bus.rid)}
-              colors={manager.routeIdToColors(bus.rid)}
-              popupOpen={bus.tid === busPopupId}
-              onClick={this.onBusMarkerClick}
-              onPopupClose={this.onBusMarkerPopupClose}
-            />
-          ))}
-          {routes.map(route => (
-            <RoutePath key={`path-${route.rid}`} route={route} colors={routeToColor(route)} />
-          ))}
-          {stations.map(station => (
-            <StationMarker
-              key={`station-${station.rid}-${station.sid}`}
-              station={station}
-              selectedRoutes={displayerRoutes}
-              route={manager.routeWithId(station.rid)}
-              popupOpen={station.sid === stationPopupId}
-              onClick={this.onStationMarkerClick}
-              onPopupClose={this.onStationMarkerPopupClose}
-            />
-          ))}
-        </Map>
-        <SidePanel
-          style={styles.sidebar}
-          buses={allBuses}
-          routes={allRoutes}
-          selected={displayerRoutes}
-          onSelectedChange={this.onDisplayedRoutesChange}
-          onAboutClick={this.onAboutClick}
-        />
-        <AboutDialog open={aboutOpen} onClose={this.onAboutClose} />
-        <View style={styles.footer}>
-          <a className="link-img-opacity" href="https://io.kr.ua/" target="__blank">
-            <img style={styles.footerImg} src={LogoIqHubBlack} />
-          </a>
-        </View>
+  const mapOpt: any = {
+    fullscreenControl: false,
+    mapTypeControlOptions: {
+      mapTypeIds: ['HYBRID', 'SATELLITE'],
+      position: 'TOP_RIGHT',
+      style: 'DEFAULT',
+    },
+  };
+  const routes = allRoutes.filter(({ rid }) => includes(displayedRoutes, rid));
+  const buses = allBuses.filter(({ rid }) => includes(displayedRoutes, rid));
+  const stations = routesToStatiosn(routes);
+  return (
+    <View style={m(styles.container, style)}>
+      <DocTitle title={'Транспорт'} />
+      <Map
+        mapRef={mapRef}
+        style={styles.map}
+        defaultZoom={getMapZoomConf(14)}
+        defaultCenter={getMapCenterConf(coordinates.kremen)}
+        options={mapOpt}
+        onZoomChanged={handleMapZoomChanged}
+        onCenterChanged={handleMapCenterChanged}
+        onClick={handleMapClick}
+        center={center || getMapCenterConf(coordinates.kremen)}
+      >
+        {buses.map(bus => (
+          <BusMarker
+            key={`bus-${bus.tid}`}
+            bus={bus}
+            route={findRouteWithId(allRoutes, bus.rid)}
+            colors={routeIdToColor(bus.rid, allRoutes)}
+            popupOpen={bus.tid === busPopupId}
+            onClick={handleBusMarkerClick}
+            onPopupClose={handleBusMarkerPopupClose}
+          />
+        ))}
+        {routes.map(route => (
+          <RoutePath key={`path-${route.rid}`} route={route} colors={routeToColor(route)} />
+        ))}
+        {stations.map(station => (
+          <StationMarker
+            key={`station-${station.rid}-${station.sid}`}
+            station={station}
+            selectedRoutes={displayedRoutes}
+            route={findRouteWithId(allRoutes, station.rid)}
+            popupOpen={station.sid === stationPopupId}
+            onClick={handleStationMarkerClick}
+            onPopupClose={handleStationMarkerPopupClose}
+          />
+        ))}
+      </Map>
+      <SidePanel
+        style={styles.sidebar}
+        buses={allBuses}
+        routes={allRoutes}
+        selected={displayedRoutes}
+        onSelectedChange={handleDisplayedRoutesChange}
+        onAboutClick={handleAboutPress}
+      />
+      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
+      <View style={styles.footer}>
+        <a className="link-img-opacity" href="https://kremen.dev/" target="__blank">
+          <img style={styles.footerImg} src={LogoIqHubBlack} />
+        </a>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 const styles: Styles = {
   container: {
@@ -264,7 +235,4 @@ const styles: Styles = {
   },
 };
 
-export default connect<ConnectedProps, unknown, ViewStyleProps>(() => ({
-  routes: manager.transportRoutes(),
-  buses: manager.state.transport.buses,
-}))(MapScreen);
+export default MapScreen;
