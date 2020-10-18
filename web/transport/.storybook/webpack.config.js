@@ -5,17 +5,18 @@ const appPath = path.resolve(__dirname, '../src');
 module.exports = {
   plugins: [],
   module: {
-    rules: [{
-      test: /\.tsx?/,
-      loader: 'babel-loader!ts-loader',
-      exclude: /node_modules/,
-      include,
-    }],
+    rules: [
+      {
+        test: /\.tsx?/,
+        loader: 'babel-loader!ts-loader',
+        exclude: /node_modules/,
+        include,
+      },
+    ],
   },
   resolve: {
     alias: {
       assets: `${appPath}/assets`,
-      common: path.resolve(__dirname, '../../../common'),
       components: `${appPath}/components`,
       core: `${appPath}/core`,
       screens: `${appPath}/screens`,
@@ -23,6 +24,6 @@ module.exports = {
       styles: `${appPath}/styles`,
       utils: `${appPath}/utils`,
     },
-    extensions: ['.js', '.ts', '.tsx']
+    extensions: ['.js', '.ts', '.tsx'],
   },
 };

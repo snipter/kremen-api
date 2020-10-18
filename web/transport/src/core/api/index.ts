@@ -1,5 +1,6 @@
-import { Log, numbersArrToStr, genRandId, isUnknowDict } from 'utils';
 import axios from 'axios';
+import { genRandId, Log, numbersArrToStr } from 'utils';
+
 import {
   TransportBus,
   TransportBusesCompactUpdate,

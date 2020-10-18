@@ -268,7 +268,7 @@ const styles: Styles = {
   },
 };
 
-export default connect<ConnectedProps, {}, OwnProps>(() => ({
+export default connect<ConnectedProps, unknown, OwnProps>(() => ({
   routes: manager.transportRoutes(),
   buses: manager.state.transport.buses,
 }))(MapScreen);

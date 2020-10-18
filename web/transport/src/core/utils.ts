@@ -5,9 +5,7 @@ import { TransportRoute } from 'core/api';
 
 export const colorSetFromColor = (val: string): ColorsSet => ({
   light: val,
-  dark: color(val)
-    .darken(0.5)
-    .toString(),
+  dark: color(val).darken(0.5).toString(),
 });
 
 const defRouteColors = colorSetFromColor('#000000');

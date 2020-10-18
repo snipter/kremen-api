@@ -25,10 +25,7 @@ const named = {
   mainColor: base.red,
 };
 
-export const withAlpha = (val: string, alpha: number) =>
-  color(val)
-    .alpha(alpha)
-    .toString();
+export const withAlpha = (val: string, alpha: number) => color(val).alpha(alpha).toString();
 
 export const colors = {
   ...base,

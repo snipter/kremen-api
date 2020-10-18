@@ -24,6 +24,7 @@ module.exports = {
     // 'iLatLngToCoordArray' was used before it was defined
     '@typescript-eslint/no-use-before-define': 'off',
     // Type boolean trivially inferred from a boolean literal, remove type annotation
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-inferrable-types': 'off',
     'no-extra-boolean-cast': 'off',
     'max-len': ['warn', { code: 120, tabWidth: 2, ignoreStrings: true }],
