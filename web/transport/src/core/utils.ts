@@ -10,6 +10,9 @@ export const colorSetFromColor = (val: string): ColorsSet => ({
 
 const defRouteColors = colorSetFromColor('#000000');
 
+export const defRoutePathColors = colorSetFromColor('#5097D5');
+export const defRouteStationColors = colorSetFromColor('#5097D5');
+
 export const offlineColors = colorSetFromColor('#BDC3C7');
 
 export const routeToColor = (route?: TransportRoute) =>

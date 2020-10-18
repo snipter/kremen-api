@@ -11,6 +11,7 @@ interface Props {
   bus: TransportBus;
   route?: TransportRoute;
   colors: ColorsSet;
+  opacity?: number;
   popupOpen?: boolean;
   onClick?: (bus: TransportBus) => void;
   onPopupClose: (bus: TransportBus) => void;
@@ -36,7 +37,7 @@ const getIconCodeForBus = (bus: TransportBus, colors: ColorsSet) => {
   return `data:image/svg+xml;base64,${iconCode}`;
 };
 
-export const BusMarker: FC<Props> = ({ onClick, bus, route, popupOpen, colors, onPopupClose }) => {
+export const BusMarker: FC<Props> = ({ onClick, bus, route, popupOpen, colors, opacity = 1.0, onPopupClose }) => {
   const onMarkerClick = () => {
     if (onClick) {
       onClick(bus);
@@ -56,7 +57,8 @@ export const BusMarker: FC<Props> = ({ onClick, bus, route, popupOpen, colors, o
         url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors),
         anchor: new google.maps.Point(19, 19),
       }}
-      zIndex={2}
+      zIndex={20}
+      opacity={opacity}
       onClick={onMarkerClick}
     >
       {popupOpen && <BusPopup bus={bus} route={route} onClose={handlePopupClose} />}

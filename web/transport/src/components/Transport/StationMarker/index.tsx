@@ -55,7 +55,7 @@ export class StationMarker extends PureComponent<Props> {
           url: getIconCode(size),
           anchor: new google.maps.Point(size / 2, size / 2),
         }}
-        zIndex={1}
+        zIndex={10}
         onClick={this.onMarkerClick}
       >
         {popupOpen && (

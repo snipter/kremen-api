@@ -3,7 +3,7 @@ import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
-import { coordinates, findRouteWithId, routeIdToColor, routeToColor, track } from 'core';
+import { coordinates, findRouteWithId, routeIdToColor, routeToColor, track, defRoutePathColors } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { includes, uniqBy } from 'lodash';
 import React, { FC, useEffect, useRef, useState } from 'react';
@@ -44,7 +44,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const allBuses = useSelector(s => s.transport.buses);
 
   const [center, setCenter] = useState<LatLng | undefined>(undefined);
-  const [busPopupId, setBusPopupId] = useState<string | undefined>(undefined);
+  const [selectBusId, setSelectBusId] = useState<string | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
@@ -97,7 +97,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handleMapClick = () => {
     track('MapClick');
     log.debug('map click');
-    setBusPopupId(undefined);
+    setSelectBusId(undefined);
     setStationPopupId(undefined);
   };
 
@@ -112,11 +112,11 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handleBusMarkerClick = (bus: TransportBus) => {
     log.info('bus marker click, bus=', bus);
     track('BusMarkerClick', { tid: bus.tid, rid: bus.rid, name: bus.name });
-    setBusPopupId(bus.tid);
+    setSelectBusId(bus.tid);
     setStationPopupId(undefined);
   };
 
-  const handleBusMarkerPopupClose = () => setBusPopupId(undefined);
+  const handleBusMarkerPopupClose = () => setSelectBusId(undefined);
 
   // Station
 
@@ -124,7 +124,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
     log.info('station marker click, station=', station);
     track('StationMarkerClick', { sid: station.sid, name: station.name });
     setStationPopupId(station.sid);
-    setBusPopupId(undefined);
+    setSelectBusId(undefined);
   };
 
   const handleStationMarkerPopupClose = () => {
@@ -135,10 +135,58 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   const handleAboutPress = () => {
     track('AboutBtnClick');
-    setAboutOpen(false);
+    setAboutOpen(true);
   };
 
   // Render
+
+  const routes = allRoutes.filter(({ rid }) => includes(displayedRoutes, rid));
+  const buses = allBuses.filter(({ rid }) => includes(displayedRoutes, rid));
+  const stations = routesToStatiosn(routes);
+
+  const renderRoutePath = (route: TransportRoute) => {
+    let colors = defRoutePathColors;
+    let opacity = 0.5;
+    let zIndex = 1;
+    if (selectBusId) {
+      const bus = allBuses.find(itm => itm.tid === selectBusId);
+      if (bus) {
+        if (bus.rid === route.rid) {
+          opacity = 0.8;
+          (zIndex = 2), (colors = routeToColor(route));
+        } else {
+          opacity = 0.3;
+          colors = defRoutePathColors;
+        }
+      }
+    }
+    return <RoutePath key={`path-${route.rid}`} route={route} colors={colors} opacity={opacity} zIndex={zIndex} />;
+  };
+
+  const renderBusMarker = (bus: TransportBus) => {
+    const colors = routeIdToColor(bus.rid, allRoutes);
+    const route = findRouteWithId(allRoutes, bus.rid);
+    let opacity = 1.0;
+    if (selectBusId) {
+      const selBus = allBuses.find(itm => itm.tid === selectBusId);
+      if (selBus?.rid !== bus.rid) {
+        opacity = 0.5;
+      }
+    }
+    return (
+      <BusMarker
+        key={`bus-${bus.tid}`}
+        bus={bus}
+        route={route}
+        colors={colors}
+        opacity={opacity}
+        popupOpen={bus.tid === selectBusId}
+        onClick={handleBusMarkerClick}
+        onPopupClose={handleBusMarkerPopupClose}
+      />
+    );
+  };
+
   const mapOpt: any = {
     fullscreenControl: false,
     mapTypeControlOptions: {
@@ -147,9 +195,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
       style: 'DEFAULT',
     },
   };
-  const routes = allRoutes.filter(({ rid }) => includes(displayedRoutes, rid));
-  const buses = allBuses.filter(({ rid }) => includes(displayedRoutes, rid));
-  const stations = routesToStatiosn(routes);
+
   return (
     <View style={m(styles.container, style)}>
       <DocTitle title={'Транспорт'} />
@@ -164,20 +210,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
         onClick={handleMapClick}
         center={center || getMapCenterConf(coordinates.kremen)}
       >
-        {buses.map(bus => (
-          <BusMarker
-            key={`bus-${bus.tid}`}
-            bus={bus}
-            route={findRouteWithId(allRoutes, bus.rid)}
-            colors={routeIdToColor(bus.rid, allRoutes)}
-            popupOpen={bus.tid === busPopupId}
-            onClick={handleBusMarkerClick}
-            onPopupClose={handleBusMarkerPopupClose}
-          />
-        ))}
-        {routes.map(route => (
-          <RoutePath key={`path-${route.rid}`} route={route} colors={routeToColor(route)} />
-        ))}
+        {buses.map(renderBusMarker)}
+        {routes.map(renderRoutePath)}
         {stations.map(station => (
           <StationMarker
             key={`station-${station.rid}-${station.sid}`}
