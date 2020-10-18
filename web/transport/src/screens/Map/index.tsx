@@ -167,10 +167,13 @@ export const MapScreen: FC<Props> = ({ style }) => {
     const colors = routeIdToColor(bus.rid, allRoutes);
     const route = findRouteWithId(allRoutes, bus.rid);
     let opacity = 1.0;
+    let zIndex = 20;
     if (selectBusId) {
       const selBus = allBuses.find(itm => itm.tid === selectBusId);
       if (selBus?.rid !== bus.rid) {
         opacity = 0.5;
+      } else {
+        zIndex = 21;
       }
     }
     return (
@@ -179,6 +182,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         bus={bus}
         route={route}
         colors={colors}
+        zIndex={zIndex}
         opacity={opacity}
         popupOpen={bus.tid === selectBusId}
         onClick={handleBusMarkerClick}

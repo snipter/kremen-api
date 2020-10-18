@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { TransportBus, TransportRoute, TransportType } from 'core/api';
 import { offlineColors } from 'core';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Marker } from 'react-google-maps';
 import { ColorsSet } from 'styles';
 
@@ -12,6 +12,7 @@ interface Props {
   route?: TransportRoute;
   colors: ColorsSet;
   opacity?: number;
+  zIndex?: number;
   popupOpen?: boolean;
   onClick?: (bus: TransportBus) => void;
   onPopupClose: (bus: TransportBus) => void;
@@ -37,7 +38,16 @@ const getIconCodeForBus = (bus: TransportBus, colors: ColorsSet) => {
   return `data:image/svg+xml;base64,${iconCode}`;
 };
 
-export const BusMarker: FC<Props> = ({ onClick, bus, route, popupOpen, colors, opacity = 1.0, onPopupClose }) => {
+export const BusMarker: FC<Props> = ({
+  onClick,
+  bus,
+  route,
+  popupOpen,
+  colors,
+  opacity = 1.0,
+  zIndex = 20,
+  onPopupClose,
+}) => {
   const onMarkerClick = () => {
     if (onClick) {
       onClick(bus);
@@ -57,7 +67,7 @@ export const BusMarker: FC<Props> = ({ onClick, bus, route, popupOpen, colors, o
         url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors),
         anchor: new google.maps.Point(19, 19),
       }}
-      zIndex={20}
+      zIndex={zIndex}
       opacity={opacity}
       onClick={onMarkerClick}
     >
