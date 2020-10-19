@@ -27,18 +27,6 @@ export const reducer = (state: TransportState = initial, action: StoreAction): T
       const { buses } = action;
       return { ...state, buses };
     }
-    case ActionType.TransportBusesCompactUpdate: {
-      const { update } = action;
-      const buses = state.buses.map(bus => {
-        if (!update[bus.tid]) {
-          return bus;
-        }
-        const [lat, lng, direction, speed, offlineNum] = update[bus.tid];
-        const offline = offlineNum === 1 ? true : false;
-        return { ...bus, lat, lng, direction, speed, offline };
-      });
-      return { ...state, buses };
-    }
     case ActionType.TransportBusesMod: {
       const { data } = action;
       const buses = state.buses.map(itm => {

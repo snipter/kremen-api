@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { TransportRoute, TransportStation } from 'core/api';
-import React, { PureComponent } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Marker } from 'react-google-maps';
 
 import StationPopup from './components/StationPopup';
@@ -30,24 +30,21 @@ const getIconCode = (size: number) => {
   return `data:image/svg+xml;base64,${iconCode}`;
 };
 
-export class StationMarker extends PureComponent<Props> {
-  private onMarkerClick = () => {
-    const { onClick, station } = this.props;
+export const StationMarker: FC<Props> = ({ station, onClick, popupOpen, route, selectedRoutes, onPopupClose }) => {
+  const handleClick = () => {
     if (onClick) {
       onClick(station);
     }
   };
 
-  private onPopupClose = () => {
-    const { station, onPopupClose } = this.props;
+  const handlePopupClose = () => {
     onPopupClose(station);
   };
 
-  public render() {
-    const { station, route, popupOpen, selectedRoutes } = this.props;
-    const { lat, lng } = station;
-    const size = 12;
-    return (
+  const { lat, lng } = station;
+  const size = 12;
+  return useMemo(
+    () => (
       <Marker
         position={{ lat, lng }}
         title={station.name}
@@ -56,14 +53,15 @@ export class StationMarker extends PureComponent<Props> {
           anchor: new google.maps.Point(size / 2, size / 2),
         }}
         zIndex={10}
-        onClick={this.onMarkerClick}
+        onClick={handleClick}
       >
         {popupOpen && (
-          <StationPopup station={station} route={route} selectedRoutes={selectedRoutes} onClose={this.onPopupClose} />
+          <StationPopup station={station} route={route} selectedRoutes={selectedRoutes} onClose={handlePopupClose} />
         )}
       </Marker>
-    );
-  }
-}
+    ),
+    [lat, lng, popupOpen, selectedRoutes],
+  );
+};
 
 export default StationMarker;

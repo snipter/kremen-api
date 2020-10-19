@@ -11,7 +11,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
-import { LatLng, Log, Timer } from 'utils';
+import { LatLng, Log } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
 import AboutDialog from './scenes/AboutDialog';
@@ -45,7 +45,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const allBuses = useSelector(s => s.transport.buses);
 
   const [center, setCenter] = useState<LatLng | undefined>(undefined);
-  const [selectBusId, setSelectBusId] = useState<string | undefined>(undefined);
+  const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
@@ -96,7 +96,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handleMapClick = () => {
     track('MapClick');
     log.debug('map click');
-    setSelectBusId(undefined);
+    setSelectedBus(undefined);
     setStationPopupId(undefined);
   };
 
@@ -111,11 +111,11 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handleBusMarkerClick = (bus: TransportBus) => {
     log.info('bus marker click, bus=', bus);
     track('BusMarkerClick', { tid: bus.tid, rid: bus.rid, name: bus.name });
-    setSelectBusId(bus.tid);
+    setSelectedBus(bus);
     setStationPopupId(undefined);
   };
 
-  const handleBusMarkerPopupClose = () => setSelectBusId(undefined);
+  const handleBusMarkerPopupClose = () => setSelectedBus(undefined);
 
   // Station
 
@@ -123,7 +123,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
     log.info('station marker click, station=', station);
     track('StationMarkerClick', { sid: station.sid, name: station.name });
     setStationPopupId(station.sid);
-    setSelectBusId(undefined);
+    setSelectedBus(undefined);
   };
 
   const handleStationMarkerPopupClose = () => {
@@ -147,16 +147,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
     let colors = defRoutePathColors;
     let opacity = 0.5;
     let zIndex = 1;
-    if (selectBusId) {
-      const bus = allBuses.find(itm => itm.tid === selectBusId);
-      if (bus) {
-        if (bus.rid === route.rid) {
-          opacity = 1.0;
-          (zIndex = 2), (colors = routeToColor(route));
-        } else {
-          opacity = 0.3;
-          colors = defRoutePathColors;
-        }
+    if (selectedBus) {
+      if (selectedBus.rid === route.rid) {
+        opacity = 1.0;
+        zIndex = 2;
+        colors = routeToColor(route);
+      } else {
+        opacity = 0.3;
+        colors = defRoutePathColors;
       }
     }
     return <RoutePath key={`path-${route.rid}`} route={route} colors={colors} opacity={opacity} zIndex={zIndex} />;
@@ -167,9 +165,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
     const route = findRouteWithId(allRoutes, bus.rid);
     let opacity = 1.0;
     let zIndex = 20;
-    if (selectBusId) {
-      const selBus = allBuses.find(itm => itm.tid === selectBusId);
-      if (selBus?.rid !== bus.rid) {
+    if (selectedBus) {
+      if (selectedBus?.rid !== bus.rid) {
         opacity = 0.5;
       } else {
         zIndex = 21;
@@ -183,7 +180,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         colors={colors}
         zIndex={zIndex}
         opacity={opacity}
-        popupOpen={bus.tid === selectBusId}
+        popupOpen={bus.tid === selectedBus?.tid}
         onClick={handleBusMarkerClick}
         onPopupClose={handleBusMarkerPopupClose}
       />

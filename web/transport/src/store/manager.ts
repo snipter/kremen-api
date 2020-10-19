@@ -28,15 +28,6 @@ export const useStoreManager = () => {
     dispatch({ type: ActionType.TransportBusesSet, buses });
   };
 
-  const updateBussesState = async (routesIds?: number[]) => {
-    log.debug('getting buses update');
-    log.start('getBusesUpdate');
-    const update = await api.transport.busesUpdate(routesIds);
-    log.end('getBusesUpdate');
-    log.debug('getting buses done');
-    dispatch({ type: ActionType.TransportBusesCompactUpdate, update });
-  };
-
   const modBuses = (data: Partial<TransportBus>[]) => dispatch({ type: ActionType.TransportBusesMod, data });
 
   const updateCommonData = async () => Promise.all([updateRoutes(), updateBusses()]);
@@ -45,7 +36,6 @@ export const useStoreManager = () => {
     updateRoutes,
     updateBusses,
     modBuses,
-    updateBussesState,
     updateCommonData,
   };
 };

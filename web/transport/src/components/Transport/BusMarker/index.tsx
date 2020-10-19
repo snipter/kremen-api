@@ -59,20 +59,23 @@ export const BusMarker: FC<Props> = ({
   };
 
   const { lat, lng } = bus;
-  return (
-    <Marker
-      position={{ lat, lng }}
-      title={bus.name}
-      icon={{
-        url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors),
-        anchor: new google.maps.Point(19, 19),
-      }}
-      zIndex={zIndex}
-      opacity={opacity}
-      onClick={onMarkerClick}
-    >
-      {popupOpen && <BusPopup bus={bus} route={route} onClose={handlePopupClose} />}
-    </Marker>
+  return useMemo(
+    () => (
+      <Marker
+        position={{ lat, lng }}
+        title={bus.name}
+        icon={{
+          url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors),
+          anchor: new google.maps.Point(19, 19),
+        }}
+        zIndex={zIndex}
+        opacity={opacity}
+        onClick={onMarkerClick}
+      >
+        {popupOpen && <BusPopup bus={bus} route={route} onClose={handlePopupClose} />}
+      </Marker>
+    ),
+    [lat, lng, opacity, zIndex, popupOpen, bus.offline, bus.direction],
   );
 };
 

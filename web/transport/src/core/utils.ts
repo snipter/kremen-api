@@ -3,10 +3,18 @@ import { sortBy } from 'lodash';
 import { ColorsSet } from 'styles';
 import { TransportRoute } from 'core/api';
 
-export const colorSetFromColor = (val: string): ColorsSet => ({
-  light: val,
-  dark: color(val).darken(0.5).toString(),
-});
+const colorsCache: Record<string, ColorsSet> = {};
+
+export const colorSetFromColor = (val: string): ColorsSet => {
+  if (colorsCache[val]) {
+    return colorsCache[val];
+  }
+  colorsCache[val] = {
+    light: val,
+    dark: color(val).darken(0.5).toString(),
+  };
+  return colorsCache[val];
+};
 
 const defRouteColors = colorSetFromColor('#000000');
 
