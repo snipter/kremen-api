@@ -6,7 +6,7 @@ import { getTransportApi } from './api';
 import { defTransportRoutesIds } from './consts';
 import { strToLatLng } from './utils';
 
-const log = Log('services.transport');
+const log = Log('api.transport');
 
 export const initTransportApi = (app: Express) => {
   log.info('init api');

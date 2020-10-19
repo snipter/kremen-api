@@ -1,11 +1,11 @@
 {
-  "name": "kremen-api",
+  "name": "@kremen/api",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "node dist/index.js",
-    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"ts-node -r tsconfig-paths/register src/index.ts\"",
+    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"NODE_ENV=dev ts-node -r tsconfig-paths/register src/index.ts\"",
     "dist": "webpack",
     "lint": "yarn lint:types && yarn lint:eslint",
     "lint:eslint": "eslint \"src/**\"",
