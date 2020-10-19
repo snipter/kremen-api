@@ -26,3 +26,8 @@ services:
     build:
       context: ./services/wss
       dockerfile: Dockerfile.build
+  redis:
+    image: docker.pkg.github.com/husky-dev/kremen-api/redis:latest
+    build:
+      context: ./services/redis
+      dockerfile: Dockerfile.build

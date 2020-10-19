@@ -13,6 +13,7 @@ services:
     command: "yarn start"
     ports:
       - "6001:6001"
+
   api:
     image: node:14-alpine3.10
     container_name: kremen-api
@@ -25,3 +26,16 @@ services:
     command: "yarn start:dev"
     ports:
       - "8080:8080"
+
+  redis:
+    build:
+      context: ./services/redis
+      dockerfile: Dockerfile.build
+    container_name: redis
+    hostname: redis
+    volumes:
+      - redis:/data
+
+volumes:
+  redis:
+    name: redis
