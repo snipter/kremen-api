@@ -1,4 +1,4 @@
-import { api } from 'core';
+import { api, TransportBus } from 'core';
 import { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import { Log } from 'utils';
@@ -37,11 +37,14 @@ export const useStoreManager = () => {
     dispatch({ type: ActionType.TransportBusesCompactUpdate, update });
   };
 
+  const modBuses = (data: Partial<TransportBus>[]) => dispatch({ type: ActionType.TransportBusesMod, data });
+
   const updateCommonData = async () => Promise.all([updateRoutes(), updateBusses()]);
 
   return {
     updateRoutes,
     updateBusses,
+    modBuses,
     updateBussesState,
     updateCommonData,
   };

@@ -7,6 +7,6 @@ build: FORCE
 	docker-compose -f docker-compose.build.yml build
 
 push: FORCE
-	docker-compose -f docker-compose.build.yml push entry api
+	docker-compose -f docker-compose.build.yml push entry api wss
 
 FORCE: ;

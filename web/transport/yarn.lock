@@ -1151,6 +1151,13 @@
   resolved "https://registry.yarnpkg.com/@icons/material/-/material-0.2.4.tgz#e90c9f71768b3736e76d7dd6783fc6c2afa88bc8"
   integrity sha512-QPcGmICAPbGLGb6F/yNf/KzKqvFx8z5qx3D1yFqVAjoFmXK35EgyW+cJ57Te3CNsmzblwtzakLGFqHPqrfb4Tw==
 
+"@kremen/types@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@kremen/types/-/types-0.0.4.tgz#bd20b47d294b52c44fe684de34d011af6b7c602e"
+  integrity sha512-eWZsKiuPkG9Swr+qZbG0j0UbGfX70rthK9NbTUzqJFpD5qjBZjxKPt2gVbFpx8yNhfRpv8WCzMNfwUddE7AzWw==
+  dependencies:
+    lodash "4.17.20"
+
 "@material-ui/core@4.11.0":
   version "4.11.0"
   resolved "https://registry.yarnpkg.com/@material-ui/core/-/core-4.11.0.tgz#b69b26e4553c9e53f2bfaf1053e216a0af9be15a"

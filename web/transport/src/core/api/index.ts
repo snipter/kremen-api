@@ -7,22 +7,28 @@ import {
   TransportPrediction,
   TransportRoute,
   TransportStation,
-} from './types';
+} from '@kremen/types';
 import { ApiReqOpt, getErrFromResp } from './utils';
 
 const log = Log('core.api');
 
-const getApiRoot = () => {
+export const getApiRoot = () => {
   switch (ENV) {
     case 'loc':
-      return 'http://localhost:8080';
+      return {
+        api: 'http://localhost:8080',
+        ws: 'ws://localhost:8080',
+      };
     default:
-      return 'https://api.kremen.dev';
+      return {
+        api: 'https://api.kremen.dev',
+        ws: 'wss://api.kremen.dev',
+      };
   }
 };
 
 const getApi = () => {
-  const apiRoot = getApiRoot();
+  const apiRoot = getApiRoot().api;
 
   const apiReq = async <T>(opt: ApiReqOpt): Promise<T> => {
     const { path, method = 'get', params } = opt;
@@ -56,10 +62,8 @@ const getApi = () => {
       },
     },
   };
-
-  // Request / Response processing
 };
 
 export const api = getApi();
 
-export * from './types';
+export * from '@kremen/types';

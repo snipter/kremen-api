@@ -39,6 +39,14 @@ export const reducer = (state: TransportState = initial, action: StoreAction): T
       });
       return { ...state, buses };
     }
+    case ActionType.TransportBusesMod: {
+      const { data } = action;
+      const buses = state.buses.map(itm => {
+        const update = data.find(uitem => uitem.tid === itm.tid);
+        return update ? { ...itm, ...update } : itm;
+      });
+      return { ...state, buses };
+    }
     default:
       return state;
   }

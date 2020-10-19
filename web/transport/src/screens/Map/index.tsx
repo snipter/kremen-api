@@ -5,6 +5,7 @@ import Map from 'components/Map';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
 import { coordinates, findRouteWithId, routeIdToColor, routeToColor, track, defRoutePathColors } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
+import { useWebScockets } from 'core/ws';
 import { includes, uniqBy } from 'lodash';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
@@ -50,22 +51,20 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
     getSelectedRoutesConf([189, 188, 192, 187, 190, 191]),
   );
-  const [busesUpdateTimer, setBusesUpdateTimer] = useState<Timer | undefined>(undefined);
 
   useEffect(() => {
     track('MapScreenVisit');
     manager.updateCommonData();
-    const t = new Timer(() => updateBusesState(), 3000, false);
-    t.start(false);
-    setBusesUpdateTimer(t);
-    return () => {
-      busesUpdateTimer?.stop();
-    };
   }, []);
 
-  const updateBusesState = async () => {
-    return manager.updateBussesState();
-  };
+  useWebScockets({
+    onMessage: msg => {
+      if (msg.type === 'buses') {
+        log.debug('ws buses update');
+        manager.modBuses(msg.data);
+      }
+    },
+  });
 
   // Map
 
@@ -152,7 +151,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
       const bus = allBuses.find(itm => itm.tid === selectBusId);
       if (bus) {
         if (bus.rid === route.rid) {
-          opacity = 0.8;
+          opacity = 1.0;
           (zIndex = 2), (colors = routeToColor(route));
         } else {
           opacity = 0.3;
