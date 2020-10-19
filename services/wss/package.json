@@ -1,0 +1,48 @@
+{
+  "name": "@kremen/websockets",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node dist/index.js",
+    "start:dev": "nodemon --watch \"src/**\" --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"NODE_ENV=dev ts-node -r tsconfig-paths/register src/index.ts\"",
+    "dist": "webpack",
+    "lint": "yarn lint:types && yarn lint:eslint",
+    "lint:eslint": "eslint \"src/**\"",
+    "lint:types": "tsc --noEmit --skipLibCheck",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "{*.ts}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@types/lodash": "4.14.162",
+    "@types/node": "14.11.8",
+    "@types/ws": "7.2.7",
+    "eslint": "7.11.0",
+    "husky": "4.3.0",
+    "lint-staged": "10.4.0",
+    "nodemon": "2.0.5",
+    "prettier": "2.1.2",
+    "ts-loader": "8.0.5",
+    "ts-node": "9.0.0",
+    "tsconfig-paths": "3.9.0",
+    "tsconfig-paths-webpack-plugin": "3.3.0",
+    "typescript": "4.0.3",
+    "webpack": "5.1.2",
+    "webpack-cli": "4.0.0"
+  },
+  "dependencies": {
+    "@kremen/types": "0.0.4",
+    "axios": "0.20.0",
+    "lodash": "4.17.20",
+    "ws": "7.3.1"
+  }
+}
