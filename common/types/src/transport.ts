@@ -1,4 +1,4 @@
-import { isNumber, isString } from 'lodash';
+import { isArray, isNumber, isString } from 'lodash';
 import { isUnknowDict } from './basic';
 
 export enum TransportCountry {
@@ -59,6 +59,9 @@ export const isTransportBus = (val: unknown): val is TransportBus =>
   isNumber(val.lat) &&
   isNumber(val.lng) &&
   isNumber(val.speed);
+
+export const isTransportBuses = (val: unknown): val is TransportBus[] =>
+  isArray(val) && val.reduce((memo, itm) => memo && isTransportBus(itm), true);
 
 export interface TransportBusesCompactUpdate {
   [id: string]: number[];
