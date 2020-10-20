@@ -38,8 +38,12 @@ const getFullKey = (key: string) => `${pref}:${key}`;
 export const getConfig = <T>(key: string): T | undefined => {
   const fullKey = getFullKey(key);
   const val = localStorage.getItem(fullKey);
-  if (val === undefined) { return undefined; }
-  if (!isString(val)) { return undefined; }
+  if (val === undefined) {
+    return undefined;
+  }
+  if (!isString(val)) {
+    return undefined;
+  }
   try {
     return JSON.parse(val);
   } catch (err) {

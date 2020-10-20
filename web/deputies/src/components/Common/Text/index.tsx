@@ -1,11 +1,10 @@
-import { isArray, isNumber } from "lodash";
-import React, { PureComponent, ReactNode } from "react";
-import { IStyle, m, MergeStyleVal, px } from "styles";
+import { isArray, isNumber } from 'lodash';
+import React, { FC } from 'react';
+import { m, MergeStyleVal, px, Style } from 'styles';
 
 interface Props {
   className?: string;
-  style?: IStyle | MergeStyleVal[];
-  children?: ReactNode;
+  style?: Style | MergeStyleVal[];
   block?: boolean;
   size?: number | string;
   bold?: boolean;
@@ -13,9 +12,8 @@ interface Props {
   content?: string;
 }
 
-export class Text extends PureComponent<Props> {
-  private getSizeStyle(): IStyle | undefined {
-    const { size } = this.props;
+export const Text: FC<Props> = ({ className, style, size, block, children, color, bold, content }) => {
+  const getSizeStyle = (): Style | undefined => {
     if (!size) {
       return undefined;
     }
@@ -23,29 +21,20 @@ export class Text extends PureComponent<Props> {
       return { fontSize: px(size) };
     }
     return { fontSize: size };
-  }
+  };
 
-  render() {
-    const {
-      className,
-      style,
-      block,
-      children,
-      color,
-      bold,
-      content,
-    } = this.props;
-    const finalStyle = m(
-      block && { display: "block " },
-      this.getSizeStyle(),
-      color ? { color } : null,
-      bold ? { fontWeight: "bold" } : null,
-      isArray(style) ? m(...style) : style
-    );
-    return (
-      <span className={className} style={finalStyle}>
-        {content || children}
-      </span>
-    );
-  }
-}
+  const finalStyle = m(
+    block && { display: 'block ' },
+    getSizeStyle(),
+    color ? { color } : undefined,
+    bold ? { fontWeight: 'bold' } : undefined,
+    isArray(style) ? m(...style) : style,
+  );
+  return (
+    <span className={className} style={finalStyle}>
+      {content || children}
+    </span>
+  );
+};
+
+export default Text;

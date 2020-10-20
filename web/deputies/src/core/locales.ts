@@ -1,8 +1,6 @@
 import { compact, once, uniq } from 'lodash';
 
-const clearLocales = (arr: string[]): string[] => (
-  arr.map((item) => item.toLowerCase())
-);
+const clearLocales = (arr: string[]): string[] => arr.map(item => item.toLowerCase());
 
 export const getUserLocales = once(() => {
   const list: string[] = [];

@@ -1,11 +1,14 @@
 import { CSSProperties } from 'react';
 
-export type IStyle = CSSProperties;
-export type ITextStyle = CSSProperties;
+export type Style = CSSProperties;
 
-export interface IStyles {
-  [key: string]: IStyle;
+export interface Styles {
+  [key: string]: Style;
 }
 
-export type MergeStyleVal = IStyle | null | undefined | boolean;
+export interface ViewStyleProps {
+  style?: Style;
+}
+
+export type MergeStyleVal = Style | null | undefined | boolean;
 export type MergeStyleVals = MergeStyleVal | MergeStyleVal[];

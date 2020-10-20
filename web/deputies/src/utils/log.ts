@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { isDate, isNumber, isString, reduce } from "lodash";
+import { isDate, isNumber, isString, reduce } from 'lodash';
 
 export enum LogLevel {
   Error = 0,
@@ -10,7 +10,7 @@ export enum LogLevel {
   Time = 5,
 }
 
-type LogEventName = "log";
+type LogEventName = 'log';
 
 type LogEventHandler = (m: string, level: LogLevel, data: unknown[]) => void;
 
@@ -21,13 +21,8 @@ interface LogEventHandlerRec {
 
 const handlers: LogEventHandlerRec[] = [];
 
-const emit = (
-  name: LogEventName,
-  mod: string,
-  level: LogLevel,
-  data: unknown[]
-) => {
-  handlers.forEach((item) => {
+const emit = (name: LogEventName, mod: string, level: LogLevel, data: unknown[]) => {
+  handlers.forEach(item => {
     if (item.name === name) {
       item.handler(mod, level, data);
     }
@@ -53,31 +48,31 @@ export const setLogColorized = (val: boolean) => {
 export const logLevelToSymbol = (level: LogLevel) => {
   switch (level) {
     case LogLevel.Debug:
-      return "-";
+      return '-';
     case LogLevel.Info:
-      return "+";
+      return '+';
     case LogLevel.Warn:
-      return "!";
+      return '!';
     case LogLevel.Error:
-      return "x";
+      return 'x';
     case LogLevel.Trace:
-      return "*";
+      return '*';
     case LogLevel.Time:
-      return "T";
+      return 'T';
     default:
-      return "";
+      return '';
   }
 };
 
 const logDataItemToStr = (data: unknown): string => {
   if (data === undefined) {
-    return "undefined";
+    return 'undefined';
   }
   if (data === null) {
-    return "null";
+    return 'null';
   }
   if (!data) {
-    return "undefined";
+    return 'undefined';
   }
   if (isString(data)) {
     return data;
@@ -89,28 +84,23 @@ const logDataItemToStr = (data: unknown): string => {
     return data.toString();
   }
   if (!data) {
-    return "";
+    return '';
   }
   try {
     return JSON.stringify(data);
   } catch (err) {
-    if (typeof data === "object" && data && data.toString) {
+    if (typeof data === 'object' && data && data.toString) {
       return data.toString();
     }
-    return "";
+    return '';
   }
 };
 
 export const logDataArrToStr = (data: unknown[]): string => {
   if (!data.length) {
-    return "";
+    return '';
   }
-  return reduce(
-    data,
-    (memo, item) =>
-      memo ? `${memo} ${logDataItemToStr(item)}` : logDataItemToStr(item),
-    ""
-  );
+  return reduce(data, (memo, item) => (memo ? `${memo} ${logDataItemToStr(item)}` : logDataItemToStr(item)), '');
 };
 
 interface LogColor {
@@ -119,18 +109,18 @@ interface LogColor {
 }
 
 const logLevelToColor = (level: LogLevel): LogColor => {
-  const defColor: LogColor = { color: "#000000" };
+  const defColor: LogColor = { color: '#000000' };
   switch (level) {
     case LogLevel.Trace:
-      return { color: "#a3a3a3" };
+      return { color: '#a3a3a3' };
     case LogLevel.Debug:
-      return { color: "#51555A" };
+      return { color: '#51555A' };
     case LogLevel.Info:
-      return { color: "#FFFFFF", background: "#0022F5" };
+      return { color: '#FFFFFF', background: '#0022F5' };
     case LogLevel.Warn:
-      return { color: "#FFFFFF", background: "#FF9501" };
+      return { color: '#FFFFFF', background: '#FF9501' };
     case LogLevel.Error:
-      return { color: "#FFFFFF", background: "#FC2500" };
+      return { color: '#FFFFFF', background: '#FC2500' };
     default:
       return defColor;
   }
@@ -155,25 +145,21 @@ const logPrefixData = (level: LogLevel, module: string): string[] => {
 const levelToSymbol = (level: LogLevel) => {
   switch (level) {
     case LogLevel.Debug:
-      return "-";
+      return '-';
     case LogLevel.Info:
-      return "+";
+      return '+';
     case LogLevel.Warn:
-      return "!";
+      return '!';
     case LogLevel.Error:
-      return "x";
+      return 'x';
     case LogLevel.Trace:
-      return "*";
+      return '*';
     default:
-      return "";
+      return '';
   }
 };
 
-export const logToStr = (
-  m: string,
-  level: LogLevel,
-  data: unknown[]
-): string => {
+export const logToStr = (m: string, level: LogLevel, data: unknown[]): string => {
   const symbol = levelToSymbol(level);
   const str = logDataArrToStr(data);
   return `[${symbol}][${m}]: ${str}`;
@@ -181,7 +167,7 @@ export const logToStr = (
 
 export const Log = (m: string) => {
   const logWithLevel = (level: LogLevel, data: unknown[]) => {
-    emit("log", m, level, data);
+    emit('log', m, level, data);
     if (!enabled || level > minLevel) {
       return;
     }

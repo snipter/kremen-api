@@ -1,18 +1,18 @@
 // Geo
 
-export interface ILatLng {
+export interface LatLng {
   lat: number;
   lng: number;
 }
 
-export interface ILatLngPolygon {
-  outer: ILatLng[];
-  inner?: ILatLng[];
+export interface LatLngPolygon {
+  outer: LatLng[];
+  inner?: LatLng[];
 }
 
-// Bussines
+// Deputy
 
-export interface IDeputy {
+export interface Deputy {
   id: string;
   name?: string;
   schedule?: string;
@@ -23,20 +23,20 @@ export interface IDeputy {
   photos?: string[];
 }
 
-export interface IDeputysMap {
-  [key: string]: IDeputy;
+export interface DeputysMap {
+  [key: string]: Deputy;
 }
 
-export interface IDistrict {
+export interface DeputyDistrict {
   id: string;
   number: number;
   deputies: string[];
-  markers: ILatLng[];
-  stations: IDistrictStation[];
-  polygons: ILatLngPolygon[];
+  markers: LatLng[];
+  stations: DeputyDistrictStation[];
+  polygons: LatLngPolygon[];
 }
 
-export interface IDistrictStation {
+export interface DeputyDistrictStation {
   id: number;
   addresses?: string;
   numberOfVoters: number;

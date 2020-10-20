@@ -1,6 +1,6 @@
-import { IStyle } from './types';
+import { Style } from './types';
 
-export const fullScreen: IStyle = {
+export const fullScreen: Style = {
   position: 'absolute',
   left: 0,
   right: 0,
@@ -8,26 +8,26 @@ export const fullScreen: IStyle = {
   bottom: 0,
 };
 
-export const screenCenter: IStyle = {
+export const screenCenter: Style = {
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translateX(-50%) translateY(-50%)',
 };
 
-export const horizontalCenter: IStyle = {
+export const horizontalCenter: Style = {
   position: 'absolute',
   left: '50%',
   transform: 'translateX(-50%)',
 };
 
-export const threeDots: IStyle = {
+export const threeDots: Style = {
   whiteSpace: 'nowrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
 };
 
-export const fullFixedScreen: IStyle = {
+export const fullFixedScreen: Style = {
   position: 'fixed',
   left: 0,
   right: 0,

@@ -1,34 +1,23 @@
-import MuiDialogTitle, {
-  DialogTitleProps,
-} from "@material-ui/core/DialogTitle";
-import IconButton from "@material-ui/core/IconButton";
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import CloseIcon from "@material-ui/icons/Close";
-import React, { FC } from "react";
+import MuiDialogTitle, { DialogTitleProps } from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
+import { createStyles, Theme, withStyles, WithStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import CloseIcon from '@material-ui/icons/Close';
+import React, { FC } from 'react';
 
-interface IBaseProps extends DialogTitleProps {
+interface OwnProps extends DialogTitleProps {
   onClose?: () => void;
 }
 
-type Props = WithStyles<typeof styles> & IBaseProps;
+type Props = WithStyles<typeof styles> & OwnProps;
 
-const ClosableDialogTitle: FC<Props> = (props) => {
+const ClosableDialogTitle: FC<Props> = props => {
   const { classes, onClose, children } = props;
   return (
     <MuiDialogTitle disableTypography={true} className={classes.container}>
       <Typography variant="h6">{children}</Typography>
       {onClose && (
-        <IconButton
-          aria-label="close"
-          className={classes.btn}
-          onClick={onClose}
-        >
+        <IconButton aria-label="close" className={classes.btn} onClick={onClose}>
           <CloseIcon />
         </IconButton>
       )}
@@ -43,7 +32,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
     },
     btn: {
-      position: "absolute",
+      position: 'absolute',
       right: theme.spacing(1),
       top: theme.spacing(1),
       color: theme.palette.grey[500],

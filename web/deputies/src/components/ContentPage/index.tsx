@@ -1,12 +1,10 @@
-import { makeStyles } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
-import { View } from "components/Common";
-import React, { FC } from "react";
-import { IStyle, mdMaxWidth, ScreenSize, sizes } from "styles";
+import { makeStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import { View } from 'components/Common';
+import React, { FC } from 'react';
+import { mdMaxWidth, ScreenSize, ViewStyleProps } from 'styles';
 
-interface Props {
-  style?: IStyle;
-}
+type Props = ViewStyleProps;
 
 const ContentPage: FC<Props> = ({ style, children }) => {
   const classes = useStyles();
@@ -19,16 +17,16 @@ const ContentPage: FC<Props> = ({ style, children }) => {
 
 const useStyles = makeStyles({
   container: {
-    padding: "30px 0",
+    padding: '30px 0',
     [mdMaxWidth(ScreenSize.Phone)]: {
       padding: 0,
     },
   },
   content: {
-    maxWidth: "768px",
-    margin: "0 auto",
-    padding: "20px 30px",
-    ["& p"]: {
+    maxWidth: '768px',
+    margin: '0 auto',
+    padding: '20px 30px',
+    ['& p']: {
       marginTop: 0,
       marginBottom: 14,
     },

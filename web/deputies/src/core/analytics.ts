@@ -9,7 +9,9 @@ const enabled = ENV !== 'dev' ? true : false;
 mixpanel.init('325fbae612a3cd571f0b3a5fc45230bb');
 
 const initUser = () => {
-  if (!enabled) { return; }
+  if (!enabled) {
+    return;
+  }
   log.info('analytics enabled');
   mixpanel.identify();
   const locale = getUserLocale();
@@ -25,22 +27,14 @@ const initUser = () => {
 initUser();
 
 /**
- * Metric Events
- */
-export type MetricEvent =
-  'AboutScreenVisit' |
-  'DistrictsMapScreenVisist' |
-  'RightsScreenVisit' |
-  'DistrictClick' |
-  'SearchPlaceResultClick';
-
-/**
  * Track event
- * @param {MetricEvent} event - event name
+ * @param {String} event - event name
  * @param {Dict?} params - event additional data
  */
-export const track = (event: MetricEvent, params?: Dict) => {
+export const track = (event: string, params?: Dict) => {
   log.debug('track event=', event);
-  if (!enabled) { return; }
+  if (!enabled) {
+    return;
+  }
   mixpanel.track(event, params);
 };

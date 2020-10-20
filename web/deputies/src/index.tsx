@@ -1,9 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './app';
-import './index.scss';
+import './index.css';
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('deputies-app') as HTMLElement,
+import { ThemeProvider } from '@material-ui/styles';
+import React, { FC } from 'react';
+import ReactDOM from 'react-dom';
+import { Navigation } from 'screens';
+import { muiTheme } from 'styles';
+
+const App: FC = () => (
+  <ThemeProvider theme={muiTheme}>
+    <Navigation />
+  </ThemeProvider>
 );
+
+ReactDOM.render(<App />, document.getElementById('app'));

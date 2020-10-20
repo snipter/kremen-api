@@ -1,18 +1,24 @@
 import { compact, each, isArray, isBoolean } from 'lodash';
-import { IStyle, MergeStyleVals } from './types';
+import { Style, MergeStyleVals } from './types';
 
 /**
  * Merge styles
  * @param {MergeStyleVals} arr - styles
  */
-export const m = (...arr: MergeStyleVals[]): IStyle => {
-  if (!arr) { return {}; }
-  let style: IStyle = {};
+export const m = (...arr: MergeStyleVals[]): Style => {
+  if (!arr) {
+    return {};
+  }
+  let style: Style = {};
   each(arr, (rawItem: MergeStyleVals) => {
     const item = isArray(rawItem) ? m(...rawItem) : rawItem;
-    if (isBoolean(item)) { return; }
-    if (!item) { return; }
-    style = {...style, ...item};
+    if (isBoolean(item)) {
+      return;
+    }
+    if (!item) {
+      return;
+    }
+    style = { ...style, ...item };
   });
   return style;
 };
@@ -30,9 +36,8 @@ export const px = (val: number): string => `${val}px`;
  * @param {number} bottom - bottom val
  * @param {number} left  - left val
  */
-export const pdd = (top: number, right: number, bottom: number, left: number): string => (
-  `${top}px ${right}px ${bottom}px ${left}px`
-);
+export const pdd = (top: number, right: number, bottom: number, left: number): string =>
+  `${top}px ${right}px ${bottom}px ${left}px`;
 
 export type McnItem = string | boolean;
 
@@ -40,6 +45,4 @@ export type McnItem = string | boolean;
  * Merge class names
  * @param {string[]} items - class names
  */
-export const mcn = (...items: McnItem[]): string => (
-  compact(items).join(' ')
-);
+export const mcn = (...items: McnItem[]): string => compact(items).join(' ');

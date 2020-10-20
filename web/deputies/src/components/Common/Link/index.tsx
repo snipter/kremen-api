@@ -1,8 +1,8 @@
-import React, { FC, MouseEvent, ReactNode } from "react";
-import { IStyle, IStyles, m } from "styles";
+import React, { FC, MouseEvent, ReactNode } from 'react';
+import { m, Style } from 'styles';
 
 interface Props {
-  style?: IStyle;
+  style?: Style;
   href?: string;
   email?: string;
   block?: boolean;
@@ -10,14 +10,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export const Link: FC<Props> = ({
-  style: propsStyle,
-  href,
-  children,
-  email,
-  block,
-  onClick,
-}) => {
+export const Link: FC<Props> = ({ style: propsStyle, href, children, email, block, onClick }) => {
   const onLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
     if (!onClick) {
       return;
@@ -33,18 +26,14 @@ export const Link: FC<Props> = ({
     if (href) {
       return href;
     }
-    return "#";
+    return '#';
   };
 
-  const style = m(propsStyle, !!block && { display: "block" });
+  const style = m(propsStyle, !!block && { display: 'block' });
 
   return (
     <a style={style} href={getHref()} target="__blank" onClick={onLinkClick}>
       {children}
     </a>
   );
-};
-
-const styles: IStyles = {
-  container: {},
 };

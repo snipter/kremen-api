@@ -1,33 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-declare module "*.svg" {
+declare module '*.svg' {
   const content: any;
   export default content;
 }
 
-declare module "*.png" {
+declare module '*.png' {
   const content: any;
   export default content;
 }
 
-declare module "*.jpg" {
+declare module '*.jpg' {
   const content: any;
   export default content;
 }
 
-declare module "*.json" {
+declare module '*.json' {
   const content: any;
   export default content;
 }
 
-declare module "*.md" {
+declare module '*.md' {
   const content: any;
   export default content;
 }
 
-declare module "googlemaps";
+declare module 'googlemaps';
 
 declare const VERSION: string | undefined;
-declare const ENV: "dev" | "prd" | "loc" | undefined;
+declare const ENV: 'dev' | 'prd' | 'loc' | undefined;
 declare const MAPS_API_KEY: string | undefined;
 declare const APP_TITLE: string | undefined;
 declare const APP_COMPANY: string | undefined;
