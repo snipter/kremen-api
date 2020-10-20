@@ -1,6 +1,5 @@
 import { DeputyDistrict } from 'core/types';
 
-// tslint:disable max-line-length
 export const defDistricts: DeputyDistrict[] = [
   {
     deputies: ['kremen-golovach-oleksandr'],
@@ -12699,4 +12698,3 @@ export const defDistricts: DeputyDistrict[] = [
     ],
   },
 ];
-// tslint:enable max-line-length

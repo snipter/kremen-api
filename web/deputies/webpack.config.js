@@ -67,7 +67,10 @@ module.exports = env => {
           minifyJS: true,
         },
       }),
-      new CopyWebpackPlugin([{ from: 'src/assets/img/*.{png,jpg}', to: 'assets', flatten: true }]),
+      new CopyWebpackPlugin([
+        { from: 'src/assets/img/*.{png,jpg}', to: 'assets', flatten: true },
+        { from: 'src/assets/photos/*.{png,jpg}', to: 'photos', flatten: true },
+      ]),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify(package.version),
         ENV: JSON.stringify(process.env.ENV),

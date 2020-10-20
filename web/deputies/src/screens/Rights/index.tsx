@@ -12,11 +12,7 @@ export const RightsScreen: FC = () => {
         <a href="/">Повернутись до карти</a>
       </p>
       <p style={styles.center}>
-        <img
-          style={styles.img}
-          src="https://firebasestorage.googleapis.com/v0/b/kremen-deputies.appspot.com/o/assets%2F30048ef2b02f607d29b168e1a40caa1c.jpg?alt=media&token=ff2dd894-9dc6-40e4-9449-95f6fb3333c7"
-          alt="Права, обов‘язки та відповідальність депутата"
-        />
+        <img style={styles.img} src="/assets/rights.jpg" alt="Права, обов‘язки та відповідальність депутата" />
       </p>
       <p>
         Статус депутата місцевої ради – це набір додаткових прав і можливостей, але також - і обов’язків, які
