@@ -3,9 +3,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const package = require('./package.json');
-// Load configs from .env file
 
-// Paths
 const appPath = path.resolve(__dirname, 'src');
 const distPath = path.resolve(__dirname, 'dist');
 
@@ -14,7 +12,6 @@ module.exports = env => {
   require('dotenv').config({
     path: path.resolve(process.cwd(), envFile),
   });
-  console.log(path.resolve(process.cwd(), envFile));
   return {
     entry: {
       app: `${appPath}/index.tsx`,
@@ -47,7 +44,6 @@ module.exports = env => {
           use: [{ loader: 'url-loader', options: { limit: 100000, name: 'assets/[name].[ext]' } }],
         },
         { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-        { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
       ],
     },
     plugins: [
@@ -77,7 +73,7 @@ module.exports = env => {
       }),
     ],
     devServer: {
-      port: 6001,
+      port: process.env.PORT || 6001,
       historyApiFallback: true,
       headers: {
         'Access-Control-Allow-Origin': '*',

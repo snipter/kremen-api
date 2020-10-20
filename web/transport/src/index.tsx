@@ -1,4 +1,4 @@
-import './index.scss';
+import './index.css';
 
 import { MuiThemeProvider } from '@material-ui/core';
 import { NavPath } from 'core';

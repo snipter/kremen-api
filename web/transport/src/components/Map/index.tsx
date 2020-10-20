@@ -1,4 +1,4 @@
-import React, { CSSProperties, RefObject, FC, MutableRefObject } from 'react';
+import React, { RefObject, FC, MutableRefObject } from 'react';
 import { GoogleMap, GoogleMapProps, withGoogleMap, withScriptjs } from 'react-google-maps';
 import { ViewStyleProps } from 'styles';
 import { Log } from 'utils';

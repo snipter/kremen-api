@@ -14,7 +14,8 @@ a.link-img-opacity {
   transition: opacity .2s ease-in-out;
   border-bottom: none;
   text-decoration: none;
-  &:hover {
-    opacity: .6;
-  }
+}
+
+a.link-img-opacity:hover {
+  opacity: .6;
 }
