@@ -11,6 +11,11 @@ services:
     build:
       context: ./web/transport
       dockerfile: Dockerfile.build
+  web-deputies:
+    image: kremen-web-deputies
+    build:
+      context: ./web/deputies
+      dockerfile: Dockerfile.build
   entry:
     image: docker.pkg.github.com/husky-dev/kremen-api/entry:latest
     build:
