@@ -8,7 +8,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/bokovan',
     name: 'Бокован Микола Володимирович',
     phones: ['76-46-14'],
-    photos: ['/photos/kremen-bokovan-mykola-001.JPG'],
+    photos: ['/photos/kremen-bokovan-mykola-001.jpg'],
     schedule: 'перший вівторок щомісяця з 12.00 до 18.00 год.',
   },
   {
@@ -18,7 +18,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/fedorchenko.rusl',
     name: 'Федорченко Руслан Анатолійович',
     phones: ['76-66-95', '76-66-95'],
-    photos: ['/photos/kremen-fedorchenko-ruslan-001.JPG'],
+    photos: ['/photos/kremen-fedorchenko-ruslan-001.jpg'],
     schedule:
       'останній четвер щомісяця з 15.00 до 18.00 год. вівторок та четвер щомісяця з 15.00 до 18.00 год. (прийом веде помічник депутата)',
   },
@@ -27,7 +27,7 @@ export const defDeputies: Deputy[] = [
     address: 'ТЦ «Бізнес-букет», м. Кременчук, вул. Першотравнева, 20, каб. 210',
     name: 'Головач Олександр Леонідович (Прийом мешканців міста депутатами ВО «Батьківщина»)',
     phones: ['7-000-25'],
-    photos: ['/photos/kremen-golovach-oleksandr-001.JPG', '/photos/kremen-golovach-oleksandr-002.JPG'],
+    photos: ['/photos/kremen-golovach-oleksandr-001.jpg', '/photos/kremen-golovach-oleksandr-002.jpg'],
     schedule: 'друга середа щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -35,7 +35,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення ради громадськості мікрорайону № 12, м. Кременчук, вул. І. Приходь- ка, 91',
     name: 'Головко Валентина Данилівна',
     phones: ['6-21-38'],
-    photos: ['/photos/kremen-golovko-valentina-001.JPG'],
+    photos: ['/photos/kremen-golovko-valentina-001.jpg'],
     schedule: 'другий четвер щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -45,7 +45,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/valentina.dordeeva',
     name: 'Гордєєва Валентина Яківна',
     phones: ['3-83-71', '(066) 269-71-76', '(098) 553-44-89', '(068) 743-02-55'],
-    photos: ['/photos/kremen-gordeeva-valentyna-001.JPG'],
+    photos: ['/photos/kremen-gordeeva-valentyna-001.jpg'],
     schedule: 'кожний вівторок щомісяця з 12.00 до 14.00 год.',
   },
   {
@@ -54,7 +54,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100004116073710',
     name: 'Грінченко Володимир Вадимович',
     phones: ['(067) 171-65-00'],
-    photos: ['/photos/kremen-gr%D1%96nchenko-volodymir-001.JPG'],
+    photos: ['/photos/kremen-gr%D1%96nchenko-volodymir-001.jpg'],
     schedule: `друга та остання п'ятниці щомісяця з 14.00 до 16.00 год.`,
   },
   {
@@ -63,7 +63,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/IvanyanGennadij',
     name: 'Іванян Геннадій Михайлович',
     phones: ['6-21-00'],
-    photos: ['/photos/kremen-%D1%96vanyan-genady-001.jpg', '/photos/kremen-%D1%96vanyan-genady-002.JPG'],
+    photos: ['/photos/kremen-%D1%96vanyan-genady-001.jpg', '/photos/kremen-%D1%96vanyan-genady-002.jpg'],
     schedule: 'понеділок, середа, п’ятниця з 10.00 до 12.00 год. вівторок, четвер з 15.00 до 17.00 год.',
   },
   {
@@ -72,7 +72,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/sasha.kalashnik.1',
     name: 'Калашник Олександр Вікторович',
     phones: ['6-00-22'],
-    photos: ['/photos/kremen-kalashnik-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-kalashnik-oleksandr-001.jpg'],
     schedule: 'третій понеділок щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -92,7 +92,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/aleksandr.kalchenko.9',
     name: 'Кальченко Олександр Вікторович',
     phones: ['4-88-49', '(098) 374-15-25', '(067) 744-20-01'],
-    photos: ['/photos/kremen-kalchenko-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-kalchenko-oleksandr-001.jpg'],
     schedule: 'перший четвер щомісяця з 17.30 до 18.30 год. перший вівторок щомісяця з 17.30 до 18.30 год.',
   },
   {
@@ -107,7 +107,7 @@ export const defDeputies: Deputy[] = [
     address: 'ЦКСД «Нафтохімік», м. Кременчук, просп. Лесі Українки (просп. 50-річчя Жовтня), 33',
     name: 'Коркішко Олександр Леонідович',
     phones: ['(067) 744-20-01'],
-    photos: ['/photos/kremen-kork%D1%96shko-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-kork%D1%96shko-oleksandr-001.jpg'],
     schedule: 'перший вівторок щомісяця з 14.00 до 17.00 год.',
   },
   {
@@ -115,7 +115,7 @@ export const defDeputies: Deputy[] = [
     address: 'готель «Кремінь» м. Кременчук, вул. Ігоря Сердюка (вул. Жовтнева), 1, к. 134',
     name: 'Костромінов Сергій Анатолійович',
     phones: ['(097) 050-65-65'],
-    photos: ['/photos/kremen-kostrom%D1%96nov-sergy-001.JPG'],
+    photos: ['/photos/kremen-kostrom%D1%96nov-sergy-001.jpg'],
     schedule: 'перший вівторок щомісяця з 15.00 до 17.00 год.',
   },
   {
@@ -123,7 +123,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення технічної бібліотеки, м. Кременчук, вул. Європейська (вул. Щорса), 66/13',
     name: 'Котляр Віталій Юрійович',
     phones: ['(067) 444-25-00'],
-    photos: ['/photos/kremen-kotlyar-vitaly-001.JPG'],
+    photos: ['/photos/kremen-kotlyar-vitaly-001.jpg'],
     schedule: 'третій понеділок щомісяця з 17.00 до 18.00 год.',
   },
   {
@@ -131,7 +131,7 @@ export const defDeputies: Deputy[] = [
     address: 'ЦКСД «Нафтохімік», м. Кременчук, просп. Лесі Українки (просп.50-річчя Жовтня), 33',
     name: 'Котляренко Людмила Григорівна',
     phones: ['(067) 744-20-01'],
-    photos: ['/photos/kremen-kotlyarenko-lyudmila-001.JPG'],
+    photos: ['/photos/kremen-kotlyarenko-lyudmila-001.jpg'],
     schedule: 'перший вівторок щомісяця з 18.00 до 20.00 год.',
   },
   {
@@ -140,7 +140,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/t100000001',
     name: 'Курченко-Гай Валентин Павлович',
     phones: ['(097) 050-65-65'],
-    photos: ['/photos/kremen-kurchenko-gai-valentin-001.JPG'],
+    photos: ['/photos/kremen-kurchenko-gai-valentin-001.jpg'],
     schedule: 'кожний четвер щомісяця з 15.00 до 17.00 год.',
   },
   {
@@ -150,7 +150,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100008862815186',
     name: 'Литвиненко Максим Валерійович',
     phones: ['77-09-01', '77-22-11'],
-    photos: ['/photos/kremen-litvinenko-maksim-001.JPG'],
+    photos: ['/photos/kremen-litvinenko-maksim-001.jpg'],
     schedule: 'другий понеділок щомісяця з 14.00 до 15.00 год. другий понеділок щомісяця з 15.00 до 16.00 год.',
   },
   {
@@ -159,7 +159,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100002063405542',
     name: 'Лозовик Дмитро Борисович',
     phones: ['(067) 407-13-47'],
-    photos: ['/photos/kremen-lozovik-dmitro-001.JPG'],
+    photos: ['/photos/kremen-lozovik-dmitro-001.jpg'],
     schedule: 'другий понеділок щомісяця з 15.00 до 17.00 год.',
   },
   {
@@ -177,7 +177,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення ради громадськості мікрорайону № 13, м. Кременчук, вул. Республіканська, 81',
     name: 'Мельник Сергій Вікторович',
     phones: ['6-21-00'],
-    photos: ['/photos/kremen-melnik-sergy-001.JPG'],
+    photos: ['/photos/kremen-melnik-sergy-001.jpg'],
     schedule: 'другий вівторок щомісяця з 14.00 до 16.00 год.',
   },
   {
@@ -187,7 +187,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/elena.mosienko.10',
     name: 'Мосієнко Олена Вікторівна',
     phones: ['4-88-49'],
-    photos: ['/photos/kremen-mos%D1%96enko-olena-001.JPG', '/photos/kremen-mos%D1%96enko-olena-002.JPG'],
+    photos: ['/photos/kremen-mos%D1%96enko-olena-001.jpg', '/photos/kremen-mos%D1%96enko-olena-002.jpg'],
     schedule: 'перший вівторок щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -211,7 +211,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/oksanapiddubnaofficialpage',
     name: 'Піддубна Оксана Миколаївна',
     phones: ['79-94-41', '(067) 744-20-01'],
-    photos: ['/photos/kremen-p%D1%96ddubna-oksana-001.JPG'],
+    photos: ['/photos/kremen-p%D1%96ddubna-oksana-001.jpg'],
     schedule: 'вівторок та субота щомісяця з 15.00 до 18.00 год. другий четвер щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -219,7 +219,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення ради громадськості мікрорайону № 13, м. Кременчук, вул. Республіканська, 81',
     name: 'Плескун Олександр Володимирович',
     phones: ['6-21-00'],
-    photos: ['/photos/kremen-pleskun-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-pleskun-oleksandr-001.jpg'],
     schedule: 'другий понеділок щомісяця з 14.00 до 17.00 год. четвертий понеділок щомісяця з 14.00 до 17.00 год.',
   },
   {
@@ -227,7 +227,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення гуртожитку КрНУ ім. Михайла Остроградського, м. Кременчук, вул. Маяко- вського, 7, 1-й поверх',
     name: 'Почтовюк Андрій Борисович',
     phones: ['3-60-70', '3-11-46'],
-    photos: ['/photos/kremen-pochtovyuk-andryi-001.JPG'],
+    photos: ['/photos/kremen-pochtovyuk-andryi-001.jpg'],
     schedule: 'друга середа щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -236,7 +236,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/sergey.pogrebnoy.14',
     name: 'Погрібний Сергій Миколайович',
     phones: ['5-34-11', '(067) 744-42-01'],
-    photos: ['/photos/kremen-pogr%D1%96bnii-sergy-001.JPG'],
+    photos: ['/photos/kremen-pogr%D1%96bnii-sergy-001.jpg'],
     schedule: 'другий та четвертий четвер щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -246,7 +246,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100002831335571',
     name: 'Порицький Микола Миколайович',
     phones: ['72-67-07'],
-    photos: ['/photos/kremen-poritskii-mykola-001.JPG'],
+    photos: ['/photos/kremen-poritskii-mykola-001.jpg'],
     schedule: `друга субота щомісяця з 9.00 до 12.00 год. друга п'ятниця щомісяця з 16.00 до 18.00 год. третя п'ятниця щомісяця з 16.00 до 18.00 год.`,
   },
   {
@@ -270,7 +270,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/zinaida.protsenko',
     name: 'Проценко Зінаїда Валеріївна',
     phones: ['6-21-00'],
-    photos: ['/photos/kremen-protsenko-zinaida-001.JPG'],
+    photos: ['/photos/kremen-protsenko-zinaida-001.jpg'],
     schedule: 'друга середа щомісяця з 16.00 до 17.30 год.',
   },
   {
@@ -286,7 +286,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення навчально-виробничого комбінату, м. Кременчук, вул. Жукова, 140',
     name: 'Роженко Олександр Анатолійович',
     phones: ['75-00-56'],
-    photos: ['/photos/kremen-rozhenko-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-rozhenko-oleksandr-001.jpg'],
     schedule: 'другий понеділок щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -295,7 +295,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100013802054014',
     name: 'Сергієнко Тетяна Павлівна',
     phones: ['72-80-97'],
-    photos: ['/photos/kremen-serg%D1%96enko-tetyana-001.JPG'],
+    photos: ['/photos/kremen-serg%D1%96enko-tetyana-001.jpg'],
     schedule: 'другий вівторок щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -314,7 +314,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/v.shybashov',
     name: 'Шибашов Володимир Вікторович',
     phones: ['79-22-62'],
-    photos: ['/photos/kremen-shibashov-volodymir-001.JPG'],
+    photos: ['/photos/kremen-shibashov-volodymir-001.jpg'],
     schedule: 'перший понеділок щомісяця з 14.00 до 17.00 год.',
   },
   {
@@ -323,7 +323,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/olya.shliakhovababayeva',
     name: 'Шляхова Ольга Олегівна',
     phones: ['70-11-34'],
-    photos: ['/photos/kremen-shlyahova-olga-001.JPG'],
+    photos: ['/photos/kremen-shlyahova-olga-001.jpg'],
     schedule: 'третій четвер щомісяця з 14.00 до 16.00 год.',
   },
   {
@@ -333,7 +333,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100007987141262',
     name: 'Сідерка Тетяна Анатоліївна',
     phones: ['(097) 050-65-65'],
-    photos: ['/photos/kremen-s%D1%96derka-tetyana-001.JPG'],
+    photos: ['/photos/kremen-s%D1%96derka-tetyana-001.jpg'],
     schedule: 'перший четвер щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -342,7 +342,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100010122459844',
     name: 'Таценюк Віталій Дмитрович',
     phones: ['74-20-54'],
-    photos: ['/photos/kremen-tatsenyuk-vitaly-001.JPG'],
+    photos: ['/photos/kremen-tatsenyuk-vitaly-001.jpg'],
     schedule: 'другий понеділок щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -352,7 +352,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/DenisTereschenko1974',
     name: 'Терещенко Денис Юрійович',
     phones: ['77-44-10'],
-    photos: ['/photos/kremen-tereschenko-denis-001.JPG'],
+    photos: ['/photos/kremen-tereschenko-denis-001.jpg'],
     schedule: 'друга субота щомісяця з 10.00 до 12.00 год. четверта субота щомісяця з 10.00 до 12.00 год.',
   },
   {
@@ -360,7 +360,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення клубу «Мрія» системи ОДЮК, м. Кременчук, вул. Героїв Крут (вул. 60 років СРСР), 3',
     name: 'Терещенко Костянтин Олександрович',
     phones: ['(067) 192-93-13'],
-    photos: ['/photos/kremen-tereschenko-konstyantin-001.JPG'],
+    photos: ['/photos/kremen-tereschenko-konstyantin-001.jpg'],
     schedule: 'останній четвер щомісяця з 15.00 до 17.00 год.',
   },
   {
@@ -369,7 +369,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/profile.php?id=100008895275828',
     name: 'Угніч Григорій Анатолійович',
     phones: ['6-21-38'],
-    photos: ['/photos/kremen-ugn%D1%96ch-grigory-001.JPG'],
+    photos: ['/photos/kremen-ugn%D1%96ch-grigory-001.jpg'],
     schedule: 'четвертий четвер щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -378,7 +378,7 @@ export const defDeputies: Deputy[] = [
     fb: 'https://www.facebook.com/ru.ulyanovs',
     name: 'Ульянов Руслан Анатолійович',
     phones: ['77-89-37'],
-    photos: ['/photos/kremen-ulyanov-ruslan-001.JPG'],
+    photos: ['/photos/kremen-ulyanov-ruslan-001.jpg'],
     schedule: 'перша середа щомісяця з 16.00 до 18.00 год.',
   },
   {
@@ -386,7 +386,7 @@ export const defDeputies: Deputy[] = [
     address: 'приміщення ради громадськості мікрорайону № 8, м. Кременчук, вул. Вадима Пугачова (вул. Московська), 9',
     name: 'Яцина Олександр Олександрович',
     phones: ['77-09-01'],
-    photos: ['/photos/kremen-yatsina-oleksandr-001.JPG'],
+    photos: ['/photos/kremen-yatsina-oleksandr-001.jpg'],
     schedule: 'четвертий четвер щомісяця з 16.00 до 17.00 год.',
   },
 ];
