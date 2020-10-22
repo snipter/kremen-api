@@ -1,5 +1,5 @@
 import express from 'express';
-import { initTransportApi } from 'services';
+import { initEquipmentApi, initTransportApi } from 'services';
 import { Log } from 'utils';
 import cors from 'cors';
 
@@ -13,8 +13,9 @@ const app = express();
 app.use(cors());
 
 initTransportApi(app);
+initEquipmentApi(app);
 
 log.info(`start listening at ${port}`);
-app.listen(8080, () => {
+app.listen(port, () => {
   log.info(`start listening at ${port} done`);
 });

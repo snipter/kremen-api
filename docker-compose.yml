@@ -12,7 +12,7 @@ services:
       - "./web/transport:/usr/src/app"
     command: "yarn start"
     ports:
-      - "6001:6001"
+      - "8091:8080"
 
   api:
     image: node:14-alpine3.10
@@ -22,10 +22,10 @@ services:
     volumes:
       - "./services/api:/usr/src/app"
     environment:
-      PORT: 8080
+      PORT: 8090
     command: "yarn start:dev"
     ports:
-      - "8080:8080"
+      - "8090:8090"
 
   redis:
     build:
