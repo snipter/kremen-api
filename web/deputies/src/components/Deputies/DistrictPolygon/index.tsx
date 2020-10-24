@@ -38,10 +38,10 @@ export const DistrictPolygon: FC<Props> = ({ onClick, item }) => {
           paths={polygonToPaths(polygon)}
           draggable={false}
           options={{
-            strokeColor: colors.blue,
+            strokeColor: colors.primary,
             strokeOpacity: 0.8,
             strokeWeight: 1,
-            fillColor: colors.blue,
+            fillColor: colors.primary,
             fillOpacity: 0.1,
           }}
           onClick={handlePolygonClick}

@@ -124,8 +124,8 @@ class MapScreen extends PureComponent<WithStyles<typeof classNames> & Props, Sta
             Про додаток
           </Link>
           <View style={styles.footerItem}>{`v${VERSION}`}</View>
-          <Link style={m(styles.noBorder, styles.footerItem)} href="http://io.kr.ua/">
-            {`IQ Hub © ${new Date().getFullYear()} рік.`}
+          <Link style={m(styles.noBorder, styles.footerItem)} href="https://kremen.dev/">
+            {`#Kremen.Dev © ${new Date().getFullYear()} рік.`}
           </Link>
         </View>
       </View>
@@ -167,7 +167,8 @@ const styles: Styles = {
     padding: '1px 6px',
     marginLeft: 1,
     marginRight: 1,
-    fontSize: 10,
+    fontSize: 12,
+    color: 'black',
     ...threeDots,
   },
   noBorder: {

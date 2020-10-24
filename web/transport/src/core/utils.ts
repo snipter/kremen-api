@@ -1,7 +1,7 @@
 import color from 'color';
-import { sortBy } from 'lodash';
-import { ColorsSet } from 'styles';
 import { TransportRoute } from 'core/api';
+import { sortBy } from 'lodash';
+import { colors, ColorsSet } from 'styles';
 
 const colorsCache: Record<string, ColorsSet> = {};
 
@@ -16,12 +16,12 @@ export const colorSetFromColor = (val: string): ColorsSet => {
   return colorsCache[val];
 };
 
-const defRouteColors = colorSetFromColor('#000000');
+const defRouteColors = colorSetFromColor(colors.back);
 
-export const defRoutePathColors = colorSetFromColor('#5097D5');
-export const defRouteStationColors = colorSetFromColor('#5097D5');
+export const defRoutePathColors = colorSetFromColor(colors.primary);
+export const defRouteStationColors = colorSetFromColor(colors.primary);
 
-export const offlineColors = colorSetFromColor('#BDC3C7');
+export const offlineColors = colorSetFromColor(colors.lightGrey);
 
 export const routeToColor = (route?: TransportRoute) =>
   route && route.color ? colorSetFromColor(route.color) : defRouteColors;

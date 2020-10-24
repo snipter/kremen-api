@@ -4,7 +4,7 @@ import { colors } from './colors';
 export const muiTheme = createMuiTheme({
   palette: {
     primary: {
-      main: colors.blue,
+      main: colors.primary,
     },
     text: {
       primary: '#000000',

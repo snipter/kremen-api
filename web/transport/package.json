@@ -1,7 +1,7 @@
 {
   "name": "@kremen/transport-web",
   "version": "0.0.19",
-  "title": "Транспорт",
+  "title": "Карта руху громадського транспорту",
   "company": "#Kremen.Dev",
   "description": "Карта кременчуцького транспорту",
   "url": "https://transport.kremen.dev",
