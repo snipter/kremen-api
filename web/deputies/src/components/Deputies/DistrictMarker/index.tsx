@@ -14,7 +14,7 @@ export const DistrictMarker: FC<Props> = ({ position, label, onClick }) => {
   const icon: google.maps.Icon = {
     url: IconMarker,
     size: new google.maps.Size(38, 38),
-    labelOrigin: new google.maps.Point(19, 18),
+    labelOrigin: new google.maps.Point(19, 19),
   };
   return <Marker position={position} icon={icon} label={{ text: label, color: colors.white }} onClick={onClick} />;
 };
