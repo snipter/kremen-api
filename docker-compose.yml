@@ -1,6 +1,21 @@
-version: "3.7"
+version: '3.7'
 
 services:
+  web-equipment:
+    build:
+      context: ./web/equipment
+      dockerfile: Dockerfile.dev
+    container_name: kremen-web-equipment
+    hostname: web-equipment
+    working_dir: /usr/src/app
+    volumes:
+      - './web/equipment:/usr/src/app'
+    environment:
+      PORT: 6003
+    command: 'yarn start:dev'
+    ports:
+      - '6003:6003'
+
   web-transport:
     build:
       context: ./web/transport
@@ -9,23 +24,27 @@ services:
     hostname: web-transport
     working_dir: /usr/src/app
     volumes:
-      - "./web/transport:/usr/src/app"
-    command: "yarn start"
+      - './web/transport:/usr/src/app'
+    environment:
+      PORT: 6001
+    command: 'yarn start:dev'
     ports:
-      - "8091:8080"
+      - '6001:6001'
 
   api:
     image: node:14-alpine3.10
     container_name: kremen-api
     hostname: api
     working_dir: /usr/src/app
+    depends_on: 
+      - redis
     volumes:
-      - "./services/api:/usr/src/app"
+      - './services/api:/usr/src/app'
     environment:
       PORT: 8090
-    command: "yarn start:dev"
+    command: 'yarn start:dev'
     ports:
-      - "8090:8090"
+      - '8090:8090'
 
   redis:
     build:
