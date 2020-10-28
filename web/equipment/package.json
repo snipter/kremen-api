@@ -9,10 +9,10 @@
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "ISC",
   "keywords": [
-    "Кременчук",
-    "Комунальна техніка",
-    "Карта",
-    "Мапа"
+    "кременчук",
+    "комунальна техніка",
+    "карта",
+    "мапа"
   ],
   "scripts": {
     "start": "yarn start:dev",

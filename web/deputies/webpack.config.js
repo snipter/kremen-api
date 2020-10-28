@@ -58,6 +58,7 @@ module.exports = env => {
         company: package.company,
         description: package.description,
         url: package.url,
+        keywords: package.keywords,
         filename: 'index.html',
         template: 'src/templates/app.ejs',
         hash: true,

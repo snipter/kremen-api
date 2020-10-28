@@ -8,6 +8,13 @@
   "main": "src/index.tsx",
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "ISC",
+  "keywords": [
+    "кременчук",
+    "виборчі округи",
+    "депутати",
+    "карта",
+    "мапа"
+  ],
   "scripts": {
     "start": "yarn start:dev",
     "start:dev": "webpack-dev-server --mode development --env.ENVFILE=.env.dev",
