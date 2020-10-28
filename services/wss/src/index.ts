@@ -1,5 +1,5 @@
 import http from 'http';
-import { getTransportWss } from 'services';
+import { getEquipmentWss, getTransportWss } from 'services';
 import url from 'url';
 import { getEnvPort, getNodeEnv, Log } from 'utils';
 
@@ -12,6 +12,7 @@ log.info(`start, port=${port}, env=${env}`);
 
 const server = http.createServer();
 const wssTransport = getTransportWss(env);
+const wssEqipment = getEquipmentWss(env);
 
 server.on('upgrade', (request, socket, head) => {
   const pathname = url.parse(request.url).pathname;
@@ -19,6 +20,10 @@ server.on('upgrade', (request, socket, head) => {
   if (pathname === '/transport/realtime') {
     wssTransport.handleUpgrade(request, socket, head, ws => {
       wssTransport.emit('connection', ws, request);
+    });
+  } else if (pathname === '/equipment/realtime') {
+    wssEqipment.handleUpgrade(request, socket, head, ws => {
+      wssEqipment.emit('connection', ws, request);
     });
   } else {
     socket.destroy();

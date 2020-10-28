@@ -1,6 +1,6 @@
 {
   "name": "@kremen/types",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "main": "lib/index.js",
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "MIT",

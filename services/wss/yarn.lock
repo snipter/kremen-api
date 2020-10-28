@@ -898,10 +898,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@kremen/types@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@kremen/types/-/types-0.0.4.tgz#bd20b47d294b52c44fe684de34d011af6b7c602e"
-  integrity sha512-eWZsKiuPkG9Swr+qZbG0j0UbGfX70rthK9NbTUzqJFpD5qjBZjxKPt2gVbFpx8yNhfRpv8WCzMNfwUddE7AzWw==
+"@kremen/types@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@kremen/types/-/types-0.0.7.tgz#d8c7c378c43b6ff02efe0237845db4275a60cacc"
+  integrity sha512-eyzfajwvRqZJYAGzH06bwY2RQSQv4+W3buqKBNneEGFspiiQ6RXhOlily8HO1ge06HKNOUMkFe5gt7+Om6EL8Q==
   dependencies:
     lodash "4.17.20"
 
