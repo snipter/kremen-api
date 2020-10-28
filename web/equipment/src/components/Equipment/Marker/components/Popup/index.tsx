@@ -1,4 +1,4 @@
-import { View } from 'components/Common';
+import { Text, View } from 'components/Common';
 import { EquipmentMachine } from 'core/api';
 import React, { FC } from 'react';
 import { InfoWindow } from 'react-google-maps';
@@ -47,6 +47,7 @@ const itemToPhoto = (item: EquipmentMachine) => {
 };
 
 export const EquipmentPopup: FC<Props> = ({ style, item, onClose }) => {
+  const { speed, company } = item;
   const title = `${item.name}`;
   const photo = itemToPhoto(item);
   return (
@@ -54,6 +55,16 @@ export const EquipmentPopup: FC<Props> = ({ style, item, onClose }) => {
       <View style={m(styles.container, style)}>
         <View row={true} justifyContent="flex-start" alignItems="center">
           <View style={styles.title}>{title}</View>
+        </View>
+        {!!company && (
+          <View style={[styles.indent]}>
+            <Text bold={true}>{`Підприємство:`}</Text>
+            <Text block={true}>{company}</Text>
+          </View>
+        )}
+        <View style={[styles.indent]} row={true}>
+          <Text bold={true}>{`Швидкість:`}</Text>
+          <Text style={styles.val}>{`${speed ? speed : 0} км/год`}</Text>
         </View>
         {!!photo && (
           <View style={[styles.photoWrap, styles.indent]}>
@@ -71,6 +82,9 @@ const styles: Styles = {
   },
   title: {
     fontWeight: 'bold',
+  },
+  val: {
+    marginLeft: 6,
   },
   indent: {
     marginTop: 10,

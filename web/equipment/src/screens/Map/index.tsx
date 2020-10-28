@@ -1,14 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DocTitle, View } from 'components/Common';
+import { Fab, IconButton } from '@material-ui/core';
+import { DocTitle, Text, View } from 'components/Common';
 import { EquipmentMarker } from 'components/Equipment';
 import { Map } from 'components/Geo';
 import { coordinates, track } from 'core';
 import { EquipmentMachine, LatLng } from 'core/api';
+import { useWebScockets } from 'core/ws';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { Log } from 'utils';
+import HelpIcon from '@material-ui/icons/HelpOutline';
 
 import AboutDialog from './scenes/AboutDialog';
 import { getMapCenterConf, getMapZoomConf, setMapCenterConf, setMapZoomConf } from './utils';
@@ -32,14 +35,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
     manager.updateItems();
   }, []);
 
-  // useWebScockets({
-  //   onMessage: msg => {
-  //     if (msg.type === 'items') {
-  //       log.debug('ws items update');
-  //       manager.modItems(msg.data);
-  //     }
-  //   },
-  // });
+  useWebScockets({
+    onMessage: msg => {
+      if (msg.type === 'items') {
+        log.debug('ws items update, count=', msg.data.length);
+        manager.modItems(msg.data);
+      }
+    },
+  });
 
   // Map
 
@@ -121,6 +124,9 @@ export const MapScreen: FC<Props> = ({ style }) => {
       >
         {items.map(renderItemMarker)}
       </Map>
+      <Fab color="primary" size="small" aria-label="help" style={styles.helpBtn} onClick={handleAboutPress}>
+        <Text size={18}>{`?`}</Text>
+      </Fab>
       <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </View>
   );
@@ -147,6 +153,11 @@ const styles: Styles = {
     left: '50%',
     transform: 'translateX(-50%)',
     bottom: 10,
+  },
+  helpBtn: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
   },
 };
 

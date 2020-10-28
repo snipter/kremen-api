@@ -1,6 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
 import React, { FC } from 'react';
 import { ViewStyleProps } from 'styles';
+import ReactMarkdown from 'react-markdown';
+import content from './content.md';
 
 interface Props extends ViewStyleProps {
   open: boolean;
@@ -17,25 +19,7 @@ export const AboutDialog: FC<Props> = ({ open, onClose }) => (
     <DialogTitle>{'Про додаток'}</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        <p>
-          Додаток створений на основі відкритих даних взятих з офіційного сайту{' '}
-          <a target="__blank" href="https://www.kremen.gov.ua/index.php?view=info-bus">
-            Кременчуцької міської ради
-          </a>
-          .
-        </p>
-        <p>Проект розробляється на волонтерських засадах і не має на меті заробляти гроші.</p>
-        <p>З питаннями, пропозиціями та інформацією про помилки звертатись:</p>
-        <p>
-          <a target="__blank" href="https://fb.me/snipter">
-            https://fb.me/snipter
-          </a>
-        </p>
-        <p>
-          <a target="__blank" href="mailto:websnitper@gmail.com">
-            websnitper@gmail.com
-          </a>
-        </p>
+        <ReactMarkdown source={content} />
       </DialogContentText>
     </DialogContent>
     <DialogActions>
