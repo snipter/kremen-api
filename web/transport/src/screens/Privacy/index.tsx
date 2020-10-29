@@ -1,14 +1,10 @@
-import React, { FC } from 'react';
-import ReactMarkdown from 'react-markdown';
-import content from './content.md';
 import { Paper } from '@material-ui/core';
+import React, { FC } from 'react';
 import { Styles } from 'styles';
 
-export const PrivacyScreen: FC = () => (
-  <Paper style={styles.content}>
-    <ReactMarkdown source={content} />
-  </Paper>
-);
+import content from './content.md';
+
+export const PrivacyScreen: FC = () => <Paper style={styles.content}>{content}</Paper>;
 
 const styles: Styles = {
   container: {},
