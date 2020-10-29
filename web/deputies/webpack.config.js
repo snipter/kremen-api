@@ -66,7 +66,7 @@ module.exports = env => {
         },
       }),
       new CopyWebpackPlugin({
-        patterns: [{ from: 'src/assets/img/*.{png,jpg}', to: 'assets', flatten: true }],
+        patterns: [{ from: 'src/assets/**/*.{png,jpg}', to: 'assets', flatten: true }],
       }),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify(package.version),

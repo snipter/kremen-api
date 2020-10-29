@@ -195,7 +195,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   return (
     <View style={m(styles.container, style)}>
-      <DocTitle title={'Карта руху громадського транспорту'} />
+      <DocTitle title={APP_TITLE} />
       <Map
         mapRef={mapRef}
         style={styles.map}

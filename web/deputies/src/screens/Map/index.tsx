@@ -1,15 +1,14 @@
 import { createStyles, WithStyles, withStyles } from '@material-ui/core';
-import { Link, View } from 'components/Common';
+import { DocTitle, Link, View } from 'components/Common';
 import { DistrictDialog, DistrictsMap } from 'components/Deputies';
 import { defCoord, DeputyDistrict, getConfig, getDistrictDeputies, LatLng, setConfig, track } from 'core';
 import { defDeputies, defDistricts } from 'core/data';
-import { NavPaths } from 'screens/types';
 import React, { PureComponent } from 'react';
 import { GoogleMap } from 'react-google-maps';
+import { NavPaths } from 'screens/types';
 import { fullScreen, m, mdMaxWidth, ScreenSize, Styles, threeDots, ViewStyleProps } from 'styles';
 import { gLatLngToLatLng, isPointInsidePoligon, Log } from 'utils';
 
-import Brands from './components/Brands';
 import SearchBar from './components/SearchBar';
 
 const log = Log('screens.DistrictsMap');
@@ -101,42 +100,41 @@ class MapScreen extends PureComponent<WithStyles<typeof classNames> & Props, Sta
     };
 
     return (
-      <View style={[styles.container, style]}>
-        <DistrictsMap
-          style={styles.map}
-          mapRef={this.onMapRef}
-          options={mapOpt}
-          defaultCenter={center}
-          defaultZoom={zoom}
-          districts={defDistricts}
-          center={center}
-          zoom={zoom}
-          onMapClick={this.onMapClick}
-          onMapCenterChange={this.onMapCenterChange}
-          onMapZoomChange={this.onMapZoomChange}
-          onDistrictClick={this.onDistrictClick}
-        >
-          <SearchBar className={classes.searchBar} onLocationSelect={this.onLocationSelect} />
-        </DistrictsMap>
-        {!!districtDialogItem && (
-          <DistrictDialog
-            open={districtDialogOpen}
-            item={districtDialogItem}
-            deputies={getDistrictDeputies(districtDialogItem, defDeputies)}
-            onClose={this.onDistrictDialogClose}
-          />
-        )}
-        <Brands style={styles.brands} />
-        <View style={styles.footer} justifyContent="center" row={true}>
-          <Link style={m(styles.noBorder, styles.footerItem)} href={NavPaths.About}>
-            Про додаток
-          </Link>
-          <View style={styles.footerItem}>{`v${VERSION}`}</View>
-          <Link style={m(styles.noBorder, styles.footerItem)} href="https://kremen.dev/">
-            {`#Kremen.Dev © ${new Date().getFullYear()} рік.`}
-          </Link>
+      <>
+        <DocTitle title={APP_TITLE} />
+        <View style={[styles.container, style]}>
+          <DistrictsMap
+            style={styles.map}
+            mapRef={this.onMapRef}
+            options={mapOpt}
+            defaultCenter={center}
+            defaultZoom={zoom}
+            districts={defDistricts}
+            center={center}
+            zoom={zoom}
+            onMapClick={this.onMapClick}
+            onMapCenterChange={this.onMapCenterChange}
+            onMapZoomChange={this.onMapZoomChange}
+            onDistrictClick={this.onDistrictClick}
+          >
+            <SearchBar className={classes.searchBar} onLocationSelect={this.onLocationSelect} />
+          </DistrictsMap>
+          {!!districtDialogItem && (
+            <DistrictDialog
+              open={districtDialogOpen}
+              item={districtDialogItem}
+              deputies={getDistrictDeputies(districtDialogItem, defDeputies)}
+              onClose={this.onDistrictDialogClose}
+            />
+          )}
+          <View style={styles.footer} justifyContent="center" row={true}>
+            <View style={styles.footerItem}>{`v${VERSION}`}</View>
+            <Link style={m(styles.noBorder, styles.footerItem)} href="https://kremen.dev/">
+              {`#Kremen.Dev © ${new Date().getFullYear()} рік.`}
+            </Link>
+          </View>
         </View>
-      </View>
+      </>
     );
   }
 }
@@ -181,11 +179,6 @@ const styles: Styles = {
   },
   noBorder: {
     border: 'none',
-  },
-  brands: {
-    position: 'absolute',
-    bottom: 24,
-    left: 2,
   },
 };
 
