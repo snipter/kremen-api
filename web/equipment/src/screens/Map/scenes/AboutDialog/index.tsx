@@ -1,7 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core';
+import { Markdown } from 'components/Common';
 import React, { FC } from 'react';
 import { ViewStyleProps } from 'styles';
-import ReactMarkdown from 'react-markdown';
+
 import content from './content.md';
 
 interface Props extends ViewStyleProps {
@@ -19,7 +20,7 @@ export const AboutDialog: FC<Props> = ({ open, onClose }) => (
     <DialogTitle>{'Про додаток'}</DialogTitle>
     <DialogContent>
       <DialogContentText>
-        <ReactMarkdown source={content} />
+        <Markdown>{content}</Markdown>
       </DialogContentText>
     </DialogContent>
     <DialogActions>
