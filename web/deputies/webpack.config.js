@@ -18,7 +18,7 @@ module.exports = env => {
     },
     output: {
       path: distPath,
-      filename: '[name]-[hash].js',
+      filename: '[name]-[contenthash].js',
       publicPath: '/',
     },
     resolve: {
@@ -27,7 +27,6 @@ module.exports = env => {
         components: `${srcPath}/components`,
         core: `${srcPath}/core`,
         screens: `${srcPath}/screens`,
-        navigation: `${srcPath}/navigation`,
         scenes: `${srcPath}/scenes`,
         store: `${srcPath}/store`,
         styles: `${srcPath}/styles`,
@@ -41,7 +40,7 @@ module.exports = env => {
       rules: [
         { test: /\.tsx?$/, use: 'ts-loader', include: srcPath },
         // Use url-loader for the files under 10k, for other cases - file-loader
-        { test: /\.(md)/, use: [{ loader: 'raw-loader' }], include: srcPath },
+        { test: /\.(md)/, use: ['raw-loader', { loader: 'markdown-loader' }], include: srcPath },
         {
           test: /\.(woff|woff2|eot|ttf|svg|png|jpg)/,
           use: [{ loader: 'url-loader', options: { limit: 100000, name: 'assets/[name].[ext]' } }],
@@ -66,10 +65,9 @@ module.exports = env => {
           minifyJS: true,
         },
       }),
-      new CopyWebpackPlugin([
-        { from: 'src/assets/img/*.{png,jpg}', to: 'assets', flatten: true },
-        { from: 'src/assets/photos/*.{png,jpg}', to: 'photos', flatten: true },
-      ]),
+      new CopyWebpackPlugin({
+        patterns: [{ from: 'src/assets/img/*.{png,jpg}', to: 'assets', flatten: true }],
+      }),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify(package.version),
         ENV: JSON.stringify(process.env.ENV),
@@ -88,10 +86,9 @@ module.exports = env => {
         'Access-Control-Allow-Origin': '*',
       },
     },
-    node: {
-      net: 'empty',
-      tls: 'empty',
-      dns: 'empty',
+    cache: {
+      type: 'filesystem',
+      cacheDirectory: path.resolve(__dirname, '.cache'),
     },
   };
 };
