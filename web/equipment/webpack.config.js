@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const package = require('./package.json');
 
-const appPath = path.resolve(__dirname, 'src');
+const srcPath = path.resolve(__dirname, 'src');
 const distPath = path.resolve(__dirname, 'dist');
 
 module.exports = env => {
@@ -14,7 +14,7 @@ module.exports = env => {
   });
   return {
     entry: {
-      app: `${appPath}/index.tsx`,
+      app: `${srcPath}/index.tsx`,
     },
     output: {
       path: distPath,
@@ -23,27 +23,30 @@ module.exports = env => {
     },
     resolve: {
       alias: {
-        assets: `${appPath}/assets`,
-        components: `${appPath}/components`,
-        core: `${appPath}/core`,
-        screens: `${appPath}/screens`,
-        scenes: `${appPath}/scenes`,
-        store: `${appPath}/store`,
-        styles: `${appPath}/styles`,
-        utils: `${appPath}/utils`,
+        assets: `${srcPath}/assets`,
+        components: `${srcPath}/components`,
+        core: `${srcPath}/core`,
+        screens: `${srcPath}/screens`,
+        scenes: `${srcPath}/scenes`,
+        store: `${srcPath}/store`,
+        styles: `${srcPath}/styles`,
+        utils: `${srcPath}/utils`,
       },
       extensions: ['.js', '.ts', '.tsx'],
+      symlinks: false,
+      cacheWithContext: false,
     },
     module: {
       rules: [
-        { test: /\.tsx?$/, use: 'ts-loader', exclude: /node_modules/ },
+        { test: /\.tsx?$/, use: 'ts-loader', include: srcPath },
         // Use url-loader for the files under 10k, for other cases - file-loader
-        { test: /\.(md)/, use: [{ loader: 'raw-loader' }] },
+        { test: /\.(md)/, use: [{ loader: 'raw-loader' }], include: srcPath },
         {
           test: /\.(woff|woff2|eot|ttf|svg|png|jpg)/,
           use: [{ loader: 'url-loader', options: { limit: 100000, name: 'assets/[name].[ext]' } }],
+          include: srcPath,
         },
-        { test: /\.css$/, use: ['style-loader', 'css-loader'] },
+        { test: /\.css$/, use: ['style-loader', 'css-loader'], include: srcPath },
       ],
     },
     plugins: [
@@ -74,6 +77,7 @@ module.exports = env => {
       }),
     ],
     devServer: {
+      host: '0.0.0.0',
       port: process.env.PORT || 6003,
       historyApiFallback: true,
       headers: {
