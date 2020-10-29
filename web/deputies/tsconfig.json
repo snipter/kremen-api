@@ -22,7 +22,11 @@
       "utils/*": ["utils/*"]
     },
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "googlemaps",
+      "markerclustererplus"
+    ]
   },
   "include": [
     "./src/**/*"

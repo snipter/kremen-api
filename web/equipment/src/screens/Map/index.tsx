@@ -99,13 +99,10 @@ export const MapScreen: FC<Props> = ({ style }) => {
     );
   };
 
-  const mapOpt: any = {
+  const mapOpt: google.maps.MapOptions = {
     fullscreenControl: false,
-    mapTypeControlOptions: {
-      mapTypeIds: ['HYBRID', 'SATELLITE'],
-      position: 'TOP_RIGHT',
-      style: 'DEFAULT',
-    },
+    mapTypeControl: false,
+    streetViewControl: false,
   };
 
   return (

@@ -93,11 +93,19 @@ class MapScreen extends PureComponent<WithStyles<typeof classNames> & Props, Sta
   render() {
     const { style, classes } = this.props;
     const { center, zoom, districtDialogOpen, districtDialogItem } = this.state;
+
+    const mapOpt: google.maps.MapOptions = {
+      fullscreenControl: false,
+      mapTypeControl: false,
+      streetViewControl: false,
+    };
+
     return (
       <View style={[styles.container, style]}>
         <DistrictsMap
           style={styles.map}
           mapRef={this.onMapRef}
+          options={mapOpt}
           defaultCenter={center}
           defaultZoom={zoom}
           districts={defDistricts}

@@ -216,6 +216,13 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/google-maps@*":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@types/google-maps/-/google-maps-3.2.2.tgz#aa97b0880be787d7fb04662707e36125c2e6e2d8"
+  integrity sha512-/XPVfS28VzUdE/HlmBRoe5ii1nNMyWujyRfRY08bD/JgmPlWSiY8enB2dqTe9mlc3kULq7LfFa1wcupM+lQfqA==
+  dependencies:
+    "@types/googlemaps" "*"
+
 "@types/googlemaps@*":
   version "3.37.6"
   resolved "https://registry.yarnpkg.com/@types/googlemaps/-/googlemaps-3.37.6.tgz#4646e4bd8dcc1beaf522b6e1c2a4228d22e9482f"
@@ -245,6 +252,13 @@
   version "4.14.162"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.162.tgz#65d78c397e0d883f44afbf1f7ba9867022411470"
   integrity sha512-alvcho1kRUnnD1Gcl4J+hK0eencvzq9rmzvFPRmP5rPHx9VVsJj6bKLTATPVf9ktgv4ujzh7T+XWKp+jhuODig==
+
+"@types/markerclustererplus@2.1.33":
+  version "2.1.33"
+  resolved "https://registry.yarnpkg.com/@types/markerclustererplus/-/markerclustererplus-2.1.33.tgz#0542a2fabdf46fa474a3de00df5b0b399f5694a5"
+  integrity sha512-ZDxsLUp8BmK9MVZZeQVDDzVrEXgRL0021AQcfXqfreFhdfZ9+PS0P6o4nZBvoIVYTmGSBemdCdI6mL6hf9yWvg==
+  dependencies:
+    "@types/google-maps" "*"
 
 "@types/minimatch@*":
   version "3.0.3"

@@ -34,4 +34,5 @@ const WrappedMapWithDefault: FC<WrappedMapProps> = ({ style, ...props }) => {
   );
 };
 
+export * from './types';
 export default WrappedMapWithDefault;

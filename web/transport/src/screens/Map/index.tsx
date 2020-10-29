@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
-import Map from 'components/Map';
+import { Map } from 'components/Geo';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
-import { coordinates, findRouteWithId, routeIdToColor, routeToColor, track, defRoutePathColors } from 'core';
+import { coordinates, defRoutePathColors, findRouteWithId, routeIdToColor, routeToColor, track } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { useWebScockets } from 'core/ws';
 import { includes, uniqBy } from 'lodash';
@@ -187,13 +187,10 @@ export const MapScreen: FC<Props> = ({ style }) => {
     );
   };
 
-  const mapOpt: any = {
+  const mapOpt: google.maps.MapOptions = {
     fullscreenControl: false,
-    mapTypeControlOptions: {
-      mapTypeIds: ['HYBRID', 'SATELLITE'],
-      position: 'TOP_RIGHT',
-      style: 'DEFAULT',
-    },
+    mapTypeControl: false,
+    streetViewControl: false,
   };
 
   return (
@@ -204,7 +201,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         style={styles.map}
         defaultZoom={getMapZoomConf(14)}
         defaultCenter={getMapCenterConf(coordinates.kremen)}
-        options={mapOpt}
+        defaultOptions={mapOpt}
         onZoomChanged={handleMapZoomChanged}
         onCenterChanged={handleMapCenterChanged}
         onClick={handleMapClick}

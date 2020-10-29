@@ -27,6 +27,10 @@
     "esModuleInterop": true,
     "plugins": [
       {"name": "typescript-tslint-plugin"}
+    ],
+    "types": [
+      "googlemaps",
+      "markerclustererplus"
     ]
   },
   "include": [
