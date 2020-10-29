@@ -40,7 +40,7 @@ module.exports = env => {
       rules: [
         { test: /\.tsx?$/, use: 'ts-loader', include: srcPath },
         // Use url-loader for the files under 10k, for other cases - file-loader
-        { test: /\.(md)/, use: [{ loader: 'raw-loader' }], include: srcPath },
+        { test: /\.(md)/, use: ['raw-loader', { loader: 'markdown-loader' }], include: srcPath },
         {
           test: /\.(woff|woff2|eot|ttf|svg|png|jpg)/,
           use: [{ loader: 'url-loader', options: { limit: 100000, name: 'assets/[name].[ext]' } }],

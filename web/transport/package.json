@@ -30,8 +30,10 @@
     "lint:eslint": "eslint \"src/**\"",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "data:update": "./scripts/init_data_update.sh",
+    "clear:cache": "rm -rf ./.cache",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "postinstall": "yarn clear:cache"
   },
   "husky": {
     "hooks": {
@@ -91,6 +93,7 @@
     "html-webpack-plugin": "4.5.0",
     "husky": "4.3.0",
     "lint-staged": "10.4.2",
+    "markdown-loader": "6.0.0",
     "prettier": "2.1.2",
     "raw-loader": "4.0.2",
     "redux-devtools-extension": "2.13.8",
