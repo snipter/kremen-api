@@ -13,6 +13,8 @@
     "paths": {
       "services": ["services"],
       "services/*": ["services"], 
+      "core": ["core"],
+      "core/*": ["core"], 
       "utils": ["utils"],
       "utils/*": ["utils"]
     }
