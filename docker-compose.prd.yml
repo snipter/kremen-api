@@ -1,4 +1,4 @@
-version: "3.7"
+version: '3.7'
 
 services:
 
@@ -15,18 +15,22 @@ services:
       - '443:443'
     restart: always
 
-  wss:
-    image: docker.pkg.github.com/husky-dev/kremen-api/wss:latest
-    container_name: wss
-    hostname: wss
+  watcher:
+    image: docker.pkg.github.com/husky-dev/kremen-api/watcher:latest
+    container_name: watcher
+    hostname: watcher
     depends_on:
       - api
+      - mongo
+      - redis
     restart: always
 
   api:
     image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
     container_name: api
     hostname: api
+    depends_on: 
+      - redis
     restart: always
 
   redis:
@@ -37,6 +41,16 @@ services:
       - redis:/data
     restart: alwasy
 
+  mongo:
+    image: docker.pkg.github.com/husky-dev/kremen-api/mongo:latest
+    container_name: mongo
+    hostname: mongo
+    volumes:
+      - mongo:/data/db
+    restart: alwasy
+
 volumes:
   redis:
     name: redis
+  mongo:
+    name: mongo

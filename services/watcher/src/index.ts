@@ -3,7 +3,7 @@ import { getEquipmentWss, getTransportWss } from 'services';
 import url from 'url';
 import { getEnvPort, getNodeEnv, Log } from 'utils';
 
-const log = Log('wss');
+const log = Log('watcher');
 
 const port = getEnvPort();
 const env = getNodeEnv();

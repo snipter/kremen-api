@@ -40,7 +40,7 @@ services:
 
   api:
     build:
-      context: ./web/equipment
+      context: ./services/api
       dockerfile: Dockerfile.dev
     hostname: api
     depends_on: 
@@ -53,15 +53,47 @@ services:
     ports:
       - '8080:8080'
 
+  watcher:
+    build:
+      context: ./services/watcher
+      dockerfile: Dockerfile.dev
+    hostname: watcher
+    depends_on: 
+      - api
+      - mongo
+      - redis
+    volumes:
+      - './services/watcher:/usr/src/app'
+    environment:
+      PORT: 8081
+    command: 'yarn start:dev'
+    ports:
+      - '8081:8081'
+
   redis:
     build:
       context: ./services/redis
-      dockerfile: Dockerfile.build
+      dockerfile: Dockerfile.dev
     container_name: redis
     hostname: redis
+    ports:
+      - '6379:6379'
     volumes:
       - redis:/data
+
+  mongo:
+    build:
+      context: ./services/mongo
+      dockerfile: Dockerfile.dev
+    container_name: mongo
+    hostname: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo:/data/db
 
 volumes:
   redis:
     name: redis
+  mongo:
+    name: mongo
