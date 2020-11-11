@@ -6,7 +6,7 @@ import url from 'url';
 import { getEnvPort, getNodeEnv, Log } from 'utils';
 import WebSocket from 'ws';
 
-const log = Log('watcher');
+const log = Log('watchman');
 
 const port = getEnvPort();
 const env = getNodeEnv();

@@ -40,10 +40,10 @@ services:
       context: ./services/api
       dockerfile: Dockerfile.prd
   
-  watcher:
-    image: docker.pkg.github.com/husky-dev/kremen-api/watcher:latest
+  watchman:
+    image: docker.pkg.github.com/husky-dev/kremen-api/watchman:latest
     build:
-      context: ./services/watcher
+      context: ./services/watchman
       dockerfile: Dockerfile.prd
 
   redis:

@@ -7,6 +7,6 @@ build: FORCE
 	docker-compose -f docker-compose.build.yml build
 
 push: FORCE
-	docker-compose -f docker-compose.build.yml push entry api watcher mongo
+	docker-compose -f docker-compose.build.yml push entry api watchman mongo
 
 FORCE: ;

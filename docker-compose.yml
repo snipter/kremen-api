@@ -53,17 +53,17 @@ services:
     ports:
       - '8080:8080'
 
-  watcher:
+  watchman:
     build:
-      context: ./services/watcher
+      context: ./services/watchman
       dockerfile: Dockerfile.dev
-    hostname: watcher
+    hostname: watchman
     depends_on: 
       - api
       - mongo
       - redis
     volumes:
-      - './services/watcher:/usr/src/app'
+      - './services/watchman:/usr/src/app'
     environment:
       PORT: 8081
     command: 'yarn start:dev'
