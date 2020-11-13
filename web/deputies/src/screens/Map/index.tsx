@@ -97,6 +97,12 @@ class MapScreen extends PureComponent<WithStyles<typeof classNames> & Props, Sta
       fullscreenControl: false,
       mapTypeControl: false,
       streetViewControl: false,
+      styles: [
+        {
+          featureType: 'poi',
+          stylers: [{ visibility: 'off' }],
+        },
+      ],
     };
 
     return (

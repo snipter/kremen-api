@@ -191,6 +191,12 @@ export const MapScreen: FC<Props> = ({ style }) => {
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
+    styles: [
+      {
+        featureType: 'poi',
+        stylers: [{ visibility: 'off' }],
+      },
+    ],
   };
 
   return (
