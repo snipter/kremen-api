@@ -8,6 +8,7 @@ import { Markdown } from 'components/Common';
 
 import body from './content/body.md';
 import footer from './content/footer.md';
+import { ServiceIcon } from 'components/Branding';
 
 export const LayoutAppBar: FC = () => {
   const [aboutVisible, setAboutVisible] = useState<boolean>(false);
@@ -21,6 +22,7 @@ export const LayoutAppBar: FC = () => {
     <>
       <AppBar position="static" style={styles.container}>
         <Toolbar style={styles.toolbar}>
+          <ServiceIcon style={styles.icon} type="transport" size={24} color={colors.white} />
           <Typography variant="h6" style={styles.title}>{`#Кремінь.Транспорт`}</Typography>
           <IconButton color="inherit" onClick={handleAboutPress}>
             <HelpIcon />
@@ -38,6 +40,11 @@ export const LayoutAppBar: FC = () => {
 const styles: Styles = {
   container: {
     backgroundColor: colors.withAlpha(colors.primary, 0.7),
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
   },
   toolbar: { minHeight: 54 },
   title: { flexGrow: 1 },
