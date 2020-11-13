@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { View } from 'components/Common';
+import { AppBar, Fab, IconButton, Toolbar, Typography } from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/HelpOutline';
+import { Text, View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import { Map } from 'components/Geo';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
@@ -10,7 +12,7 @@ import { includes, uniqBy } from 'lodash';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
-import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
+import { colors, fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { LatLng, Log } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
@@ -202,6 +204,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
   return (
     <View style={m(styles.container, style)}>
       <DocTitle title={APP_TITLE} />
+      <AppBar position="static" style={{ backgroundColor: colors.withAlpha('#5097D5', 0.7) }}>
+        <Toolbar style={{ minHeight: 54 }}>
+          <Typography variant="h6" style={{ flexGrow: 1 }}>{`#Кремінь.Транспорт`}</Typography>
+          <IconButton color="inherit" onClick={handleAboutPress}>
+            <HelpIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
       <Map
         mapRef={mapRef}
         style={styles.map}
@@ -249,13 +259,14 @@ const styles: Styles = {
   container: {
     ...fullScreen,
     overflow: 'hidden',
+    flexDirection: 'column',
   },
   map: {
     ...fullScreen,
   },
   sidebar: {
     position: 'absolute',
-    top: 14,
+    top: 14 + 60,
     left: 14,
     width: 260,
     zIndex: 2,

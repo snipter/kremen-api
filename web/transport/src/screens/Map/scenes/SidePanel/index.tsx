@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import IconEdit from '@material-ui/icons/KeyboardArrowDown';
 import IconClose from '@material-ui/icons/KeyboardArrowUp';
-import { Collapse, Link } from 'components/Common';
+import { Collapse } from 'components/Common';
 import View from 'components/Common/View';
 import { RouteCircle } from 'components/Transport';
 import { sortRoutes, track } from 'core';
@@ -17,11 +17,10 @@ interface Props extends ViewStyleProps {
   routes: TransportRoute[];
   buses: TransportBus[];
   selected: number[];
-  onAboutClick: () => void;
   onSelectedChange: (selected: number[]) => void;
 }
 
-export const SidePanel: FC<Props> = ({ style, routes, buses, selected, onSelectedChange, onAboutClick }) => {
+export const SidePanel: FC<Props> = ({ style, routes, buses, selected, onSelectedChange }) => {
   const [editOpen, setEditOpen] = useState<boolean>(false);
 
   const handleEditBtnClick = () => {
@@ -49,9 +48,6 @@ export const SidePanel: FC<Props> = ({ style, routes, buses, selected, onSelecte
       <Collapse style={styles.gropusWrap} opened={editOpen}>
         <RouteSelectGroup title="Тролейбуси" routes={troutes} selected={selected} onSelectedChange={onSelectedChange} />
         <RouteSelectGroup title="Маршрутки" routes={broutes} selected={selected} onSelectedChange={onSelectedChange} />
-        <View style={styles.about} row={true} justifyContent="center">
-          <Link onClick={onAboutClick}>Про додаток</Link>
-        </View>
         <View style={styles.footer} row={true} justifyContent="space-between">
           <View style={m(styles.footerItem, styles.total)}>{`Всього: ${buses.length}`}</View>
           <View style={styles.footerItem}>{`Активно: ${buses.filter(item => !item.offline).length}`}</View>
@@ -102,10 +98,6 @@ const styles: Styles = {
   },
   total: {
     textAlign: 'left',
-  },
-  about: {
-    fontSize: '12px',
-    marginTop: 10,
   },
   version: {
     textAlign: 'right',
