@@ -1,4 +1,4 @@
-import { TransportBus, TransportPrediction, TransportRoute, TransportStation } from '@kremen/types';
+import { TransportBus, TransportPrediction, TransportRoute } from '@kremen/types';
 import axios from 'axios';
 import { genRandId, Log } from 'utils';
 
@@ -46,10 +46,9 @@ const getApi = () => {
   return {
     transport: {
       routes: async (): Promise<TransportRoute[]> => apiReq<TransportRoute[]>({ path: `transport/routes` }),
-      stations: async (): Promise<TransportStation[]> => apiReq<TransportStation[]>({ path: `transport/stations` }),
+      buses: async (): Promise<TransportBus[]> => apiReq<TransportBus[]>({ path: `transport/buses` }),
       stationPrediction: async (sid: number): Promise<TransportPrediction[]> =>
         apiReq<TransportPrediction[]>({ path: `transport/stations/${sid}/prediction` }),
-      buses: async (): Promise<TransportBus[]> => apiReq<TransportBus[]>({ path: `transport/buses` }),
     },
   };
 };

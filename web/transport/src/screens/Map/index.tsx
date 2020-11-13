@@ -44,7 +44,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const allRoutes = useSelector(s => s.transport.routes);
   const allBuses = useSelector(s => s.transport.buses);
 
-  const [center, setCenter] = useState<LatLng | undefined>(undefined);
+  const [center /* setCenter */] = useState<LatLng | undefined>(undefined);
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [aboutOpen, setAboutOpen] = useState<boolean>(false);
