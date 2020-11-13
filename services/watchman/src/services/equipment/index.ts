@@ -78,7 +78,7 @@ export const initEquipmentWatcher = ({ apiRoot, wss, db }: WatcherOpt) => {
 
   setInterval(() => {
     processItemsUpdate();
-  }, 5000);
+  }, 10000);
 
   let prevItems: EquipmentMachine[] = [];
 
