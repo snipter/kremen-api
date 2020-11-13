@@ -1,36 +1,3 @@
-export const defTransportRoutesIds = [
-  179,
-  166,
-  170,
-  171,
-  184,
-  186,
-  173,
-  185,
-  181,
-  183,
-  168,
-  172,
-  175,
-  182,
-  167,
-  178,
-  169,
-  174,
-  193,
-  198,
-  199,
-  196,
-  195,
-  187,
-  194,
-  188,
-  189,
-  190,
-  191,
-  192,
-];
-
 interface TransportRouteColorsMap {
   [key: string]: string;
 }

@@ -4,9 +4,9 @@ import { getEnvs, Log } from 'utils';
 import cors from 'cors';
 
 const log = Log('api');
-const { port, env } = getEnvs();
+const { port, env, cacheEnabled } = getEnvs();
 
-log.info(`start, port=${port}, env=${env}`);
+log.info(`start, port=${port}, env=${env}, cacheEnabled=${cacheEnabled}`);
 
 const app = express();
 app.use(cors());

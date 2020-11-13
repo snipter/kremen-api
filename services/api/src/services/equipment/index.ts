@@ -4,13 +4,13 @@ import { cacheWithRootKey, DataSourceError, getEnvs, Log, minSec, respWithErr, s
 import { getEquipmentApi } from './api';
 import { EquipmentTimer } from './types';
 
-const log = Log('api.equipment');
+const log = Log('equipment');
 
-const { getCache, setCache } = cacheWithRootKey('equipment');
 const { cacheEnabled } = getEnvs();
+const { getCache, setCache } = cacheWithRootKey({ rootKey: 'equipment', enabled: cacheEnabled });
 
 export const initEquipmentApi = (app: Express) => {
-  log.info('init api, cache enabled=', cacheEnabled);
+  log.info('init api');
 
   app.get('/equipment', async (req, res) => {
     try {

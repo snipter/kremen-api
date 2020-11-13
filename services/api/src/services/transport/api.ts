@@ -1,10 +1,9 @@
+import axios from 'axios';
 import { flatten } from 'lodash';
+import { DataSourceError, HttpReqQs, LatLng, Log } from 'utils';
 
-import { HttpReqQs, LatLng, Log } from 'utils';
-import { defTransportRoutesIds } from './consts';
 import {
   TransportBus,
-  TransportBusesCompactUpdate,
   TransportCity,
   TransportCountry,
   TransportDataSourceBus,
@@ -14,16 +13,9 @@ import {
   TransportRoute,
   TransportStation,
 } from './types';
-import {
-  busToCompactUpdate,
-  parseDataSourceBus,
-  parseDataSourcePrediction,
-  parseDataSourceRoute,
-  parseDataSourceStation,
-} from './utils';
-import axios from 'axios';
+import { parseDataSourceBus, parseDataSourcePrediction, parseDataSourceRoute, parseDataSourceStation } from './utils';
 
-const log = Log('api.transport');
+const log = Log('transport');
 
 interface TranportApiReqOpt {
   path: string;
@@ -31,19 +23,21 @@ interface TranportApiReqOpt {
 }
 
 export const getTransportApi = () => {
-  const dataSourceUrl = 'http://infobus.kz';
-
   const apiReq = async <T>({ path, qs }: TranportApiReqOpt): Promise<T> => {
-    const defQs = { lang: 'ru' };
-    const reqQs = qs ? { ...defQs, ...qs } : defQs;
-    const url = `${dataSourceUrl}${path}`;
-    if (qs && Object.keys(qs)) {
-      log.debug('api req, url=', url, ', qs=', qs);
-    } else {
-      log.debug('api req, url=', url);
+    try {
+      const defQs = { lang: 'ru' };
+      const reqQs = qs ? { ...defQs, ...qs } : defQs;
+      const url = `http://infobus.kz${path}`;
+      if (qs && Object.keys(qs)) {
+        log.debug('api req, url=', url, ', qs=', qs);
+      } else {
+        log.debug('api req, url=', url);
+      }
+      const { data } = await axios({ url, params: reqQs });
+      return data;
+    } catch (err) {
+      throw new DataSourceError(err.message);
     }
-    const { data } = await axios({ url, params: reqQs });
-    return data;
   };
 
   // Country
@@ -61,6 +55,17 @@ export const getTransportApi = () => {
 
     const getRoutes = async (): Promise<TransportRoute[]> =>
       (await apiReq<TransportDataSourceRoute[]>({ path: `/cities/${cityId}/routes` })).map(parseDataSourceRoute);
+
+    const getRoutesWithStations = async (): Promise<TransportRoute[]> => {
+      const routes = await getRoutes();
+      const rids = routes.map(itm => itm.rid);
+      const stations = await getRoutesStations(rids);
+      const data = routes.map(route => {
+        const routeStations = stations.filter(({ rid }) => rid === route.rid);
+        return { ...route, stations: routeStations };
+      });
+      return data;
+    };
 
     const getRoutesCount = async () => apiReq({ path: `/cities/${cityId}/routeamount` });
 
@@ -81,8 +86,10 @@ export const getTransportApi = () => {
         parseDataSourceStation,
       );
 
-    const getRoutesStations = async (rids: number[]): Promise<TransportStation[]> =>
-      flatten(await Promise.all(rids.map(getRouteStations)));
+    const getRoutesStations = async (rids?: number[]): Promise<TransportStation[]> => {
+      const curRids: number[] = rids ? rids : (await getRoutes()).map(({ rid }) => rid);
+      return flatten(await Promise.all(curRids.map(getRouteStations)));
+    };
 
     const getStationPrediction = async (sid: number) =>
       (await apiReq<TransportDataSourcePrediction[]>({ path: `/cities/${cityId}/stations/${sid}/prediction` })).map(
@@ -98,32 +105,24 @@ export const getTransportApi = () => {
         parseDataSourceBus,
       );
 
-    const getRoutesBuses = async (rids: number[] = defTransportRoutesIds) => {
-      const arr = await Promise.all(rids.map(rid => getRouteBuses(rid)));
+    const getRoutesBuses = async (rids?: number[]) => {
+      const curRids: number[] = rids ? rids : (await getRoutes()).map(({ rid }) => rid);
+      const arr = await Promise.all(curRids.map(rid => getRouteBuses(rid)));
       const buses: TransportBus[] = [];
       arr.forEach(routeBuses => buses.push(...routeBuses));
       return buses;
     };
 
-    const getRoutesBusesUpdate = async (rids: number[]): Promise<TransportBusesCompactUpdate> => {
-      const buses = await getRoutesBuses(rids);
-      let res: TransportBusesCompactUpdate = {};
-      buses.forEach(bus => {
-        res = { ...res, ...busToCompactUpdate(bus) };
-      });
-      return res;
-    };
-
     return {
       getCity,
       getRoutes,
+      getRoutesWithStations,
       getRoutesCount,
       getRouteStations,
       findRoute,
       getBusesCount,
       getRouteBuses,
       getRoutesBuses,
-      getRoutesBusesUpdate,
       getRoutesStations,
       getStationPrediction,
     };

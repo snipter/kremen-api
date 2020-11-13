@@ -4,7 +4,7 @@ import { DataSourceError, delay, HttpReqQs, Log, secMs } from 'utils';
 import { EquipmentListResponse, EquipmentReqWithTimerRes, EquipmentTimer } from './types';
 import { getParsedTickInfoFromStr, getSessionIdFromBody, getTimerInfoFromBody } from './utils';
 
-const log = Log('api.equipment');
+const log = Log('equipment');
 
 interface EquipmentApiOpt {
   sid?: string;

@@ -4,7 +4,6 @@ import { defTransportRouteColor, tranpsortRouteColors } from './consts';
 
 import {
   TransportBus,
-  TransportBusesCompactUpdate,
   TransportDataSourceBus,
   TransportDataSourcePrediction,
   TransportDataSourceStation,
@@ -48,11 +47,6 @@ export const parseDataSourceStation = (input: TransportDataSourceStation): Trans
 export const parseDataSourcePrediction = (input: TransportDataSourcePrediction): TransportPrediction => {
   const { routeId: rid, stationId: sid, busIMEI: tid, ...data } = input;
   return { rid, sid, tid, ...data };
-};
-
-export const busToCompactUpdate = (input: TransportBus): TransportBusesCompactUpdate => {
-  const { tid, lat, lng, direction, speed, offline } = input;
-  return { [tid]: [lat, lng, direction, speed, offline ? 1 : 0] };
 };
 
 // Parsers

@@ -49,10 +49,6 @@ export interface TransportBus {
   speed: number;
 }
 
-export interface TransportBusesCompactUpdate {
-  [id: string]: number[];
-}
-
 export interface TransportPrediction {
   rid: number;
   sid: number;

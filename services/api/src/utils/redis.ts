@@ -2,6 +2,7 @@ import Redis from 'redis';
 import { getEnvs } from './envs';
 
 import { Log } from './log';
+import { genRandId } from './rand';
 
 const log = Log('utils.redis');
 
@@ -29,6 +30,8 @@ redis.on('error', err => {
   log.err(err.message);
 });
 
+// Commands
+
 const set = async (key: string, value: string) =>
   new Promise<string>((resolve, reject) => redis.set(key, value, (err, res) => (err ? reject(err) : resolve(res))));
 
@@ -42,15 +45,26 @@ const setex = async (key: string, seconds: number, value: string) =>
     redis.setex(key, seconds, value, (err, res) => (err ? reject(err) : resolve(res))),
   );
 
-export const cacheWithRootKey = (rootKey: string) => {
+// Cahce
+
+interface CahceOpt {
+  rootKey: string;
+  enabled?: boolean;
+}
+
+export const cacheWithRootKey = ({ rootKey, enabled = true }: CahceOpt) => {
   const fkey = (key: string) => `cache:${rootKey}:${key}`;
 
   const setCache = async <T = any>(key: string, value: T, seconds?: number) => {
+    if (!enabled) {
+      return;
+    }
     const data = JSON.stringify(value);
     const ckey = fkey(key);
+    const tag = `set ${ckey} (${genRandId(3)})`;
     log.debug('setting cache with key=', ckey);
     try {
-      log.start(`set ${ckey}`);
+      log.start(tag);
       if (seconds) {
         await setex(ckey, seconds, data);
       } else {
@@ -59,15 +73,19 @@ export const cacheWithRootKey = (rootKey: string) => {
     } catch (err) {
       log.err('set chache err: ', err.message);
     } finally {
-      log.start(`set ${ckey}`);
+      log.end(tag);
     }
   };
 
   const getCache = async <T = unknown>(key: string): Promise<T | undefined> => {
+    if (!enabled) {
+      return undefined;
+    }
     const ckey = fkey(key);
+    const tag = `get ${ckey} (${genRandId(3)})`;
     log.debug(`getting cache with key= ${ckey}`);
     try {
-      log.start(`get ${ckey}`);
+      log.start(tag);
       const rawData = await get(ckey);
       if (!rawData) {
         return undefined;
@@ -78,7 +96,7 @@ export const cacheWithRootKey = (rootKey: string) => {
       log.err('get chache err: ', err.message);
       return undefined;
     } finally {
-      log.end(`get ${ckey}`);
+      log.end(tag);
     }
   };
 
