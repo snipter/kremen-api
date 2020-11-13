@@ -1,27 +1,15 @@
 import Redis from 'redis';
+import { getEnvs } from './envs';
 
 import { Log } from './log';
 
-const log = Log('utils.cache');
+const log = Log('utils.redis');
 
-const getEnvPort = (): number => {
-  const {
-    env: { REDIS_PORT },
-  } = process;
-  if (!REDIS_PORT) {
-    return 6379;
-  }
-  const port = parseInt(REDIS_PORT, 10);
-  if (isNaN(port)) {
-    log.err('redis port is not a number, REDIS_PORT=', REDIS_PORT, ', falling back to default');
-    return 6379;
-  }
-  return port;
-};
+const { redisPort } = getEnvs();
 
 export const redis = Redis.createClient({
   host: process.env.REDIS_HOST || 'redis',
-  port: getEnvPort(),
+  port: redisPort,
   retry_strategy: options => {
     if (options.error && options.error.code === 'ECONNREFUSED') {
       return new Error('The server refused the connection');
@@ -38,54 +26,61 @@ export const redis = Redis.createClient({
 });
 
 redis.on('error', err => {
-  log.err(err);
+  log.err(err.message);
 });
+
+const set = async (key: string, value: string) =>
+  new Promise<string>((resolve, reject) => redis.set(key, value, (err, res) => (err ? reject(err) : resolve(res))));
+
+const get = async (key: string) =>
+  new Promise<string | undefined>((resolve, reject) =>
+    redis.get(key, (err, res) => (err ? reject(err) : resolve(res ? res : undefined))),
+  );
+
+const setex = async (key: string, seconds: number, value: string) =>
+  new Promise<string>((resolve, reject) =>
+    redis.setex(key, seconds, value, (err, res) => (err ? reject(err) : resolve(res))),
+  );
 
 export const cacheWithRootKey = (rootKey: string) => {
   const fkey = (key: string) => `cache:${rootKey}:${key}`;
 
-  const setCache = async <T = any>(key: string, value: T, seconds?: number) =>
-    new Promise<void>((resolve, reject) => {
-      try {
-        const data = JSON.stringify(value);
-        log.debug('setting cache with key=', fkey(key));
-        log.start(`set ${fkey(key)}`);
-        if (seconds) {
-          redis.setex(fkey(key), seconds, data, err => {
-            log.end(`set ${fkey(key)}`);
-            err ? reject(err) : resolve();
-          });
-        } else {
-          redis.set(fkey(key), data, err => {
-            log.end(`set ${fkey(key)}`);
-            err ? reject(err) : resolve();
-          });
-        }
-      } catch (err) {
-        return reject(err);
+  const setCache = async <T = any>(key: string, value: T, seconds?: number) => {
+    const data = JSON.stringify(value);
+    const ckey = fkey(key);
+    log.debug('setting cache with key=', ckey);
+    try {
+      log.start(`set ${ckey}`);
+      if (seconds) {
+        await setex(ckey, seconds, data);
+      } else {
+        await set(ckey, data);
       }
-    });
+    } catch (err) {
+      log.err('set chache err: ', err.message);
+    } finally {
+      log.start(`set ${ckey}`);
+    }
+  };
 
-  const getCache = async <T = any>(key: string) =>
-    new Promise<T | undefined>((resolve, reject) => {
-      log.debug('getting cache with key=', fkey(key));
-      log.start(`get ${fkey(key)}`);
-      redis.get(fkey(key), (err, rawData) => {
-        log.end(`get ${fkey(key)}`);
-        if (err) {
-          return reject(err);
-        }
-        if (!rawData) {
-          return resolve(undefined);
-        }
-        try {
-          resolve(JSON.parse(rawData));
-        } catch (parsErr) {
-          log.err(`parsing cache error: ${parsErr.toString()}`);
-          return reject(parsErr);
-        }
-      });
-    });
+  const getCache = async <T = unknown>(key: string): Promise<T | undefined> => {
+    const ckey = fkey(key);
+    log.debug(`getting cache with key= ${ckey}`);
+    try {
+      log.start(`get ${ckey}`);
+      const rawData = await get(ckey);
+      if (!rawData) {
+        return undefined;
+      }
+      const data = JSON.parse(rawData);
+      return (data as unknown) as T;
+    } catch (err) {
+      log.err('get chache err: ', err.message);
+      return undefined;
+    } finally {
+      log.end(`get ${ckey}`);
+    }
+  };
 
   return { setCache, getCache };
 };

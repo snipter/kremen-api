@@ -5,3 +5,4 @@ export * from './log';
 export * from './redis';
 export * from './str';
 export * from './time';
+export * from './errors';

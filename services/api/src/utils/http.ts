@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { compact, isString, rest } from 'lodash';
 import { Response } from 'express';
+import { compact, isString } from 'lodash';
+import { DataSourceError } from './errors';
 
 export interface HttpReqQs {
   [key: string]: undefined | string | number;
@@ -36,6 +37,14 @@ export const okResp = <T = any>(res: Response, data: T) => res.status(200).json(
 export const serverErrResp = (res: Response, error: string) => res.status(503).json({ error });
 
 export const notFoundResp = (res: Response, data?: string) => res.status(404).json({ error: data || '' });
+
+export const respWithErr = (res: Response, err: Error) => {
+  if (err instanceof DataSourceError) {
+    const { code, message } = err;
+    return res.status(503).json({ error: { code, message } });
+  }
+  return res.status(503).json({ error: { code: 'UNKNOWN_ERR', message: err.message } });
+};
 
 export const paramMissedResp = (res: Response, paramName: string) =>
   res.status(422).json({ error: `"${paramName}" param missed` });

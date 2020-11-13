@@ -32,7 +32,7 @@ export type EquipmentTrackingRecord = LatLng;
 
 // Requests
 
-export interface EquipmentListRes {
+export interface EquipmentListResponse {
   equipment: EquipmentMachine[];
   system: {
     sid?: string;

@@ -1,7 +1,8 @@
-import { delay, HttpReqQs, Log, secMs } from 'utils';
-import { EquipmentListRes, EquipmentReqWithTimerRes, EquipmentTimer } from './types';
-import { getParsedTickInfoFromStr, getSessionIdFromBody, getTimerInfoFromBody } from './utils';
 import axios from 'axios';
+import { DataSourceError, delay, HttpReqQs, Log, secMs } from 'utils';
+
+import { EquipmentListResponse, EquipmentReqWithTimerRes, EquipmentTimer } from './types';
+import { getParsedTickInfoFromStr, getSessionIdFromBody, getTimerInfoFromBody } from './utils';
 
 const log = Log('api.equipment');
 
@@ -9,30 +10,26 @@ interface EquipmentApiOpt {
   sid?: string;
 }
 
-interface ApiReqOpt {
-  url: string;
-  qs?: HttpReqQs;
-  timeout?: number;
-}
-
 export const getEquipmentApi = (opt: EquipmentApiOpt = {}) => {
   let sid: string | undefined = opt.sid;
 
-  const dataSourceUrl = 'http://admin.logistika.org.ua:1999/';
-  const dataSourceTimeout = secMs * 10;
-
-  const apiReq = async <T>({ url, qs, timeout }: ApiReqOpt): Promise<T> => {
+  const apiReq = async <T>({ qs }: { qs?: HttpReqQs } = {}): Promise<T> => {
+    const url = 'http://admin.logistika.org.ua:1999/';
     const reqQs = qs;
     if (qs && Object.keys(qs)) {
       log.debug('api req, url=', url, ', qs=', qs);
     } else {
       log.debug('api req, url=', url);
     }
-    const { data } = await axios({ url, params: reqQs, timeout });
-    return data;
+    try {
+      const { data } = await axios({ url, params: reqQs, timeout: secMs * 10 });
+      return data;
+    } catch (err) {
+      throw new DataSourceError(err.message);
+    }
   };
 
-  const list = async (initTimer?: EquipmentTimer): Promise<EquipmentListRes> => {
+  const list = async (initTimer?: EquipmentTimer): Promise<EquipmentListResponse> => {
     let curTimer: EquipmentTimer | undefined = initTimer;
     log.debug('starting');
 
@@ -50,14 +47,14 @@ export const getEquipmentApi = (opt: EquipmentApiOpt = {}) => {
       curTimer = getTimerInfoFromBody(confBody);
       log.info(`getting timer data done`, curTimer);
       if (!curTimer) {
-        throw new Error('conf add timer is empty');
+        throw new DataSourceError('conf add timer is empty');
       }
     }
 
     let attempts = 3;
     while (attempts > 0) {
       if (!curTimer) {
-        throw new Error('Current timer not set');
+        throw new DataSourceError('Current timer not set');
       }
       const { timer, equipment }: EquipmentReqWithTimerRes = await reqWithTimer(curTimer);
       curTimer = timer;
@@ -70,7 +67,7 @@ export const getEquipmentApi = (opt: EquipmentApiOpt = {}) => {
       }
     }
 
-    throw new Error('Cannot get equipment list');
+    throw new DataSourceError('Cannot get equipment list');
   };
 
   const reqWithTimer = async (timer: EquipmentTimer): Promise<EquipmentReqWithTimerRes> => {
@@ -85,20 +82,20 @@ export const getEquipmentApi = (opt: EquipmentApiOpt = {}) => {
   };
 
   const getSessionId = async (): Promise<string | undefined> => {
-    const body = await apiReq<string>({ url: dataSourceUrl, timeout: dataSourceTimeout });
+    const body = await apiReq<string>();
     return getSessionIdFromBody(body);
   };
 
   const makeConfigureReq = async (): Promise<string> => {
     const qs = { SID: sid, Sender: 'Cundefined', Event: 'CREATE' };
-    const body = await apiReq<string>({ url: dataSourceUrl, qs, timeout: dataSourceTimeout });
+    const body = await apiReq<string>({ qs });
     return body;
   };
 
   const makeTickReq = async (sender: string): Promise<string> => {
     log.debug(`making tick req, sender: ${sender}`);
     const qs = { SID: sid, Sender: sender, Event: 'Tici' };
-    const body = await apiReq<string>({ url: dataSourceUrl, qs, timeout: dataSourceTimeout });
+    const body = await apiReq<string>({ qs });
     log.debug(`making tick req done`);
     return body;
   };

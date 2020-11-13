@@ -1,11 +1,10 @@
 import express from 'express';
 import { initEquipmentApi, initTransportApi } from 'services';
-import { Log } from 'utils';
+import { getEnvs, Log } from 'utils';
 import cors from 'cors';
 
 const log = Log('api');
-const port = process.env.PORT || 8080;
-const env = process.env.NODE_ENV || 'dev';
+const { port, env } = getEnvs();
 
 log.info(`start, port=${port}, env=${env}`);
 
