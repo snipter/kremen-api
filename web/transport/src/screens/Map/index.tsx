@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AppBar, Fab, IconButton, Toolbar, Typography } from '@material-ui/core';
-import HelpIcon from '@material-ui/icons/HelpOutline';
-import { Text, View } from 'components/Common';
+import { View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import { Map } from 'components/Geo';
+import { LayoutAppBar } from 'components/Layout';
 import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
 import { coordinates, defRoutePathColors, findRouteWithId, routeIdToColor, routeToColor, track } from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
@@ -12,11 +11,10 @@ import { includes, uniqBy } from 'lodash';
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
-import { colors, fullScreen, m, Styles, ViewStyleProps } from 'styles';
+import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { LatLng, Log } from 'utils';
 
 import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
-import AboutDialog from './scenes/AboutDialog';
 import { SidePanel } from './scenes/SidePanel';
 import {
   getMapCenterConf,
@@ -49,7 +47,6 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const [center /* setCenter */] = useState<LatLng | undefined>(undefined);
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
-  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
     getSelectedRoutesConf([189, 188, 192, 187, 190, 191]),
   );
@@ -132,13 +129,6 @@ export const MapScreen: FC<Props> = ({ style }) => {
     setStationPopupId(undefined);
   };
 
-  // About dialog
-
-  const handleAboutPress = () => {
-    track('AboutBtnClick');
-    setAboutOpen(true);
-  };
-
   // Render
 
   const routes = allRoutes.filter(({ rid }) => includes(displayedRoutes, rid));
@@ -204,14 +194,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   return (
     <View style={m(styles.container, style)}>
       <DocTitle title={APP_TITLE} />
-      <AppBar position="static" style={{ backgroundColor: colors.withAlpha('#5097D5', 0.7) }}>
-        <Toolbar style={{ minHeight: 54 }}>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>{`#Кремінь.Транспорт`}</Typography>
-          <IconButton color="inherit" onClick={handleAboutPress}>
-            <HelpIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+      <LayoutAppBar />
       <Map
         mapRef={mapRef}
         style={styles.map}
@@ -243,9 +226,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         routes={allRoutes}
         selected={displayedRoutes}
         onSelectedChange={handleDisplayedRoutesChange}
-        onAboutClick={handleAboutPress}
       />
-      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
       <View style={styles.footer}>
         <a className="link-img-opacity" href="https://kremen.dev/" target="__blank">
           <img style={styles.footerImg} src={LogoIqHubBlack} />
