@@ -24,19 +24,29 @@ const DialogActions = withStyles(theme => ({
 interface Props extends ViewStyleProps {
   title?: string;
   visible?: boolean;
+  actions?: AlertDialogAction[];
   onClose?: () => void;
 }
 
-export const AlertDialog: FC<Props> = ({ style, title, visible = false, children, onClose }) => {
+interface AlertDialogAction {
+  title: string;
+  autoFocus?: boolean;
+  color?: 'inherit' | 'primary' | 'secondary' | 'default';
+  onPress?: () => void;
+}
+
+export const AlertDialog: FC<Props> = ({ style, title, visible = false, actions, children, onClose }) => {
   return (
     <Dialog style={style} onClose={onClose} open={visible}>
       {!!title && <DialogTitle onClose={onClose}>{title}</DialogTitle>}
       <DialogContent dividers>{children}</DialogContent>
-      {!!onClose && (
+      {!!actions && actions.length && (
         <DialogActions>
-          <Button autoFocus onClick={onClose} color="primary">
-            Закрити
-          </Button>
+          {actions.map((itm, key) => (
+            <Button key={key} autoFocus={itm.autoFocus} onClick={itm.onPress} color={itm.color}>
+              {itm.title}
+            </Button>
+          ))}
         </DialogActions>
       )}
     </Dialog>
