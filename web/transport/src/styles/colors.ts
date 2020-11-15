@@ -5,6 +5,19 @@ export interface ColorsSet {
   dark: string;
 }
 
+const colorsCache: Record<string, ColorsSet> = {};
+
+export const colorSetFromColor = (val: string): ColorsSet => {
+  if (colorsCache[val]) {
+    return colorsCache[val];
+  }
+  colorsCache[val] = {
+    light: val,
+    dark: color(val).darken(0.5).toString(),
+  };
+  return colorsCache[val];
+};
+
 const base = {
   red: '#D8434E',
   green: '#4CAF50',

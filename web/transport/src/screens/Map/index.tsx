@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { View } from 'components/Common';
+import { ControlRoundBtn, View } from 'components/Common';
 import DocTitle from 'components/DocTitle';
 import { Map } from 'components/Geo';
 import { LayoutAppBar } from 'components/Layout';
-import { BusMarker, RoutePath, StationMarker } from 'components/Transport';
-import { coordinates, defRoutePathColors, findRouteWithId, routeIdToColor, routeToColor, track } from 'core';
+import { BusMarker, CurLocMarker, RoutePath, StationMarker } from 'components/Transport';
+import {
+  coordinates,
+  defRoutePathColors,
+  findRouteWithId,
+  getConf,
+  removeConf,
+  routeIdToColor,
+  routeToColor,
+  setConf,
+  track,
+} from 'core';
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { useWebScockets } from 'core/ws';
 import { includes, uniqBy } from 'lodash';
@@ -14,16 +24,8 @@ import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { LatLng, Log } from 'utils';
 
-import LogoIqHubBlack from './assets/logo-iqhub-black.svg';
 import { SidePanel } from './scenes/SidePanel';
-import {
-  getMapCenterConf,
-  getMapZoomConf,
-  getSelectedRoutesConf,
-  setMapCenterConf,
-  setMapZoomConf,
-  setSelectedRoutesConf,
-} from './utils';
+import { getMapZoomConf, getSelectedRoutesConf, setMapZoomConf, setSelectedRoutesConf } from './utils';
 
 const log = Log('screens.MapScreen');
 
@@ -44,7 +46,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const allRoutes = useSelector(s => s.transport.routes);
   const allBuses = useSelector(s => s.transport.buses);
 
-  const [center /* setCenter */] = useState<LatLng | undefined>(undefined);
+  const [center, setCenter] = useState<LatLng>(coordinates.kremen);
+  const [zoom, setZoom] = useState<number>(getMapZoomConf(14));
   const [selectedBus, setSelectedBus] = useState<TransportBus | undefined>(undefined);
   const [stationPopupId, setStationPopupId] = useState<number | undefined>(undefined);
   const [displayedRoutes, setDisplayedRoutes] = useState<number[]>(
@@ -83,13 +86,11 @@ export const MapScreen: FC<Props> = ({ style }) => {
     if (!mapRef.current) {
       return;
     }
+    log.debug('cener changed');
     const coord = mapRef.current.getCenter();
     const lat = coord.lat();
     const lng = coord.lng();
-    if (!lat || !lng) {
-      return;
-    }
-    setMapCenterConf({ lat, lng });
+    setCenter({ lat, lng });
   };
 
   const handleMapClick = () => {
@@ -99,10 +100,74 @@ export const MapScreen: FC<Props> = ({ style }) => {
     setStationPopupId(undefined);
   };
 
-  const handleDisplayedRoutesChange = (val: number[]) => {
-    track('DisplayedRoutesChange', { routes: val });
-    setSelectedRoutesConf(val);
-    setDisplayedRoutes(val);
+  const handleZoomInPress = () => {
+    if (mapRef.current) {
+      setZoomAndSave(mapRef.current.getZoom() + 1);
+    }
+  };
+
+  const handleZoomOutPress = () => {
+    if (mapRef.current) {
+      setZoomAndSave(mapRef.current.getZoom() - 1);
+    }
+  };
+
+  const setZoomAndSave = (val: number) => {
+    let newVal = val;
+    if (newVal < 0) {
+      newVal = 0;
+    }
+    if (newVal > 22) {
+      newVal = 22;
+    }
+    setZoom(newVal);
+    setMapZoomConf(newVal);
+  };
+
+  // Cur location
+
+  const [curPosition, setCurPosition] = useState<LatLng | undefined>(getConf('curPosition'));
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      log.info('geolocation allowed');
+      navigator.geolocation.getCurrentPosition(handleCurPositionFirstReceived, err => {
+        if (err.code === 1) {
+          log.info('user denied geolocation prompt');
+          removeConf('curPosition');
+          setCurPosition(undefined);
+        } else {
+          log.err(err.message);
+        }
+      });
+    } else {
+      log.info('geolocation not enabled on this device');
+      removeConf('curPosition');
+      setCurPosition(undefined);
+    }
+  }, []);
+
+  const handleCurPositionFirstReceived = (rawVal: Position) => {
+    log.debug('cur position firts received');
+    const { latitude, longitude } = rawVal.coords;
+    setCenter({ lat: latitude, lng: longitude });
+    navigator.geolocation.watchPosition(handleCurPositionChange);
+  };
+
+  const handleCurPositionChange = (rawVal: Position) => {
+    log.debug('cur poisition changed');
+    const val = { lat: rawVal.coords.latitude, lng: rawVal.coords.longitude };
+    setConf('curPosition', val);
+    setCurPosition(val);
+  };
+
+  const handleCurPositionClick = () => {
+    log.debug('handle cur location press');
+    if (curPosition) {
+      setCenter(curPosition);
+    } else {
+      alert('Геолокація не увімкнена або дана функція не доступна в вашому браузері');
+    }
   };
 
   // Bus
@@ -127,6 +192,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   const handleStationMarkerPopupClose = () => {
     setStationPopupId(undefined);
+  };
+
+  // Routes
+
+  const handleDisplayedRoutesChange = (val: number[]) => {
+    track('DisplayedRoutesChange', { routes: val });
+    setSelectedRoutesConf(val);
+    setDisplayedRoutes(val);
   };
 
   // Render
@@ -183,6 +256,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
+    zoomControl: false,
     styles: [
       {
         featureType: 'poi',
@@ -198,13 +272,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
       <Map
         mapRef={mapRef}
         style={styles.map}
-        defaultZoom={getMapZoomConf(14)}
-        defaultCenter={getMapCenterConf(coordinates.kremen)}
+        defaultZoom={zoom}
+        defaultCenter={center}
         defaultOptions={mapOpt}
         onZoomChanged={handleMapZoomChanged}
         onCenterChanged={handleMapCenterChanged}
         onClick={handleMapClick}
-        center={center || getMapCenterConf(coordinates.kremen)}
+        center={center}
+        zoom={zoom}
       >
         {buses.map(renderBusMarker)}
         {routes.map(renderRoutePath)}
@@ -219,18 +294,19 @@ export const MapScreen: FC<Props> = ({ style }) => {
             onPopupClose={handleStationMarkerPopupClose}
           />
         ))}
+        {!!curPosition && <CurLocMarker position={curPosition} />}
       </Map>
       <SidePanel
-        style={styles.sidebar}
+        style={styles.routesPanel}
         buses={allBuses}
         routes={allRoutes}
         selected={displayedRoutes}
         onSelectedChange={handleDisplayedRoutesChange}
       />
-      <View style={styles.footer}>
-        <a className="link-img-opacity" href="https://kremen.dev/" target="__blank">
-          <img style={styles.footerImg} src={LogoIqHubBlack} />
-        </a>
+      <View style={styles.controlsPanel}>
+        <ControlRoundBtn style={styles.controlsPanelBtn} icon="plus" onClick={handleZoomInPress} />
+        <ControlRoundBtn style={styles.controlsPanelBtn} icon="minus" onClick={handleZoomOutPress} />
+        <ControlRoundBtn style={styles.controlsPanelBtn} icon="target" onClick={handleCurPositionClick} />
       </View>
     </View>
   );
@@ -245,7 +321,7 @@ const styles: Styles = {
   map: {
     ...fullScreen,
   },
-  sidebar: {
+  routesPanel: {
     position: 'absolute',
     top: 14 + 60,
     left: 14,
@@ -253,14 +329,15 @@ const styles: Styles = {
     zIndex: 2,
     overflowY: 'scroll',
   },
-  footer: {
+  controlsPanel: {
     position: 'absolute',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    bottom: 10,
+    right: 14,
+    bottom: 24,
+    zIndex: 2,
   },
-  footerImg: {
-    width: '80px',
+  controlsPanelBtn: {
+    marginTop: 4,
+    marginBottom: 4,
   },
 };
 

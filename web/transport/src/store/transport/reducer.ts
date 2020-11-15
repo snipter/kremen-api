@@ -2,7 +2,6 @@ import { TransportBus, TransportRoute } from 'core/api';
 import { ActionType, StoreAction } from 'store/actions';
 
 import initRoutes from './routes.json';
-import initBuses from './buses.json';
 
 export interface TransportState {
   routes: TransportRoute[];
@@ -11,8 +10,7 @@ export interface TransportState {
 
 const getInitState = (): TransportState => {
   const routes = initRoutes ? initRoutes : [];
-  const buses = initBuses ? initBuses : [];
-  return { routes, buses };
+  return { routes, buses: [] };
 };
 
 const initial: TransportState = getInitState();

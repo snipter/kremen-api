@@ -29,3 +29,5 @@ export const setConf = <T = any>(key: string, val: T) => {
   const valStr = JSON.stringify(val);
   localStorage.setItem(fullKey, valStr);
 };
+
+export const removeConf = (key: string) => localStorage.removeItem(fkey(key));
