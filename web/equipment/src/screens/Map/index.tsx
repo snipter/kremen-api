@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Fab, IconButton } from '@material-ui/core';
-import { DocTitle, Text, View } from 'components/Common';
+import { DocTitle, View } from 'components/Common';
 import { EquipmentMarker } from 'components/Equipment';
 import { Map } from 'components/Geo';
+import { ServicesAppBar } from 'components/Services';
 import { coordinates, track } from 'core';
 import { EquipmentMachine, LatLng } from 'core/api';
 import { useWebScockets } from 'core/ws';
@@ -11,9 +11,7 @@ import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { Log } from 'utils';
-import HelpIcon from '@material-ui/icons/HelpOutline';
 
-import AboutDialog from './scenes/AboutDialog';
 import { getMapCenterConf, getMapZoomConf, setMapCenterConf, setMapZoomConf } from './utils';
 
 const log = Log('screens.MapScreen');
@@ -114,6 +112,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   return (
     <View style={m(styles.container, style)}>
       <DocTitle title={APP_TITLE} />
+      <ServicesAppBar />
       <Map
         mapRef={mapRef}
         style={styles.map}
@@ -127,10 +126,6 @@ export const MapScreen: FC<Props> = ({ style }) => {
       >
         {items.map(renderItemMarker)}
       </Map>
-      <Fab color="primary" size="small" aria-label="help" style={styles.helpBtn} onClick={handleAboutPress}>
-        <Text size={18}>{`?`}</Text>
-      </Fab>
-      <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
     </View>
   );
 };
