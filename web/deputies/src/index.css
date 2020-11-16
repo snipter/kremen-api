@@ -14,17 +14,8 @@ body {
 }
 
 a {
-  transition: opacity .3s ease-in-out;
+  font-weight: bold;
   color: #ECB400;
   border-bottom: 1px dashed #ECB400;
-}
-
-a:link, a:active, a:visited{
-  color: #ECB400;
   text-decoration: none;
-  border-bottom: 1px dashed #ECB400;
-}
-
-a:hover{
-  opacity: .7;
 }
