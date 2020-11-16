@@ -72,6 +72,7 @@ module.exports = env => {
         VERSION: JSON.stringify(package.version),
         ENV: JSON.stringify(process.env.ENV),
         MAPS_API_KEY: JSON.stringify(process.env.MAPS_API_KEY),
+        APP_NAME: JSON.stringify(package.name),
         APP_TITLE: JSON.stringify(package.title),
         APP_COMPANY: JSON.stringify(package.company),
         APP_DESCRIPTION: JSON.stringify(package.description),

@@ -12,7 +12,7 @@ interface Props extends ViewStyleProps {
   current: string;
 }
 
-export const ServiceDropdown: FC<Props> = ({ style, current }) => {
+export const ServicesDropdown: FC<Props> = ({ style, current }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | undefined>(undefined);
 
   const handleClick = (e: MouseEvent<HTMLElement>) => {
@@ -58,3 +58,5 @@ const styles: Styles = {
     fontSize: '30px',
   },
 };
+
+export default ServicesDropdown;

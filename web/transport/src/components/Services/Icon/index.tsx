@@ -8,7 +8,7 @@ interface Props extends ViewStyleProps {
   color?: string;
 }
 
-export const ServiceIcon: FC<Props> = ({ style, size = 46, color = colors.white, name }) => {
+export const ServicesIcon: FC<Props> = ({ style, size = 46, color = colors.white, name }) => {
   const renderIcon = () => {
     if (name.indexOf('transport') >= 0) {
       return (
@@ -53,4 +53,4 @@ export const ServiceIcon: FC<Props> = ({ style, size = 46, color = colors.white,
   );
 };
 
-export default ServiceIcon;
+export default ServicesIcon;

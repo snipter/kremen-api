@@ -1,5 +1,5 @@
 import { ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import ServiceIcon from 'components/Branding/ServiceIcon';
+import ServicesIcon from 'components/Services/Icon';
 import { View } from 'components/Common';
 import { Service } from 'core/services';
 import React, { FC } from 'react';
@@ -13,7 +13,7 @@ export const ServiceListItem: FC<Props> = ({ style, item }) => (
   <ListItem style={m(styles.container, style)} button component="a" href={item.url}>
     <ListItemIcon>
       <View style={m(styles.iconWrap, { backgroundColor: item.color })}>
-        <ServiceIcon name={item.id} size={20} />
+        <ServicesIcon name={item.id} size={20} />
       </View>
     </ListItemIcon>
     <ListItemText primary={item.title} secondary={item.descr} />

@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ControlRoundBtn, View } from 'components/Common';
-import DocTitle from 'components/DocTitle';
+import { ControlRoundBtn, DocTitle, View } from 'components/Common';
 import { Map } from 'components/Geo';
-import { LayoutAppBar } from 'components/Layout';
+import { ServicesAppBar } from 'components/Services';
 import { BusMarker, CurLocMarker, RoutePath, StationMarker } from 'components/Transport';
 import {
   coordinates,
@@ -268,7 +267,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   return (
     <View style={m(styles.container, style)}>
       <DocTitle title={APP_TITLE} />
-      <LayoutAppBar />
+      <ServicesAppBar />
       <Map
         mapRef={mapRef}
         style={styles.map}
