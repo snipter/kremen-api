@@ -29,6 +29,7 @@ declare module 'googlemaps';
 declare const VERSION: string | undefined;
 declare const ENV: 'dev' | 'prd' | 'loc' | undefined;
 declare const MAPS_API_KEY: string | undefined;
+declare const APP_NAME: string | undefined;
 declare const APP_TITLE: string | undefined;
 declare const APP_COMPANY: string | undefined;
 declare const APP_DESCRIPTION: string | undefined;

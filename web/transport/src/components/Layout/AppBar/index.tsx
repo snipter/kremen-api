@@ -1,14 +1,14 @@
-import { AppBar, IconButton, Toolbar, Typography } from '@material-ui/core';
-import React, { FC, useState } from 'react';
+import { AppBar, IconButton, Toolbar } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/HelpOutline';
-import { colors, Styles } from 'styles';
-import { track } from 'mixpanel-browser';
+import { ServiceDropdown, ServiceIcon } from 'components/Branding';
+import { Markdown, View } from 'components/Common';
 import { AlertDialog } from 'components/Dialogs';
-import { Markdown } from 'components/Common';
+import { track } from 'mixpanel-browser';
+import React, { FC, useState } from 'react';
+import { colors, Styles } from 'styles';
 
 import body from './content/body.md';
 import footer from './content/footer.md';
-import { ServiceIcon } from 'components/Branding';
 
 export const LayoutAppBar: FC = () => {
   const [aboutVisible, setAboutVisible] = useState<boolean>(false);
@@ -22,8 +22,10 @@ export const LayoutAppBar: FC = () => {
     <>
       <AppBar position="static" style={styles.container}>
         <Toolbar style={styles.toolbar}>
-          <ServiceIcon style={styles.icon} type="transport" size={24} color={colors.white} />
-          <Typography variant="h6" style={styles.title}>{`#Кремінь.Транспорт`}</Typography>
+          <ServiceIcon style={styles.icon} name={APP_NAME || ''} size={24} color={colors.white} />
+          <View style={styles.titleWrap} row={true} alignItems="center">
+            <ServiceDropdown current={APP_NAME || ''} />
+          </View>
           <IconButton color="inherit" onClick={handleAboutPress}>
             <HelpIcon />
           </IconButton>
@@ -39,15 +41,17 @@ export const LayoutAppBar: FC = () => {
 
 const styles: Styles = {
   container: {
-    backgroundColor: colors.withAlpha(colors.primary, 0.7),
+    backgroundColor: colors.withAlpha(colors.primary, 0.8),
   },
+  toolbar: { minHeight: 54 },
   icon: {
     width: 24,
     height: 24,
-    marginRight: 8,
+    marginRight: 12,
   },
-  toolbar: { minHeight: 54 },
-  title: { flexGrow: 1 },
+  titleWrap: {
+    flexGrow: 1,
+  },
 };
 
 export default LayoutAppBar;
