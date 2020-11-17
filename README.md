@@ -1,4 +1,8 @@
-# #Kremen.API
+# #Kremen.Dev
+
+Set of services for the Kremenchuk city.
+
+## Development
 
 Deploy:
 
@@ -10,6 +14,12 @@ Run production
 
 ```bash
 docker-compose -f docker-compose.prd.yml up
+```
+
+Backup envs:
+
+```bash
+make envs-backup
 ```
 
 ## Contacts

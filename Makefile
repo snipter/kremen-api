@@ -9,4 +9,7 @@ build: FORCE
 push: FORCE
 	docker-compose -f docker-compose.build.yml push entry api watchman mongo
 
+envs-backup: FORCE
+	./scripts/envs-backup.js
+
 FORCE: ;
