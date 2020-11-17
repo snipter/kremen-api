@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DocTitle, View } from 'components/Common';
+import { AlertDialog } from 'components/Dialogs';
 import { EquipmentMarker } from 'components/Equipment';
 import { Map } from 'components/Geo';
 import { ServicesAppBar } from 'components/Services';
@@ -26,7 +27,8 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   const [selectedItem, setSelectedItem] = useState<EquipmentMachine | undefined>(undefined);
   const [center, setCenter] = useState<LatLng | undefined>(undefined);
-  const [aboutOpen, setAboutOpen] = useState<boolean>(false);
+
+  const [warnOpen, setWarnOpen] = useState<boolean>(true);
 
   useEffect(() => {
     track('MapScreenVisit');
@@ -72,11 +74,6 @@ export const MapScreen: FC<Props> = ({ style }) => {
   const handleMapClick = () => {
     track('MapClick');
     log.debug('map click');
-  };
-
-  const handleAboutPress = () => {
-    track('AboutBtnClick');
-    setAboutOpen(true);
   };
 
   // Render
@@ -126,6 +123,16 @@ export const MapScreen: FC<Props> = ({ style }) => {
       >
         {items.map(renderItemMarker)}
       </Map>
+      <AlertDialog visible={warnOpen} title="Сервіс тимчасово не працює" onClose={() => setWarnOpen(false)}>
+        <p>
+          {`Офіційне джерело даних не працює. еможливо отримати дані з офіційного сайту міської ради: `}
+          <a href="http://admin.logistika.org.ua:1999" target="__blank">{`http://admin.logistika.org.ua:1999`}</a>
+        </p>
+        <p>{`Сервіс відновить свою роботу як тільки запрацює офіційний сайт.`}</p>
+        <p>
+          <a href="https://kremen-dev.statuspage.io" target="__blank">{`Слідкувати за статусом`}</a>
+        </p>
+      </AlertDialog>
     </View>
   );
 };
