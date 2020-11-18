@@ -130,15 +130,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
   useEffect(() => {
     if (navigator.geolocation) {
       log.info('geolocation allowed');
-      navigator.geolocation.getCurrentPosition(handleCurPositionFirstReceived, err => {
-        if (err.code === 1) {
-          log.info('user denied geolocation prompt');
-          removeConf('curPosition');
-          setCurPosition(undefined);
-        } else {
-          log.err(err.message);
-        }
-      });
+      navigator.geolocation.getCurrentPosition(handlePositionReceived, handlePositionErr);
     } else {
       log.info('geolocation not enabled on this device');
       removeConf('curPosition');
@@ -146,14 +138,25 @@ export const MapScreen: FC<Props> = ({ style }) => {
     }
   }, []);
 
-  const handleCurPositionFirstReceived = (rawVal: Position) => {
-    log.debug('cur position firts received');
-    const { latitude, longitude } = rawVal.coords;
-    setCenter({ lat: latitude, lng: longitude });
-    navigator.geolocation.watchPosition(handleCurPositionChange);
+  const handlePositionErr = (err: PositionError) => {
+    if (err.code === 1) {
+      log.info('user denied geolocation prompt');
+      removeConf('curPosition');
+      setCurPosition(undefined);
+    } else {
+      log.err(err.message);
+    }
   };
 
-  const handleCurPositionChange = (rawVal: Position) => {
+  const handlePositionReceived = (rawVal: Position) => {
+    log.debug('cur position firts received');
+    const { latitude: lat, longitude: lng } = rawVal.coords;
+    setCenter({ lat, lng });
+    setCurPosition({ lat, lng });
+    navigator.geolocation.watchPosition(handlePositionUpdated);
+  };
+
+  const handlePositionUpdated = (rawVal: Position) => {
     log.debug('cur poisition changed');
     const val = { lat: rawVal.coords.latitude, lng: rawVal.coords.longitude };
     setConf('curPosition', val);
