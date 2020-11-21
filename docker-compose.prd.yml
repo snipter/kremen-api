@@ -9,7 +9,7 @@ services:
     depends_on:
       - api
     volumes:
-      - './creds/ssl:/etc/letsencrypt'
+      - 'ssl:/etc/letsencrypt'
     ports:
       - '80:80'
       - '443:443'
@@ -50,6 +50,8 @@ services:
     restart: always
 
 volumes:
+  ssl:
+    name: ssl
   redis:
     name: redis
   mongo:
