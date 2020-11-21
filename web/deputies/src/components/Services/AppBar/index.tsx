@@ -1,20 +1,20 @@
-import { AppBar, IconButton, Theme, Toolbar } from '@material-ui/core';
+import { AppBar, IconButton, Toolbar } from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/HelpOutline';
-import ServicesDropdown from 'components/Services/Dropdown';
-import ServicesIcon from 'components/Services/Icon';
 import { Markdown, View } from 'components/Common';
 import { AlertDialog } from 'components/Dialogs';
+import ServicesDropdown from 'components/Services/Dropdown';
+import ServicesIcon from 'components/Services/Icon';
 import { track } from 'mixpanel-browser';
 import React, { FC, useState } from 'react';
-import { colors, Styles } from 'styles';
+import { colors, Styles, useTheme } from 'styles';
 
 import body from './content/body.md';
 import footer from './content/footer.md';
-import { useTheme } from '@material-ui/styles';
 
 export const ServicesAppBar: FC = () => {
   const [aboutVisible, setAboutVisible] = useState<boolean>(false);
-  const theme = useTheme<Theme>();
+
+  const theme = useTheme();
 
   const handleAboutPress = () => {
     track('AboutBtnPress');
