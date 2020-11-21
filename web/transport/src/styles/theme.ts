@@ -1,4 +1,5 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme, Theme } from '@material-ui/core/styles';
+import { useTheme as useMuiTheme } from '@material-ui/styles';
 
 import { colors } from './colors';
 
@@ -9,3 +10,5 @@ export const muiTheme = createMuiTheme({
     },
   },
 });
+
+export const useTheme = () => useMuiTheme<Theme>();

@@ -4,12 +4,11 @@ import { Markdown, View } from 'components/Common';
 import { AlertDialog } from 'components/Dialogs';
 import ServicesDropdown from 'components/Services/Dropdown';
 import ServicesIcon from 'components/Services/Icon';
-import { track } from 'mixpanel-browser';
+import aboutBodyContent from 'content/aboutBody.md';
+import aboutFooterContent from 'content/aboutFooter.md';
+import { track } from 'core/analytics';
 import React, { FC, useState } from 'react';
 import { colors, Styles, useTheme } from 'styles';
-
-import body from './content/body.md';
-import footer from './content/footer.md';
 
 export const ServicesAppBar: FC = () => {
   const [aboutVisible, setAboutVisible] = useState<boolean>(false);
@@ -25,7 +24,12 @@ export const ServicesAppBar: FC = () => {
     <>
       <AppBar position="static" style={styles.container}>
         <Toolbar style={styles.toolbar}>
-          <ServicesIcon style={styles.icon} name={APP_NAME || ''} size={24} color={theme.palette.text.primary} />
+          <ServicesIcon
+            style={styles.icon}
+            name={APP_NAME || ''}
+            size={24}
+            color={theme.palette.primary.contrastText}
+          />
           <View style={styles.titleWrap} row={true} alignItems="center">
             <ServicesDropdown current={APP_NAME || ''} />
           </View>
@@ -35,8 +39,8 @@ export const ServicesAppBar: FC = () => {
         </Toolbar>
       </AppBar>
       <AlertDialog title="Про додаток" visible={aboutVisible} onClose={() => setAboutVisible(false)}>
-        <Markdown>{body}</Markdown>
-        <Markdown>{footer}</Markdown>
+        <Markdown>{aboutBodyContent}</Markdown>
+        <Markdown>{aboutFooterContent}</Markdown>
       </AlertDialog>
     </>
   );

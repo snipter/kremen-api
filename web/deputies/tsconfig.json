@@ -10,6 +10,8 @@
     "paths": {
       "components": ["components"],
       "components/*": ["components/*"],
+      "content": ["content"],
+      "content/*": ["content/*"],
       "core": ["core"],
       "core/*": ["core/*"],
       "navigation": ["navigation"],

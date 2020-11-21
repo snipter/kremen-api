@@ -49,23 +49,11 @@ const initUser = () => {
 initUser();
 
 /**
- * Metric Events
- */
-export type MetricEvent =
-  | 'AboutBtnClick'
-  | 'BusMarkerClick'
-  | 'MapScreenVisit'
-  | 'MapClick'
-  | 'RoutesSidebarToggle'
-  | 'DisplayedRoutesChange'
-  | 'StationMarkerClick';
-
-/**
  * Track event
  * @param {MetricEvent} event - event name
  * @param {Dict?} params - event additional data
  */
-export const track = (event: MetricEvent, params?: Dict) => {
+export const track = (event: string, params?: Dict) => {
   if (!enabled) {
     return;
   }

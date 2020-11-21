@@ -25,9 +25,10 @@ module.exports = env => {
       alias: {
         assets: `${srcPath}/assets`,
         components: `${srcPath}/components`,
+        content: `${srcPath}/content`,
         core: `${srcPath}/core`,
-        screens: `${srcPath}/screens`,
         scenes: `${srcPath}/scenes`,
+        screens: `${srcPath}/screens`,
         store: `${srcPath}/store`,
         styles: `${srcPath}/styles`,
         utils: `${srcPath}/utils`,
