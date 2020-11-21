@@ -8,7 +8,7 @@ const keyPrefix = 'kremen:equipment';
 
 const fkey = (key: string) => `${keyPrefix}:${key}`;
 
-export const getConf = <T = any>(key: string): T | undefined => {
+export const getConf = <T = unknown>(key: string): T | undefined => {
   const fullKey = fkey(key);
   const valStr = localStorage.getItem(fullKey);
   if (!isString(valStr)) {
@@ -21,7 +21,7 @@ export const getConf = <T = any>(key: string): T | undefined => {
     log.err(e);
     return undefined;
   }
-  return val;
+  return (val as unknown) as T;
 };
 
 export const setConf = <T = any>(key: string, val: T) => {

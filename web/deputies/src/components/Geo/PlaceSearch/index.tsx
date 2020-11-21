@@ -1,6 +1,6 @@
 import { CircularProgress } from '@material-ui/core';
 import { View } from 'components/Common';
-import { defCoord, LatLng } from 'core';
+import { coordinates, LatLng } from 'core';
 import React, { FC, useState } from 'react';
 import PlacesAutocomplete, { geocodeByPlaceId } from 'react-places-autocomplete';
 import { Styles, ViewStyleProps } from 'styles';
@@ -17,7 +17,7 @@ interface Props extends ViewStyleProps {
   onSelect?: (value: google.maps.GeocoderResult) => void;
 }
 
-export const PlaceSearch: FC<Props> = ({ style, location = defCoord.kremen.loc, radius = 22000, onSelect }) => {
+export const PlaceSearch: FC<Props> = ({ style, location = coordinates.kremen, radius = 22000, onSelect }) => {
   const [value, setValue] = useState<string>('');
 
   const handleChange = (newVal: string) => {

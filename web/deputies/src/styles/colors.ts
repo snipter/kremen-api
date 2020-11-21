@@ -5,5 +5,6 @@ export const withAlpha = (val: string, alpha: number) => color(val).alpha(alpha)
 export const colors = {
   white: '#fff',
   primary: '#ECB400',
+  gray: '#aaa',
   withAlpha,
 };

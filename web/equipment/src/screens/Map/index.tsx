@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DocTitle, View } from 'components/Common';
+import { ControlRoundBtn, DocTitle, View } from 'components/Common';
 import { EquipmentMarker } from 'components/Equipment';
 import { Map } from 'components/Geo';
 import { ServicesAppBar } from 'components/Services';
@@ -12,7 +12,7 @@ import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
 import { Log } from 'utils';
 
-import { getMapCenterConf, getMapZoomConf, setMapCenterConf, setMapZoomConf } from './utils';
+import { getMapZoomConf, setMapZoomConf } from './utils';
 
 const log = Log('screens.MapScreen');
 
@@ -21,13 +21,10 @@ type Props = ViewStyleProps;
 const mapMarkerSize = 46;
 
 export const MapScreen: FC<Props> = ({ style }) => {
-  const mapRef = useRef<GoogleMap>(null);
-
   const manager = useStoreManager();
   const items = useSelector(s => s.equipment.items);
 
   const [selectedItem, setSelectedItem] = useState<EquipmentMachine | undefined>(undefined);
-  const [center, setCenter] = useState<LatLng | undefined>(undefined);
 
   useEffect(() => {
     track('MapScreenVisit');
@@ -45,6 +42,11 @@ export const MapScreen: FC<Props> = ({ style }) => {
 
   // Map
 
+  const mapRef = useRef<GoogleMap>(null);
+
+  const [center, setCenter] = useState<LatLng>(coordinates.kremen);
+  const [zoom, setZoom] = useState<number>(getMapZoomConf(14));
+
   const handleMapZoomChanged = () => {
     if (!mapRef.current) {
       return;
@@ -61,18 +63,40 @@ export const MapScreen: FC<Props> = ({ style }) => {
     if (!mapRef.current) {
       return;
     }
+    log.debug('cener changed');
     const coord = mapRef.current.getCenter();
     const lat = coord.lat();
     const lng = coord.lng();
-    if (!lat || !lng) {
-      return;
-    }
-    setMapCenterConf({ lat, lng });
+    setCenter({ lat, lng });
   };
 
   const handleMapClick = () => {
     track('MapClick');
     log.debug('map click');
+  };
+
+  const handleZoomInPress = () => {
+    if (mapRef.current) {
+      setZoomAndSave(mapRef.current.getZoom() + 1);
+    }
+  };
+
+  const handleZoomOutPress = () => {
+    if (mapRef.current) {
+      setZoomAndSave(mapRef.current.getZoom() - 1);
+    }
+  };
+
+  const setZoomAndSave = (val: number) => {
+    let newVal = val;
+    if (newVal < 0) {
+      newVal = 0;
+    }
+    if (newVal > 22) {
+      newVal = 22;
+    }
+    setZoom(newVal);
+    setMapZoomConf(newVal);
   };
 
   // Render
@@ -98,6 +122,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
     fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false,
+    zoomControl: false,
     styles: [
       {
         featureType: 'poi',
@@ -113,16 +138,21 @@ export const MapScreen: FC<Props> = ({ style }) => {
       <Map
         mapRef={mapRef}
         style={styles.map}
-        defaultZoom={getMapZoomConf(14)}
-        defaultCenter={getMapCenterConf(coordinates.kremen)}
-        options={mapOpt}
+        defaultOptions={mapOpt}
+        defaultZoom={zoom}
+        defaultCenter={center}
+        center={center}
+        zoom={zoom}
         onZoomChanged={handleMapZoomChanged}
         onCenterChanged={handleMapCenterChanged}
         onClick={handleMapClick}
-        center={center || getMapCenterConf(coordinates.kremen)}
       >
         {items.map(renderItemMarker)}
       </Map>
+      <View style={styles.controlsPanel}>
+        <ControlRoundBtn style={styles.controlsPanelBtn} icon="plus" onClick={handleZoomInPress} />
+        <ControlRoundBtn style={styles.controlsPanelBtn} icon="minus" onClick={handleZoomOutPress} />
+      </View>
     </View>
   );
 };
@@ -149,10 +179,15 @@ const styles: Styles = {
     transform: 'translateX(-50%)',
     bottom: 10,
   },
-  helpBtn: {
+  controlsPanel: {
     position: 'absolute',
-    top: 14,
     right: 14,
+    bottom: 24,
+    zIndex: 2,
+  },
+  controlsPanelBtn: {
+    marginTop: 4,
+    marginBottom: 4,
   },
 };
 

@@ -2,10 +2,11 @@ import { DeputyDistrict, LatLng, LatLngPolygon } from 'core';
 import React, { FC } from 'react';
 import { Polygon } from 'react-google-maps';
 import { colors } from 'styles';
-import DistrictMarker from '../DistrictMarker';
+import DistrictMarker from './components/Marker';
 
 interface Props {
   item: DeputyDistrict;
+  disabled?: boolean;
   markerSize?: number;
   onClick?: (item: DeputyDistrict) => void;
 }
@@ -18,7 +19,7 @@ const polygonToPaths = (item: LatLngPolygon): LatLng[][] => {
   return paths;
 };
 
-export const DistrictPolygon: FC<Props> = ({ onClick, item, markerSize }) => {
+export const DistrictPolygon: FC<Props> = ({ onClick, item, disabled = false, markerSize }) => {
   const handlePolygonClick = () => {
     if (onClick) {
       onClick(item);
@@ -39,11 +40,11 @@ export const DistrictPolygon: FC<Props> = ({ onClick, item, markerSize }) => {
           paths={polygonToPaths(polygon)}
           draggable={false}
           options={{
-            strokeColor: colors.primary,
-            strokeOpacity: 0.8,
+            strokeColor: !disabled ? colors.primary : colors.gray,
+            strokeOpacity: 1,
             strokeWeight: 1,
-            fillColor: colors.primary,
-            fillOpacity: 0.1,
+            fillColor: !disabled ? colors.primary : colors.gray,
+            fillOpacity: 0.2,
           }}
           onClick={handlePolygonClick}
         />

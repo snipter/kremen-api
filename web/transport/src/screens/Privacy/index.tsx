@@ -1,13 +1,14 @@
 import { Paper } from '@material-ui/core';
-import { Markdown } from 'components/Common';
+import { DocTitle, Markdown } from 'components/Common';
 import React, { FC } from 'react';
 import { Styles } from 'styles';
 
-import content from './content.md';
+import privacyContent from 'content/privacy.md';
 
 export const PrivacyScreen: FC = () => (
   <Paper style={styles.content}>
-    <Markdown>{content}</Markdown>
+    <DocTitle title="Політика конфіденційності" />
+    <Markdown>{privacyContent}</Markdown>
   </Paper>
 );
 

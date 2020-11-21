@@ -1,16 +1,7 @@
-import { getConf, LatLng, setConf } from 'core';
-
-export const getMapCenterConf = (defVal: LatLng): LatLng => {
-  const rawVal = getConf('center');
-  return rawVal || defVal;
-};
-
-export const setMapCenterConf = (val: LatLng) => {
-  setConf('center', val);
-};
+import { getConf, setConf } from 'core';
 
 export const getMapZoomConf = (defVal: number): number => {
-  const rawVal = getConf('zoom');
+  const rawVal = getConf<number>('zoom');
   return rawVal || defVal;
 };
 

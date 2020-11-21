@@ -278,14 +278,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
       <Map
         mapRef={mapRef}
         style={styles.map}
+        defaultOptions={mapOpt}
         defaultZoom={zoom}
         defaultCenter={center}
-        defaultOptions={mapOpt}
+        center={center}
+        zoom={zoom}
         onZoomChanged={handleMapZoomChanged}
         onCenterChanged={handleMapCenterChanged}
         onClick={handleMapClick}
-        center={center}
-        zoom={zoom}
       >
         {buses.map(renderBusMarker)}
         {routes.map(renderRoutePath)}

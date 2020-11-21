@@ -11,6 +11,10 @@
 		{
 			"name": "web-deputies",
 			"path": "web/deputies"
+		},
+		{
+			"name": "services-api",
+			"path": "services/api"
 		}
 	],
 	"settings": {}

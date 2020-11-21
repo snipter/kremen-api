@@ -1,12 +1,10 @@
 import IconAddress from '@material-ui/icons/Business';
 import IconCalendar from '@material-ui/icons/Event';
-import IconFacebook from '@material-ui/icons/Facebook';
 import IconPhone from '@material-ui/icons/PhoneIphone';
-import IconTwitter from '@material-ui/icons/Twitter';
 import { View } from 'components/Common';
 import { Deputy } from 'core';
 import React, { FC } from 'react';
-import { px, Styles, threeDots, ViewStyleProps } from 'styles';
+import { px, Styles, ViewStyleProps } from 'styles';
 import { capitalizeFirstLetter } from 'utils';
 
 import PhotoSlider from './components/PhotoSlider';
@@ -16,7 +14,7 @@ interface Props extends ViewStyleProps {
 }
 
 export const DeputieInfo: FC<Props> = ({ item, style }) => {
-  const { name, photos, phones, schedule, address, fb, twitter } = item;
+  const { name, photos, phones, schedule, address } = item;
   return (
     <View style={[styles.container, style]} row={true}>
       {photos && photos.length && (
@@ -36,26 +34,6 @@ export const DeputieInfo: FC<Props> = ({ item, style }) => {
           <View style={styles.row} row={true}>
             <IconAddress style={styles.rowIcon} />
             <View>{capitalizeFirstLetter(address)}</View>
-          </View>
-        )}
-        {!!fb && (
-          <View style={styles.row} row={true}>
-            <IconFacebook style={styles.rowIcon} />
-            <View style={styles.fb}>
-              <a href={fb} target="__blank">
-                {fb}
-              </a>
-            </View>
-          </View>
-        )}
-        {!!twitter && (
-          <View style={styles.row} row={true}>
-            <IconTwitter style={styles.rowIcon} />
-            <View>
-              <a href={twitter} target="__blank">
-                {twitter}
-              </a>
-            </View>
           </View>
         )}
         {phones &&
@@ -93,10 +71,6 @@ const styles: Styles = {
   name: {
     fontWeight: 'bold',
     fontSize: px(18),
-  },
-  fb: {
-    ...threeDots,
-    width: 260,
   },
 };
 
