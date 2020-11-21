@@ -1,5 +1,4 @@
-import { Dialog, DialogContent } from '@material-ui/core';
-import { ClosableDialogTitle } from 'components/Dialogs';
+import { AlertDialog } from 'components/Dialogs';
 import { Deputy, DeputyDistrict, districtToVotersCount } from 'core';
 import React, { FC } from 'react';
 import { Styles } from 'styles';
@@ -14,7 +13,7 @@ interface Props {
 }
 
 export const DistrictDialog: FC<Props> = ({ onClose, open, item, deputies }) => {
-  const handleCloseAction = () => {
+  const handleClose = () => {
     if (onClose) {
       onClose();
     }
@@ -24,14 +23,11 @@ export const DistrictDialog: FC<Props> = ({ onClose, open, item, deputies }) => 
   const title = `Виборчий округ №${item.number} (${votersCount} чоловік)`;
 
   return (
-    <Dialog open={open ? open : false} onClose={handleCloseAction}>
-      <ClosableDialogTitle onClose={handleCloseAction}>{title}</ClosableDialogTitle>
-      <DialogContent style={styles.content}>
-        {deputies.map((deputie, index) => (
-          <DeputieInfo key={index} style={index > 0 ? styles.itemBorder : undefined} item={deputie} />
-        ))}
-      </DialogContent>
-    </Dialog>
+    <AlertDialog title={title} visible={open} onClose={handleClose}>
+      {deputies.map((deputie, index) => (
+        <DeputieInfo key={index} style={index > 0 ? styles.itemBorder : undefined} item={deputie} />
+      ))}
+    </AlertDialog>
   );
 };
 

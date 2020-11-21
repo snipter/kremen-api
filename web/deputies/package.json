@@ -1,7 +1,7 @@
 {
   "name": "@kremen/deputies-web",
   "version": "2.1.0",
-  "title": "Карта виборчих округів",
+  "title": "Виборчі округи",
   "company": "#Kremen.Dev",
   "description": "Карта виборчих округів дозволяє вам дізнатись хто є депутатом вашого району та як з ним зв'язатись",
   "url": "https://deputat.kremen.dev/",

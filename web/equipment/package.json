@@ -1,7 +1,7 @@
 {
   "name": "@kremen/equipment-web",
   "version": "0.0.2",
-  "title": "Карта руху комунальної техніки",
+  "title": "Комунальна техніка",
   "company": "#Kremen.Dev",
   "description": "Карта руху комунальної техніки, снігоприбиральників, посипальників та тракторів в Кременчуці",
   "url": "https://equipment.kremen.dev",

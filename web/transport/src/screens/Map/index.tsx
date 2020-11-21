@@ -38,6 +38,9 @@ const routesToStatiosn = (routes: TransportRoute[]): TransportStation[] => {
 
 type Props = ViewStyleProps;
 
+const mapMarkerSize = 46;
+const stationMarkerSize = Math.round(mapMarkerSize / 2.7);
+
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
@@ -245,6 +248,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         bus={bus}
         route={route}
         colors={colors}
+        size={mapMarkerSize}
         zIndex={zIndex}
         opacity={opacity}
         popupOpen={bus.tid === selectedBus?.tid}
@@ -290,13 +294,14 @@ export const MapScreen: FC<Props> = ({ style }) => {
             key={`station-${station.rid}-${station.sid}`}
             station={station}
             selectedRoutes={displayedRoutes}
+            size={stationMarkerSize}
             route={findRouteWithId(allRoutes, station.rid)}
             popupOpen={station.sid === stationPopupId}
             onClick={handleStationMarkerClick}
             onPopupClose={handleStationMarkerPopupClose}
           />
         ))}
-        {!!curPosition && <CurLocMarker position={curPosition} />}
+        {!!curPosition && <CurLocMarker size={mapMarkerSize} position={curPosition} />}
       </Map>
       <SidePanel
         style={styles.routesPanel}

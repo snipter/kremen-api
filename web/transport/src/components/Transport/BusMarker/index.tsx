@@ -10,6 +10,7 @@ import BusPopup from './components/BusPopup';
 interface Props {
   bus: TransportBus;
   route?: TransportRoute;
+  size?: number;
   colors: ColorsSet;
   opacity?: number;
   zIndex?: number;
@@ -18,11 +19,11 @@ interface Props {
   onPopupClose: (bus: TransportBus) => void;
 }
 
-const getIconCodeForBus = (bus: TransportBus, colors: ColorsSet) => {
+const getIconCodeForBus = (bus: TransportBus, colors: ColorsSet, size: number) => {
   const { direction } = bus;
   const rotate = direction + 180;
   const iconCode = btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="38px" height="38px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <svg width="${size}px" height="${size}px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g stroke="none" stroke-width="1.3" fill="none" fill-rule="evenodd">
       <path transform="rotate(${rotate} 19 19)" d="M19,37.179939 L24.2581419,30.3443545 L24.3664119,30.2928085 C28.6881118,28.235298 31.5,23.8715911 31.5,19 C31.5,12.0964406 25.9035594,6.5 19,6.5 C12.0964406,6.5 6.5,12.0964406 6.5,19 C6.5,23.8715911 9.31188822,28.235298 13.6335881,30.2928085 L13.7418581,30.3443545 L19,37.179939 Z" stroke="${
     colors.dark
@@ -44,6 +45,7 @@ export const BusMarker: FC<Props> = ({
   route,
   popupOpen,
   colors,
+  size = 38,
   opacity = 1.0,
   zIndex = 20,
   onPopupClose,
@@ -65,8 +67,8 @@ export const BusMarker: FC<Props> = ({
         position={{ lat, lng }}
         title={bus.name}
         icon={{
-          url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors),
-          anchor: new google.maps.Point(19, 19),
+          url: getIconCodeForBus(bus, bus.offline ? offlineColors : colors, size),
+          anchor: new google.maps.Point(Math.round(size / 2), Math.round(size / 2)),
         }}
         zIndex={zIndex}
         opacity={opacity}
@@ -75,7 +77,7 @@ export const BusMarker: FC<Props> = ({
         {popupOpen && <BusPopup bus={bus} route={route} onClose={handlePopupClose} />}
       </Marker>
     ),
-    [lat, lng, opacity, zIndex, popupOpen, bus.offline, bus.direction],
+    [lat, lng, opacity, zIndex, size, popupOpen, bus.offline, bus.direction],
   );
 };
 

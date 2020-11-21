@@ -6,6 +6,7 @@ import DistrictMarker from '../DistrictMarker';
 
 interface Props {
   item: DeputyDistrict;
+  markerSize?: number;
   onClick?: (item: DeputyDistrict) => void;
 }
 
@@ -17,7 +18,7 @@ const polygonToPaths = (item: LatLngPolygon): LatLng[][] => {
   return paths;
 };
 
-export const DistrictPolygon: FC<Props> = ({ onClick, item }) => {
+export const DistrictPolygon: FC<Props> = ({ onClick, item, markerSize }) => {
   const handlePolygonClick = () => {
     if (onClick) {
       onClick(item);
@@ -52,6 +53,7 @@ export const DistrictPolygon: FC<Props> = ({ onClick, item }) => {
           key={`DistrictMarker-${item.id}-${index}`}
           label={`${item.number}`}
           position={position}
+          size={markerSize}
           onClick={handleMarkerClick}
         />
       ))}

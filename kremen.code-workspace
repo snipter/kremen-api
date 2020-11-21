@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "web-transport",
+			"path": "web/transport"
+		},
+		{
+			"name": "web-equipment",
+			"path": "web/equipment"
+		},
+		{
+			"name": "web-deputies",
+			"path": "web/deputies"
+		}
+	],
+	"settings": {}
+}

@@ -18,6 +18,8 @@ const log = Log('screens.MapScreen');
 
 type Props = ViewStyleProps;
 
+const mapMarkerSize = 46;
+
 export const MapScreen: FC<Props> = ({ style }) => {
   const mapRef = useRef<GoogleMap>(null);
 
@@ -83,6 +85,7 @@ export const MapScreen: FC<Props> = ({ style }) => {
         key={`item-${item.eid}`}
         item={item}
         zIndex={zIndex}
+        size={mapMarkerSize}
         opacity={opacity}
         popupOpen={!!selectedItem && selectedItem.eid === item.eid}
         onClick={() => setSelectedItem(item)}

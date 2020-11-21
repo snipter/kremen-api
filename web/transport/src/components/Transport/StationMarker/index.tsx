@@ -8,6 +8,7 @@ import StationPopup from './components/StationPopup';
 interface Props {
   station: TransportStation;
   popupOpen?: boolean;
+  size?: number;
   route?: TransportRoute;
   selectedRoutes: number[];
   onClick?: (station: TransportStation) => void;
@@ -30,7 +31,15 @@ const getIconCode = (size: number) => {
   return `data:image/svg+xml;base64,${iconCode}`;
 };
 
-export const StationMarker: FC<Props> = ({ station, onClick, popupOpen, route, selectedRoutes, onPopupClose }) => {
+export const StationMarker: FC<Props> = ({
+  station,
+  onClick,
+  popupOpen,
+  route,
+  size = 12,
+  selectedRoutes,
+  onPopupClose,
+}) => {
   const handleClick = () => {
     if (onClick) {
       onClick(station);
@@ -42,7 +51,6 @@ export const StationMarker: FC<Props> = ({ station, onClick, popupOpen, route, s
   };
 
   const { lat, lng } = station;
-  const size = 12;
   return useMemo(
     () => (
       <Marker
@@ -50,7 +58,7 @@ export const StationMarker: FC<Props> = ({ station, onClick, popupOpen, route, s
         title={station.name}
         icon={{
           url: getIconCode(size),
-          anchor: new google.maps.Point(size / 2, size / 2),
+          anchor: new google.maps.Point(Math.round(size / 2), Math.round(size / 2)),
         }}
         zIndex={10}
         onClick={handleClick}
@@ -60,7 +68,7 @@ export const StationMarker: FC<Props> = ({ station, onClick, popupOpen, route, s
         )}
       </Marker>
     ),
-    [lat, lng, popupOpen, selectedRoutes],
+    [lat, lng, popupOpen, selectedRoutes, size],
   );
 };
 

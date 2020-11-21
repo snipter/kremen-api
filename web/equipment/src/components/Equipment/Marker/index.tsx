@@ -9,16 +9,17 @@ interface Props {
   item: EquipmentMachine;
   opacity?: number;
   zIndex?: number;
+  size?: number;
   popupOpen?: boolean;
   onClick?: (item: EquipmentMachine) => void;
   onPopupClose: (item: EquipmentMachine) => void;
 }
 
-const getMarkerCode = (item: EquipmentMachine) => {
+const getMarkerCode = (item: EquipmentMachine, size: number) => {
   const color = equipmentTypeToColor(item.type);
   const colors = colorSetFromColor(color);
   const iconCode = btoa(`<?xml version="1.0" encoding="UTF-8"?>
-  <svg width="38px" height="38px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <svg width="${size}px" height="${size}px" viewBox="0 0 38 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
       <g stroke="none" stroke-width="1.3" fill="none" fill-rule="evenodd">
       <path d="M19,37.179939 L24.2581419,30.3443545 L24.3664119,30.2928085 C28.6881118,28.235298 31.5,23.8715911 31.5,19 C31.5,12.0964406 25.9035594,6.5 19,6.5 C12.0964406,6.5 6.5,12.0964406 6.5,19 C6.5,23.8715911 9.31188822,28.235298 13.6335881,30.2928085 L13.7418581,30.3443545 L19,37.179939 Z" stroke="${
         colors.dark
@@ -48,7 +49,15 @@ const itemTypeToIcon = (type?: EquipmentMachineType): string => {
   }
 };
 
-export const EquipmentMarker: FC<Props> = ({ onClick, item, popupOpen, opacity = 1.0, zIndex = 20, onPopupClose }) => {
+export const EquipmentMarker: FC<Props> = ({
+  onClick,
+  item,
+  popupOpen,
+  opacity = 1.0,
+  zIndex = 20,
+  size = 38,
+  onPopupClose,
+}) => {
   const handlePopupClose = () => {
     onPopupClose(item);
   };
@@ -60,8 +69,8 @@ export const EquipmentMarker: FC<Props> = ({ onClick, item, popupOpen, opacity =
         position={{ lat, lng }}
         title={item.name}
         icon={{
-          url: getMarkerCode(item),
-          anchor: new google.maps.Point(19, 19),
+          url: getMarkerCode(item, size),
+          anchor: new google.maps.Point(Math.round(size / 2), Math.round(size / 2)),
         }}
         zIndex={zIndex}
         opacity={opacity}
@@ -70,7 +79,7 @@ export const EquipmentMarker: FC<Props> = ({ onClick, item, popupOpen, opacity =
         {popupOpen && <EquipmentPopup item={item} onClose={handlePopupClose} />}
       </Marker>
     ),
-    [lat, lng, opacity, zIndex, popupOpen],
+    [lat, lng, opacity, zIndex, popupOpen, size],
   );
 };
 

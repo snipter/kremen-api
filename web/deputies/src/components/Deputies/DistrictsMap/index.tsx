@@ -22,6 +22,8 @@ interface Props extends ViewStyleProps {
   onDistrictClick?: (item: DeputyDistrict) => void;
 }
 
+const mapMarkerSize = 46;
+
 export const DistrictsMap: FC<Props> = ({
   style,
   mapRef,
@@ -53,7 +55,12 @@ export const DistrictsMap: FC<Props> = ({
       onZoomChanged={onMapZoomChange}
     >
       {districts.map(item => (
-        <DistrictPolygon key={`DistrictPolygon-${item.id}`} item={item} onClick={onDistrictClick} />
+        <DistrictPolygon
+          key={`DistrictPolygon-${item.id}`}
+          item={item}
+          markerSize={mapMarkerSize}
+          onClick={onDistrictClick}
+        />
       ))}
       {children}
     </Map>
