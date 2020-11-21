@@ -14,7 +14,7 @@ const findFiles = async (patter) =>
   );
 
 const process = async () => {
-  const rootPath = path.resolve(__dirname, "..");
+  const rootPath = path.resolve(__dirname, "../..");
   log.debug(`rootPath= ${rootPath}`);
 
   const rawFiles = await findFiles(`${rootPath}/**/.env*`);
