@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ControlRoundBtn, DocTitle, View } from 'components/Common';
-import { Map } from 'components/Geo';
 import { ServicesAppBar } from 'components/Services';
 import { BusMarker, CurLocMarker, RoutePath, StationMarker } from 'components/Transport';
 import {
@@ -17,7 +16,7 @@ import {
 import { TransportBus, TransportRoute, TransportStation } from 'core/api';
 import { useWebScockets } from 'core/ws';
 import { includes, uniqBy } from 'lodash';
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import { GoogleMap } from 'react-google-maps';
 import { useSelector, useStoreManager } from 'store';
 import { fullScreen, m, Styles, ViewStyleProps } from 'styles';
@@ -25,6 +24,8 @@ import { LatLng, Log } from 'utils';
 
 import { SidePanel } from './scenes/SidePanel';
 import { getMapZoomConf, getSelectedRoutesConf, setMapZoomConf, setSelectedRoutesConf } from './utils';
+
+const Map = lazy(() => import('components/Geo/Map'));
 
 const log = Log('screens.MapScreen');
 
@@ -275,34 +276,36 @@ export const MapScreen: FC<Props> = ({ style }) => {
     <View style={m(styles.container, style)}>
       <DocTitle title={APP_TITLE} />
       <ServicesAppBar />
-      <Map
-        mapRef={mapRef}
-        style={styles.map}
-        defaultOptions={mapOpt}
-        defaultZoom={zoom}
-        defaultCenter={center}
-        center={center}
-        zoom={zoom}
-        onZoomChanged={handleMapZoomChanged}
-        onCenterChanged={handleMapCenterChanged}
-        onClick={handleMapClick}
-      >
-        {buses.map(renderBusMarker)}
-        {routes.map(renderRoutePath)}
-        {stations.map(station => (
-          <StationMarker
-            key={`station-${station.rid}-${station.sid}`}
-            station={station}
-            selectedRoutes={displayedRoutes}
-            size={stationMarkerSize}
-            route={findRouteWithId(allRoutes, station.rid)}
-            popupOpen={station.sid === stationPopupId}
-            onClick={handleStationMarkerClick}
-            onPopupClose={handleStationMarkerPopupClose}
-          />
-        ))}
-        {!!curPosition && <CurLocMarker size={mapMarkerSize} position={curPosition} />}
-      </Map>
+      <Suspense fallback={() => null}>
+        <Map
+          mapRef={mapRef}
+          style={styles.map}
+          defaultOptions={mapOpt}
+          defaultZoom={zoom}
+          defaultCenter={center}
+          center={center}
+          zoom={zoom}
+          onZoomChanged={handleMapZoomChanged}
+          onCenterChanged={handleMapCenterChanged}
+          onClick={handleMapClick}
+        >
+          {buses.map(renderBusMarker)}
+          {routes.map(renderRoutePath)}
+          {stations.map(station => (
+            <StationMarker
+              key={`station-${station.rid}-${station.sid}`}
+              station={station}
+              selectedRoutes={displayedRoutes}
+              size={stationMarkerSize}
+              route={findRouteWithId(allRoutes, station.rid)}
+              popupOpen={station.sid === stationPopupId}
+              onClick={handleStationMarkerClick}
+              onPopupClose={handleStationMarkerPopupClose}
+            />
+          ))}
+          {!!curPosition && <CurLocMarker size={mapMarkerSize} position={curPosition} />}
+        </Map>
+      </Suspense>
       <SidePanel
         style={styles.routesPanel}
         buses={allBuses}
