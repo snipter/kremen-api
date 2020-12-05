@@ -1,19 +1,15 @@
 import { TransportBus, TransportRoute } from 'core/api';
 import { ActionType, StoreAction } from 'store/actions';
 
-import initRoutes from './routes.json';
-
 export interface TransportState {
   routes: TransportRoute[];
   buses: TransportBus[];
 }
 
-const getInitState = (): TransportState => {
-  const routes = initRoutes ? initRoutes : [];
-  return { routes, buses: [] };
+const initial: TransportState = {
+  routes: [],
+  buses: [],
 };
-
-const initial: TransportState = getInitState();
 
 export const reducer = (state: TransportState = initial, action: StoreAction): TransportState => {
   switch (action.type) {

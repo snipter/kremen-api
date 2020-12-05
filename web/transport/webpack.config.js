@@ -18,7 +18,7 @@ module.exports = env => {
     },
     output: {
       path: distPath,
-      filename: '[name]-[contenthash].js',
+      filename: '[name]-[contenthash:8].js',
       publicPath: '/',
     },
     resolve: {
@@ -49,6 +49,45 @@ module.exports = env => {
         },
         { test: /\.css$/, use: ['style-loader', 'css-loader'], include: srcPath },
       ],
+    },
+    optimization: {
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
+        maxInitialRequests: Infinity,
+        minSize: 0,
+        cacheGroups: {
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-router-dom)[\\/]/,
+            priority: 1,
+            name: 'react',
+          },
+          lodash: {
+            test: /[\\/]node_modules[\\/]lodash/,
+            priority: 1,
+            name: 'lodash',
+          },
+          material: {
+            test: /[\\/]node_modules[\\/]@material-ui/,
+            priority: 1,
+            name: 'material-ui',
+          },
+          redux: {
+            test: /[\\/]node_modules[\\/]redux/,
+            priority: 1,
+            name: 'redux',
+          },
+          mixpanel: {
+            test: /[\\/]node_modules[\\/]mixpanel/,
+            priority: 1,
+            name: 'mixpanel',
+          },
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+          },
+        },
+      },
     },
     plugins: [
       new HtmlWebpackPlugin({
