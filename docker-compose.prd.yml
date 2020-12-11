@@ -33,6 +33,17 @@ services:
       - redis
     restart: always
 
+  slack:
+    image: docker.pkg.github.com/husky-dev/kremen-api/slack:latest
+    container_name: slack
+    hostname: slack
+    restart: always
+    environment:
+      - PORT=80
+      - SLACK_URL=kremendev.slack.com
+      - COMMUNITY_NAME=Kremen Dev Community
+      - SLACK_TOKEN
+
   redis:
     image: docker.pkg.github.com/husky-dev/kremen-api/redis:latest
     container_name: redis

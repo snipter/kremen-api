@@ -1,0 +1,3 @@
+FROM outsideris/slack-invite-automation:latest
+
+COPY assets/background.jpg /slack-invite-automation/public/images/bg.jpg

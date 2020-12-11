@@ -34,6 +34,12 @@ services:
       context: ./services/entry
       dockerfile: Dockerfile.prd
 
+  slack:
+    image: docker.pkg.github.com/husky-dev/kremen-api/slack:latest
+    build:
+      context: ./services/slack
+      dockerfile: Dockerfile.prd
+
   api:
     image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
     build:
