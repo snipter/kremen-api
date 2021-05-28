@@ -26,6 +26,13 @@ jobs:
         registry: ghcr.io
         username: ${{ github.repository_owner }}
         password: ${{ secrets.CR_PAT }}
+    - name: Setup envs
+      env:
+        ENVS: ${{ secrets.ENVS }}
+      run: |
+        echo $ENVS | base64 --decode > setup_envs.sh
+        chmod +x setup_envs.sh
+        ./setup_envs.sh
     - name: Build
       run: make build
     - name: Push
