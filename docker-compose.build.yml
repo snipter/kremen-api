@@ -29,43 +29,37 @@ services:
 
 
   entry:
-    image: docker.pkg.github.com/husky-dev/kremen-api/entry:latest
+    image: ghcr.io/husky-dev/kremen-api/entry:latest
     build:
       context: ./services/entry
       dockerfile: Dockerfile.prd
 
-  slack:
-    image: docker.pkg.github.com/husky-dev/kremen-api/slack:latest
-    build:
-      context: ./services/slack
-      dockerfile: Dockerfile.prd
-
   api:
-    image: docker.pkg.github.com/husky-dev/kremen-api/api:latest
+    image: ghcr.io/husky-dev/kremen-api/api:latest
     build:
       context: ./services/api
       dockerfile: Dockerfile.prd
   
   watchman:
-    image: docker.pkg.github.com/husky-dev/kremen-api/watchman:latest
+    image: ghcr.io/husky-dev/kremen-api/watchman:latest
     build:
       context: ./services/watchman
       dockerfile: Dockerfile.prd
 
   redis:
-    image: docker.pkg.github.com/husky-dev/kremen-api/redis:latest
+    image: ghcr.io/husky-dev/kremen-api/redis:latest
     build:
       context: ./services/redis
       dockerfile: Dockerfile.prd
 
   mongo:
-    image: docker.pkg.github.com/husky-dev/kremen-api/mongo:latest
+    image: ghcr.io/husky-dev/kremen-api/mongo:latest
     build:
       context: ./services/mongo
       dockerfile: Dockerfile.prd
 
   backup:
-    image: docker.pkg.github.com/husky-dev/kremen-api/backup:latest
+    image: ghcr.io/husky-dev/kremen-api/backup:latest
     build:
       context: ./services/backup
       dockerfile: Dockerfile.prd
